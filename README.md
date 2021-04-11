@@ -1,11 +1,11 @@
-# Xamarin.MediaGallery [![NuGet Badge](https://buildstats.info/nuget/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/)
+# Xamarin.MediaGallery [![NuGet Badge](https://img.shields.io/nuget/v/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/)
 
 ![header](/header.svg)
 
-This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices[^1]
+This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices.
 
-[^1]: Unfortunately, at the time of the release of this plugin, [MediaPlugin](https://github.com/jamesmontemagno/MediaPlugin) by [@jamesmontemagno](https://github.com/jamesmontemagno) is no longer supported, and [Xamarin.Essentials](https://github.com/xamarin/Essentials) has not received updates for about 2 months. 
-This plugin has fixed bugs and added some features that are missing in [Xamarin.Essentials](https://github.com/xamarin/Essentials). I hope that in the future it will be ported to [MAUI](https://github.com/dotnet/maui) so that developers have an easy way to add these features to their apps.
+*Unfortunately, at the time of the release of this plugin, [MediaPlugin](https://github.com/jamesmontemagno/MediaPlugin) by [@jamesmontemagno](https://github.com/jamesmontemagno) is no longer supported, and [Xamarin.Essentials](https://github.com/xamarin/Essentials) has not received updates for about 2 months.*
+*This plugin has fixed bugs and added some features that are missing in [Xamarin.Essentials](https://github.com/xamarin/Essentials). I hope that in the future it will be ported to [MAUI](https://github.com/dotnet/maui) so that developers have an easy way to add these features to their apps.*
 
 # Available Platforms
 
