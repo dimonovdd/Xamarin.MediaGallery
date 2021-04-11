@@ -102,4 +102,11 @@ await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
 - When using `PickAsync` method `selectionLimit` parameter just sets multiple selection is allowed
 
 ## iOS
+
 No platform differences.
+
+# Screenshots
+
+|______________|   iOS   | Android |______________|
+|:------------:|:---:|:-------:|:------------:|
+| |![iOS](/Screenshots/ios.jpg)|![Android](/Screenshots/droid.jpg)| |
