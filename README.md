@@ -95,3 +95,11 @@ if (status != PermissionStatus.Granted)
 await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
 //...
  ```
+# Platform Differences
+## Android
+
+- When saving media files, the date and time are appended to the file name
+- When using `PickAsync` method `selectionLimit` parameter just sets multiple selection is allowed
+
+## iOS
+No platform differences.
