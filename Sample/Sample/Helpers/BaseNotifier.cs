@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Xamarin.Essentials;
 using Xamarin.Forms.Internals;
 
 namespace Sample.Helpers
@@ -19,6 +20,7 @@ namespace Sample.Helpers
         }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs eventArgs)
-            => PropertyChanged?.Invoke(this, eventArgs);
+            => MainThread.BeginInvokeOnMainThread(
+                    () => PropertyChanged?.Invoke(this, eventArgs));
     }
 }

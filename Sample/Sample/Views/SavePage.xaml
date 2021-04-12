@@ -6,27 +6,23 @@
     xmlns:vm="clr-namespace:Sample.ViewModels"
     x:Class="Sample.Views.SavePage"
     x:DataType="vm:SaveVM"
-    Title="Save">
+    Title="Save To Gallery From:">
 
     <ScrollView>
-        <Grid RowSpacing="8" Padding="8">
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="400"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Text="Save To Gallery From:"
-                   HorizontalTextAlignment="Center" FontAttributes="Bold" Margin="0"/>
-
-            <StackLayout Grid.Row="1" Orientation="Vertical" Margin="0" Padding="0" Spacing="0">
-                <RadioButton Content="Stream" IsChecked="{Binding FromStream}" Margin="0" Padding="0"/>
-                <RadioButton Content="ByteArray" IsChecked="{Binding FromByteArray}" Margin="0" Padding="0"/>
-                <RadioButton Content="CacheDirectory" IsChecked="{Binding FromCacheDirectory}" Margin="0" Padding="0"/>
+            <StackLayout Grid.Row="0" Orientation="Vertical" Margin="0" Spacing="0">
+                <RadioButton Content="Stream" IsChecked="{Binding FromStream}" />
+                <RadioButton Content="ByteArray" IsChecked="{Binding FromByteArray}" />
+                <RadioButton Content="CacheDirectory" IsChecked="{Binding FromCacheDirectory}" />
             </StackLayout>
 
-            <Grid Grid.Row="2" Padding="0" Margin="0" ColumnSpacing="8" RowSpacing="8">
+            <Grid Grid.Row="1" Margin="0" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="40"/>

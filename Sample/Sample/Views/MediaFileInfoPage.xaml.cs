@@ -1,9 +1,9 @@
 ﻿
 namespace Sample.Views
 {
-    public partial class HomePage
+    public partial class MediaFileInfoPage
     {
-        public HomePage()
+        public MediaFileInfoPage()
         {
             InitializeComponent();
         }

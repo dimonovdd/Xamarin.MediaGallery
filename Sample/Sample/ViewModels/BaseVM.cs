@@ -18,14 +18,10 @@ namespace Sample.ViewModels
 
         internal event Func<BaseVM, bool, Task> DoNavigate;
 
-        public Task DisplayAlertAsync(string message)
-        {
-            return DoDisplayAlert?.Invoke(message) ?? Task.CompletedTask;
-        }
+        protected Task DisplayAlertAsync(string message)
+            => DoDisplayAlert?.Invoke(message) ?? Task.CompletedTask;
 
-        public Task NavigateAsync(BaseVM vm, bool showModal = false)
-        {
-            return DoNavigate?.Invoke(vm, showModal) ?? Task.CompletedTask;
-        }
+        protected Task NavigateAsync(BaseVM vm, bool showModal = false)
+            => DoNavigate?.Invoke(vm, showModal) ?? Task.CompletedTask;
     }
 }
