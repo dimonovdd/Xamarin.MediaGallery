@@ -8,7 +8,7 @@
     x:DataType="vm:MediaFileInfoVM"
     Title="{Binding File.FileName}">
 
-    <ScrollView>
+    <ScrollView x:Name="Scroll"> 
         <StackLayout>
             <views:MediaFileView File="{Binding File}" FilePath="{Binding Path}"
                                  HeightRequest="400"/>
@@ -20,7 +20,8 @@
             <Label Text="{Binding File.Extension}" />
 
             <Label Margin="0,8,0,0" FontAttributes="Bold" Text="Metadata:" />
-            <Label Text="{Binding Metadata}" LineBreakMode="WordWrap" />
+            <Label x:Name="MetaLabel"
+                Text="{Binding Metadata}" VerticalOptions="FillAndExpand"/>
         </StackLayout>
     </ScrollView>
 </views:BasePage>

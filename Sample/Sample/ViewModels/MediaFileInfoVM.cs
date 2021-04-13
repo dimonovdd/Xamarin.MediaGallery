@@ -47,11 +47,12 @@ namespace Sample.ViewModels
 
         async Task ReadMeta(Stream stream)
         {
+            var metaSB = new StringBuilder();
+
             try
             {
                 var directories = ImageMetadataReader.ReadMetadata(stream);
 
-                var metaSB = new StringBuilder();
                 foreach (var directory in directories)
                 {
                     foreach (var tag in directory.Tags)
@@ -60,13 +61,12 @@ namespace Sample.ViewModels
                     foreach (var error in directory.Errors)
                         metaSB.AppendLine("ERROR: " + error);
                 }
-
-                Metadata = metaSB.ToString();
             }
             catch (Exception ex)
             {
                 await DisplayAlertAsync(ex.Message);
             }
+            Metadata = metaSB.ToString();
         }
 
     }
