@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.MediaGallery;
 
@@ -34,7 +36,8 @@ namespace Sample.ViewModels
         {
             try
             {
-                SelectedItems = (await MediaGallery.PickAsync(SelectionLimit, types))?.Files;
+                var result = await MediaGallery.PickAsync(SelectionLimit, types);
+                SelectedItems = result?.Files?.ToArray();
             }
             catch(Exception ex)
             {
