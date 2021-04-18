@@ -1,6 +1,7 @@
-﻿
-using Xamarin.Essentials;
+﻿using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
+using DeviceInfo = Xamarin.Essentials.DeviceInfo;
 
 namespace Sample.Views
 {
@@ -8,6 +9,7 @@ namespace Sample.Views
     {
         bool isDroid;
 
+        [Preserve]
         public MediaFileInfoPage()
         {
             InitializeComponent();
