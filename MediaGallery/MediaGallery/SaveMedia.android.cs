@@ -8,10 +8,14 @@ using Android.Webkit;
 using Xamarin.Essentials;
 using Environment = Android.OS.Environment;
 using File = Java.IO.File;
-using MediaColumns = Android.Provider.MediaStore.MediaColumns;
 using Path = System.IO.Path;
 using Stream = System.IO.Stream;
 using Uri = Android.Net.Uri;
+#if MONOANDROID11_0
+using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
+#else
+using MediaColumns = Android.Provider.MediaStore.MediaColumns;
+#endif
 
 namespace Xamarin.MediaGallery
 {

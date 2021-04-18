@@ -5,8 +5,13 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Uri = Android.Net.Uri;
-using FileColumns = Android.Provider.MediaStore.Files.FileColumns;
 using Android.Provider;
+#if MONOANDROID11_0
+using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
+#else
+using MediaColumns = Android.Provider.MediaStore.MediaColumns;
+#endif
+
 
 namespace Xamarin.MediaGallery
 {
@@ -85,7 +90,7 @@ namespace Xamarin.MediaGallery
 
         static IMediaFile GetFileResult(Uri uri)
         {
-            var name = QueryContentResolverColumn(uri, FileColumns.DisplayName);
+            var name = QueryContentResolverColumn(uri, MediaColumns.DisplayName);
             return string.IsNullOrWhiteSpace(name)
                 ? null
                 : new MediaFile(name, uri);
