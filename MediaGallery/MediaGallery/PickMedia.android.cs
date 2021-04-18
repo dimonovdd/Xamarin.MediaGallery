@@ -23,7 +23,8 @@ namespace Xamarin.MediaGallery
 
             Intent intent;
 
-            if(isImage && types.Length == 1)
+            // https://github.com/dimonovdd/Xamarin.MediaGallery/pull/5
+            if (isImage && types.Length == 1)
             {
                 intent = new Intent(Intent.ActionPick, MediaStore.Images.Media.ExternalContentUri);
                 intent.SetType(imageType);
