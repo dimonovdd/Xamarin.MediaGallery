@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 using Xamarin.MediaGallery;
 
 namespace Sample.ViewModels
 {
+    
     public class PickVM : BaseVM
     {
         public PickVM()
@@ -29,6 +30,7 @@ namespace Sample.ViewModels
 
         public ICommand PickVideoCommand { get; }
 
+        [Preserve]
         public ICommand OpenInfoCommand { get; }
 
 
