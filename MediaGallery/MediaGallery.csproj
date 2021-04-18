@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;Xamarin.iOS10;MonoAndroid10.0;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;Xamarin.iOS10;MonoAndroid10.0;MonoAndroid11.0;</TargetFrameworks>
     <AssemblyName>Xamarin.MediaGallery</AssemblyName>
     <RootNamespace>Xamarin.MediaGallery</RootNamespace>
     <PackageId>Xamarin.MediaGallery</PackageId>
@@ -33,7 +33,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType></DebugType>
-    <DocumentationFile>bin\Release\netstandard2.0\Xamarin.MediaGallery.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netstandard2.1\Xamarin.MediaGallery.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE" PackagePath="" Pack="true" />
