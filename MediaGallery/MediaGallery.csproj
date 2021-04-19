@@ -63,4 +63,12 @@
   <ItemGroup>
     <Folder Include="MediaPickResult\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="MediaFile\MediaFile %28copy%29.shared.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MediaFile\MediaFile.netstandard.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>

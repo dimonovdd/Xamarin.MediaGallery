@@ -7,13 +7,17 @@ namespace Xamarin.MediaGallery
 {
     public partial class MediaFile
     {
+        readonly Uri uri;
+
         internal MediaFile(string fileName, Uri uri)
         {
             FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             Extension = Path.GetExtension(fileName)?.TrimStart('.');
             ContentType = MimeTypeMap.Singleton.GetMimeTypeFromExtension(Extension);
-            openReadAsync =
-                () => Task.FromResult(Platform.AppActivity.ContentResolver.OpenInputStream(uri));
+            this.uri = uri;
         }
+
+        Task<Stream> PlatformOpenReadAsync()
+            => Task.FromResult(Platform.AppActivity.ContentResolver.OpenInputStream(uri));
     }
 }

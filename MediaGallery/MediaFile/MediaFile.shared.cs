@@ -1,28 +1,17 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 
 namespace Xamarin.MediaGallery
 {
     public partial class MediaFile : IMediaFile
     {
-        readonly Func<Task<Stream>> openReadAsync;
-
-        internal MediaFile(string fileName, string extension, string contentType, Func<Task<Stream>> openReadAsync)
-        {
-            FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-            Extension = extension.TrimStart('.');
-            ContentType = contentType.ToLower();
-            this.openReadAsync = openReadAsync;
-        }
-
         public string FileName => $"{FileNameWithoutExtension}.{Extension}";
 
-        public string FileNameWithoutExtension { get; }
+        public string FileNameWithoutExtension { get; protected internal set; }
 
-        public string Extension { get; }
+        public string Extension { get; protected internal set; }
 
-        public string ContentType { get; }
+        public string ContentType { get; protected internal set; }
 
         public MediaFileType? Type => ContentType.StartsWith("image")
                 ? MediaFileType.Image
@@ -31,6 +20,6 @@ namespace Xamarin.MediaGallery
                     : (MediaFileType?)null;
 
         public Task<Stream> OpenReadAsync()
-            => openReadAsync?.Invoke();
+            => PlatformOpenReadAsync();
     }
 }

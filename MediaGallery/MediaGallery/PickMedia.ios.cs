@@ -35,14 +35,10 @@ namespace Xamarin.MediaGallery
                         ? PHPickerFilter.VideosFilter
                         : PHPickerFilter.ImagesFilter;
 
-                var picker = new PHPickerViewController(config);
-                picker.Delegate = new PPD
+                pickerRef = new PHPickerViewController(config)
                 {
-                    CompletedHandler = res =>
-                        tcs.TrySetResult(PickerResultsToMediaFile(res))
+                    Delegate = new PHPickerDelegate(tcs)
                 };
-
-                pickerRef = picker;
             }
             else
             {
@@ -57,25 +53,20 @@ namespace Xamarin.MediaGallery
                 if (!(isVideo || isImage))
                     throw new FeatureNotSupportedException();
 
-                var picker = new UIImagePickerController();
-                picker.SourceType = sourceType;
-                picker.MediaTypes = isVideo && isImage
-                    ? new string[] { UTType.Movie, UTType.Image }
-                    : new string[] { isVideo ? UTType.Movie : UTType.Image };
-                picker.AllowsEditing = false;
-                picker.AllowsImageEditing = false;
-
-                picker.Delegate = new PhotoPickerDelegate
+                pickerRef = new UIImagePickerController
                 {
-                    CompletedHandler = res =>
-                    {
-                        var result = DictionaryToMediaFile(res);
-                        tcs.TrySetResult(result == null ? null : new IMediaFile[] { result });
-                    }
+                    SourceType = sourceType,
+                    AllowsEditing = false,
+                    AllowsImageEditing = false,
+                    Delegate = new PhotoPickerDelegate(tcs),
+                    MediaTypes = isVideo && isImage
+                        ? new string[] { UTType.Movie, UTType.Image }
+                        : new string[] { isVideo ? UTType.Movie : UTType.Image }
                 };
-
-                pickerRef = picker;
             }
+
+            if (pickerRef.PresentationController != null)
+                pickerRef.PresentationController.Delegate = new PresentatControllerDelegate(tcs);
 
             if (DeviceInfo.Idiom == DeviceIdiom.Tablet && pickerRef.PopoverPresentationController != null && vc.View != null)
                 pickerRef.PopoverPresentationController.SourceRect = vc.View.Bounds;
@@ -84,15 +75,13 @@ namespace Xamarin.MediaGallery
 
             var result = await tcs.Task;
 
-            await vc.DismissViewControllerAsync(true);
-
             pickerRef?.Dispose();
             pickerRef = null;
 
             return result;
         }
 
-        static IMediaFile DictionaryToMediaFile(NSDictionary info)
+        static IMediaFile ConvertPickerResults(NSDictionary info)
         {
             if (info == null)
                 return null;
@@ -170,47 +159,54 @@ namespace Xamarin.MediaGallery
                 assetUrl.PathExtension);
         }
 
-        static IEnumerable<IMediaFile> PickerResultsToMediaFile(PHPickerResult[] results)
+        static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
         {
-            if (results != null)
-                foreach (var res in results)
-                {
-                    var item = res.ItemProvider;
-                    var identifier = item.RegisteredTypeIdentifiers?.FirstOrDefault();
-
-                    yield return MediaFile.Create(
-                        item.SuggestedName,
-                        async () =>
-                        {
-                            var data = await item.LoadDataRepresentationAsync(identifier);
-                            var stream = data.AsStream();
-                            return stream;
-                        },
-                        identifier);
-                }
+            foreach (var res in results)
+                if(res?.ItemProvider != null)
+                    yield return new PHPickerFile(res.ItemProvider);
         }
 
         class PhotoPickerDelegate : UIImagePickerControllerDelegate
         {
-            public Action<NSDictionary> CompletedHandler { get; set; }
+            TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
 
-            public override void FinishedPickingMedia(UIImagePickerController picker, NSDictionary info) =>
-                CompletedHandler?.Invoke(info);
+            internal PhotoPickerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
+                => this.tcs = tcs;
 
-            public override void Canceled(UIImagePickerController picker) =>
-                CompletedHandler?.Invoke(null);
+            public override void FinishedPickingMedia(UIImagePickerController picker, NSDictionary info)
+            {
+                picker.DismissViewController(true, null);
+                var result = ConvertPickerResults(info);
+                tcs.TrySetResult(result == null ? null : new IMediaFile[] { result });
+            }
+
+            public override void Canceled(UIImagePickerController picker)
+                => tcs?.TrySetResult(null);
         }
 
-        class PPD : PHPickerViewControllerDelegate
+        class PHPickerDelegate : PHPickerViewControllerDelegate
         {
-            public Action<PHPickerResult[]> CompletedHandler { get; set; }
+            TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
 
-            public override void DidFinishPicking(PHPickerViewController picker, PHPickerResult[] results) =>
-                CompletedHandler?.Invoke(results);
+            internal PHPickerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
+                => this.tcs = tcs;
+
+            public override void DidFinishPicking(PHPickerViewController picker, PHPickerResult[] results)
+            {
+                picker.DismissViewController(true, null);
+                tcs?.TrySetResult(results == null ? null : ConvertPickerResults(results));
+            }
         }
 
-        static UIViewController GetCurrentUIViewController()
-            => Platform.GetCurrentUIViewController()
-            ?? throw new InvalidOperationException("Could not find current view controller.");
+        class PresentatControllerDelegate : UIAdaptivePresentationControllerDelegate
+        {
+            TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
+
+            internal PresentatControllerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
+                => this.tcs = tcs;
+
+            public override void DidDismiss(UIPresentationController presentationController) =>
+                tcs?.TrySetResult(null);
+        }
     }
 }
