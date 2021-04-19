@@ -8,7 +8,7 @@
     x:DataType="vm:HomeVm"
     Title="Samples">
 
-    <StackLayout Spacing="16" Padding="16">
+    <StackLayout>
         <Button Text="Pick" Command="{Binding NavigateToPickCommand, Mode=OneTime}"/>
         <Button Text="Save" Command="{Binding NavigateToSaveCommand, Mode=OneTime}"/>
     </StackLayout>

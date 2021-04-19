@@ -103,7 +103,7 @@ await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
 
 ## iOS
 
-No platform differences.
+- Multi picking is supported from iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
 
 # Screenshots
 

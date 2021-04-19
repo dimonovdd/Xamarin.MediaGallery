@@ -14,11 +14,6 @@ namespace Xamarin.MediaGallery
             Extension = extension.TrimStart('.');
             ContentType = contentType.ToLower();
             this.openReadAsync = openReadAsync;
-            Type = ContentType.StartsWith("image")
-                ? MediaFileType.Image
-                : ContentType.StartsWith("video")
-                    ? MediaFileType.Video
-                    : (MediaFileType?)null;
         }
 
         public string FileName => $"{FileNameWithoutExtension}.{Extension}";
@@ -29,7 +24,11 @@ namespace Xamarin.MediaGallery
 
         public string ContentType { get; }
 
-        public MediaFileType? Type { get; }
+        public MediaFileType? Type => ContentType.StartsWith("image")
+                ? MediaFileType.Image
+                : ContentType.StartsWith("video")
+                    ? MediaFileType.Video
+                    : (MediaFileType?)null;
 
         public Task<Stream> OpenReadAsync()
             => openReadAsync?.Invoke();

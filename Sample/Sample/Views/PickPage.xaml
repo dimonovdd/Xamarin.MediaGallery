@@ -4,44 +4,41 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:Sample.ViewModels"
-    xmlns:templates="clr-namespace:Sample.Views.Templates"
-    xmlns:models="clr-namespace:Sample.Models"
-    xmlns:toolkit="http://xamarin.com/schemas/2020/toolkit"
+    xmlns:mediagallery="clr-namespace:Xamarin.MediaGallery;assembly=Xamarin.MediaGallery"
     x:Class="Sample.Views.PickPage"
     x:DataType="vm:PickVM"
-    Title="Pick">
-
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <DataTemplate x:Key="ImageTemplate" x:DataType="models:CacheItem">
-                <Image Source="{Binding Path, Mode=OneTime}" HeightRequest="200"/>
-            </DataTemplate>
-
-            <DataTemplate x:Key="VideoTemplate" x:DataType="models:CacheItem">
-                <toolkit:MediaElement Source="{Binding Path, Mode=OneTime}" HeightRequest="200"/>
-            </DataTemplate>
-
-            <templates:MediaTemplateSelector x:Key="ItemTemplateSelector"
-                                            VideoTemplate="{StaticResource VideoTemplate}"
-                                            ImageTemplate="{StaticResource ImageTemplate}" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
+    Title="Pick"
+    x:Name="ThisPage">
 
     <ScrollView>
-        <StackLayout Padding="16" Spacing="16">
-            <StackLayout Spacing="16">
+        <StackLayout>
+            <StackLayout Margin="0">
                 <Label Text="SelectionLimit:"/>
                 <Entry Text="{Binding SelectionLimit}" Keyboard="Numeric"/>
 
-                <Button Text="Pick Any" Command="{Binding PickAnyCommand, Mode=OneTime}"/>
-                <Button Text="Pick Image" Command="{Binding PickImageCommand, Mode=OneTime}"/>
-                <Button Text="Pick Video" Command="{Binding PickVideoCommand, Mode=OneTime}"/>
+                <Button Text="Any" Command="{Binding PickAnyCommand, Mode=OneTime}"/>
+                <Button Text="Image" Command="{Binding PickImageCommand, Mode=OneTime}"/>
+                <Button Text="Video" Command="{Binding PickVideoCommand, Mode=OneTime}"/>
             </StackLayout>
-            <StackLayout Spacing="8"
-                         BindableLayout.ItemsSource="{Binding SelectedItems}"
-                         BindableLayout.ItemTemplateSelector="{StaticResource ItemTemplateSelector}"/>
+
+            <StackLayout Margin="0" Spacing="0"
+                         BindableLayout.ItemsSource="{Binding SelectedItems}">
+
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="mediagallery:IMediaFile">
+                        <ContentView Padding="0,8">
+                            <Label Text="{Binding FileName}"
+                                   TextColor="DarkBlue" FontAttributes="Bold"/>
+
+                            <ContentView.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding BindingContext.OpenInfoCommand, Source={x:Reference ThisPage}}"
+                                    CommandParameter="{Binding .}"/>
+                            </ContentView.GestureRecognizers>
+                        </ContentView>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
         </StackLayout>
     </ScrollView>
-
 </views:BasePage>

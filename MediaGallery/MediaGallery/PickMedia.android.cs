@@ -5,8 +5,13 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Uri = Android.Net.Uri;
-using FileColumns = Android.Provider.MediaStore.Files.FileColumns;
-using Path = System.IO.Path;
+using Android.Provider;
+#if MONOANDROID11_0
+using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
+#else
+using MediaColumns = Android.Provider.MediaStore.MediaColumns;
+#endif
+
 
 namespace Xamarin.MediaGallery
 {
@@ -14,33 +19,35 @@ namespace Xamarin.MediaGallery
     {
         const string imageType = "image/*";
         const string videoType = "video/*";
-        const string allType = "*/*";
         static TaskCompletionSource<Intent> tcs;
 
         static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, params MediaFileType[] types)
         {
-            var isVideo = types.Contains(MediaFileType.Video);
             var isImage = types.Contains(MediaFileType.Image);
             tcs = new TaskCompletionSource<Intent>();
 
             Intent intent;
 
-            if(isImage && !isVideo)
+            // https://github.com/dimonovdd/Xamarin.MediaGallery/pull/5
+            if (isImage && types.Length == 1)
             {
-                intent = new Intent(Intent.ActionPick);
+                intent = new Intent(Intent.ActionPick, MediaStore.Images.Media.ExternalContentUri);
                 intent.SetType(imageType);
+                intent.PutExtra(Intent.ExtraMimeTypes, new string[] { imageType });
             }
             else
             {
                 intent = new Intent(Intent.ActionGetContent);
 
-                intent.SetType(isImage ? allType : videoType);
-                intent.PutExtra(Intent.ExtraMimeTypes, isImage
+                intent.SetType(isImage ? $"{imageType}, {videoType}" : videoType);
+                intent.PutExtra(
+                    Intent.ExtraMimeTypes,
+                    isImage
                     ? new string[] { imageType, videoType }
                     : new string[] { videoType });
             }
 
-            intent.PutExtra(Intent.ExtraLocalOnly, true);
+            intent.PutExtra(Intent.ExtraLocalOnly, false);
             intent.PutExtra(Intent.ExtraAllowMultiple, selectionLimit > 1);
 
             Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
@@ -61,38 +68,37 @@ namespace Xamarin.MediaGallery
 
         static IEnumerable<IMediaFile> GetFilesFromIntent(Intent intent)
         {
-            var clipData = intent?.ClipData;
+            var clipCount = intent?.ClipData?.ItemCount ?? 0;
             var data = intent?.Data;
 
-            if (clipData != null)
-                for (var i = 0; i < clipData.ItemCount; i++)
+            if (data != null && !(clipCount > 1))
+            {
+                var res = GetFileResult(data);
+                if (res != null)
+                    yield return res;
+            }
+            else if (clipCount > 0)
+                for (var i = 0; i < clipCount; i++)
                 {
-                   var item = clipData.GetItemAt(i);
-                   yield return GetFileResult(item.Uri);
+                    var item = intent.ClipData.GetItemAt(i);
+                    var res = GetFileResult(item.Uri);
+                    if (res != null)
+                        yield return res;
                 }
-            else if(data != null)
-                yield return GetFileResult(data);
         }
 
 
         static IMediaFile GetFileResult(Uri uri)
         {
-            var name = QueryContentResolverColumn(uri, FileColumns.DisplayName);
-            var fileName = Path.GetFileNameWithoutExtension(name);
-            var extension = Path.GetExtension(name);
-
-            return MediaFile.Create(
-                fileName,
-                extension,
-                () => Task.FromResult(
-                    Platform.AppActivity.ContentResolver.OpenInputStream(uri)));
+            var name = QueryContentResolverColumn(uri, MediaColumns.DisplayName);
+            return string.IsNullOrWhiteSpace(name)
+                ? null
+                : new MediaFile(name, uri);
         }
 
 
         static string QueryContentResolverColumn(Uri contentUri, string columnName)
         {
-            string data = null;
-
             try
             {
                 using var cursor = Platform.AppActivity.ContentResolver
@@ -102,14 +108,14 @@ namespace Xamarin.MediaGallery
                 {
                     var columnIndex = cursor.GetColumnIndex(columnName);
                     if (columnIndex != -1)
-                        data = cursor.GetString(columnIndex);
+                        return cursor.GetString(columnIndex);
                 }
+                return null;
             }
             catch
             {
+                return null;
             }
-
-            return data;
         }
     }
 }

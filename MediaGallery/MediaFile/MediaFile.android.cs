@@ -1,17 +1,19 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Android.Webkit;
+using Uri = Android.Net.Uri;
 
 namespace Xamarin.MediaGallery
 {
     public partial class MediaFile
     {
-        internal static MediaFile Create(string fileName, string extension, Func<Task<Stream>> openReadAsync)
-            => new MediaFile(
-                fileName,
-                extension,
-                MimeTypeMap.Singleton.GetMimeTypeFromExtension(extension.TrimStart('.')),
-                openReadAsync);
+        internal MediaFile(string fileName, Uri uri)
+        {
+            FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+            Extension = Path.GetExtension(fileName)?.TrimStart('.');
+            ContentType = MimeTypeMap.Singleton.GetMimeTypeFromExtension(Extension);
+            openReadAsync =
+                () => Task.FromResult(Platform.AppActivity.ContentResolver.OpenInputStream(uri));
+        }
     }
 }
