@@ -104,11 +104,11 @@ namespace Xamarin.MediaGallery
                         var doc = new UIDocument(assetUrl);
                         var fullPath = doc.FileUrl?.Path;
 
-                        return MediaFile.Create(
-                            doc.LocalizedName ?? Path.GetFileNameWithoutExtension(fullPath),
-                            () => Task.FromResult<Stream>(File.OpenRead(fullPath)),
-                            null,
-                            assetUrl.PathExtension);
+                        //return MediaFile.Create(
+                        //    doc.LocalizedName ?? Path.GetFileNameWithoutExtension(fullPath),
+                        //    () => Task.FromResult<Stream>(File.OpenRead(fullPath)),
+                        //    null,
+                        //    assetUrl.PathExtension);
                     }
 
                     phAsset = info.ValueForKey(UIImagePickerController.PHAsset) as PHAsset;
@@ -127,11 +127,11 @@ namespace Xamarin.MediaGallery
             {
                 var img = info.ValueForKey(UIImagePickerController.OriginalImage) as UIImage;
 
-                if (img != null)
-                    return MediaFile.Create(
-                        Guid.NewGuid().ToString(),
-                        () => Task.FromResult(img.AsJPEG().AsStream()),
-                        UTType.JPEG);
+                //if (img != null)
+                //    return MediaFile.Create(
+                //        Guid.NewGuid().ToString(),
+                //        () => Task.FromResult(img.AsJPEG().AsStream()),
+                //        UTType.JPEG);
             }
 
             if (phAsset == null || assetUrl == null)
@@ -144,19 +144,21 @@ namespace Xamarin.MediaGallery
             else
                 originalFilename = phAsset.ValueForKey(new NSString("filename")) as NSString;
 
-            return MediaFile.Create(
-                originalFilename,
-                () =>
-                {
-                    var tcsStream = new TaskCompletionSource<Stream>();
+            //return MediaFile.Create(
+            //    originalFilename,
+            //    () =>
+            //    {
+            //        var tcsStream = new TaskCompletionSource<Stream>();
 
-                    PHImageManager.DefaultManager.RequestImageData(phAsset, null, new PHImageDataHandler((data, str, orientation, dict) =>
-                        tcsStream.TrySetResult(data.AsStream())));
+            //        PHImageManager.DefaultManager.RequestImageData(phAsset, null, new PHImageDataHandler((data, str, orientation, dict) =>
+            //            tcsStream.TrySetResult(data.AsStream())));
 
-                    return tcsStream.Task;
-                },
-                null,
-                assetUrl.PathExtension);
+            //        return tcsStream.Task;
+            //    },
+            //    null,
+            //    assetUrl.PathExtension);
+
+            return null;
         }
 
         static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)

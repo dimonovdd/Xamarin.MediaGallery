@@ -12,12 +12,14 @@ namespace Xamarin.MediaGallery
         internal MediaFile(string fileName, Uri uri)
         {
             FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-            Extension = Path.GetExtension(fileName)?.TrimStart('.');
+            Extension = Path.GetExtension(fileName);
             ContentType = MimeTypeMap.Singleton.GetMimeTypeFromExtension(Extension);
             this.uri = uri;
         }
 
         Task<Stream> PlatformOpenReadAsync()
             => Task.FromResult(Platform.AppActivity.ContentResolver.OpenInputStream(uri));
+
+        void PlatformDispose() { }
     }
 }

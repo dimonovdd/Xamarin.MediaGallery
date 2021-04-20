@@ -5,11 +5,17 @@ namespace Xamarin.MediaGallery
 {
     public partial class MediaFile : IMediaFile
     {
+        private string extension;
+
         public string FileName => $"{FileNameWithoutExtension}.{Extension}";
 
         public string FileNameWithoutExtension { get; protected internal set; }
 
-        public string Extension { get; protected internal set; }
+        public string Extension
+        {
+            get => extension;
+            protected internal set => extension = value?.TrimStart('.');
+        }
 
         public string ContentType { get; protected internal set; }
 
@@ -21,5 +27,8 @@ namespace Xamarin.MediaGallery
 
         public Task<Stream> OpenReadAsync()
             => PlatformOpenReadAsync();
+
+        public void Dispose()
+            => PlatformDispose();
     }
 }

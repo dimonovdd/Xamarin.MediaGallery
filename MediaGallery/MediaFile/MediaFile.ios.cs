@@ -9,8 +9,10 @@ namespace Xamarin.MediaGallery
 {
     public partial class MediaFile
     {
-         protected virtual Task<Stream> PlatformOpenReadAsync()
-            => Task.FromResult<Stream>(null);
+        protected virtual Task<Stream> PlatformOpenReadAsync()
+           => Task.FromResult<Stream>(null);
+
+        protected virtual void PlatformDispose() { }
 
         protected string GetExtension(string identifier)
             => UTType.CopyAllTags(identifier, UTType.TagClassFilenameExtension)?.FirstOrDefault();
@@ -21,8 +23,8 @@ namespace Xamarin.MediaGallery
 
     internal class PHPickerFile : MediaFile
     {
-        readonly NSItemProvider provider;
         readonly string identifier;
+        NSItemProvider provider;
 
         internal PHPickerFile(NSItemProvider provider)
         {
@@ -30,14 +32,21 @@ namespace Xamarin.MediaGallery
             FileNameWithoutExtension = provider?.SuggestedName;
             identifier = provider?.RegisteredTypeIdentifiers?.FirstOrDefault();
 
-            if (!string.IsNullOrWhiteSpace(identifier))
-            {
-                Extension = GetExtension(identifier);
-                ContentType = GetMIMEType(identifier);
-            }
+            if (string.IsNullOrWhiteSpace(identifier))
+                return;
+
+            Extension = GetExtension(identifier);
+            ContentType = GetMIMEType(identifier);
         }
 
         protected override async Task<Stream> PlatformOpenReadAsync()
             => (await provider?.LoadDataRepresentationAsync(identifier))?.AsStream();
+
+        protected override void PlatformDispose()
+        {
+            provider?.Dispose();
+            provider = null;
+            base.PlatformDispose();
+        }
     }
 }

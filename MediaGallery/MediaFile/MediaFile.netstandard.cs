@@ -7,5 +7,8 @@ namespace Xamarin.MediaGallery
     {
         Task<Stream> PlatformOpenReadAsync()
             => throw MediaGallery.NotSupportedOrImplementedException;
+
+        void PlatformDispose()
+            => throw MediaGallery.NotSupportedOrImplementedException;
     }
 }
