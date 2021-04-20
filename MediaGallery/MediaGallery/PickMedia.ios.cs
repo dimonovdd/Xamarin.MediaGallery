@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Foundation;
 using MobileCoreServices;
-using Photos;
 using PhotosUI;
 using UIKit;
 using Xamarin.Essentials;
@@ -86,77 +85,15 @@ namespace Xamarin.MediaGallery
             if (info == null)
                 return null;
 
-            PHAsset phAsset = null;
-            NSUrl assetUrl = null;
+            using var assetUrl = (info.ValueForKey(UIImagePickerController.ImageUrl)
+                ?? info.ValueForKey(UIImagePickerController.MediaURL)) as NSUrl;
 
-            if (HasOSVersion(11))
-            {
-                assetUrl = info[UIImagePickerController.ImageUrl] as NSUrl;
+            var path = assetUrl?.Path;
 
-                // Try the MediaURL sometimes used for videos
-                if (assetUrl == null)
-                    assetUrl = info[UIImagePickerController.MediaURL] as NSUrl;
-
-                if (assetUrl != null)
-                {
-                    if (!assetUrl.Scheme.Equals("assets-library", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var doc = new UIDocument(assetUrl);
-                        var fullPath = doc.FileUrl?.Path;
-
-                        return MediaFile.Create(
-                            doc.LocalizedName ?? Path.GetFileNameWithoutExtension(fullPath),
-                            () => Task.FromResult<Stream>(File.OpenRead(fullPath)),
-                            null,
-                            assetUrl.PathExtension);
-                    }
-
-                    phAsset = info.ValueForKey(UIImagePickerController.PHAsset) as PHAsset;
-                }
-            }
-
-            if (phAsset == null)
-            {
-                assetUrl = info[UIImagePickerController.ReferenceUrl] as NSUrl;
-
-                if (assetUrl != null)
-                    phAsset = PHAsset.FetchAssets(new NSUrl[] { assetUrl }, null)?.LastObject as PHAsset;
-            }
-
-            if (phAsset == null || assetUrl == null)
-            {
-                var img = info.ValueForKey(UIImagePickerController.OriginalImage) as UIImage;
-
-                if (img != null)
-                    return MediaFile.Create(
-                        Guid.NewGuid().ToString(),
-                        () => Task.FromResult(img.AsJPEG().AsStream()),
-                        UTType.JPEG);
-            }
-
-            if (phAsset == null || assetUrl == null)
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
                 return null;
 
-            string originalFilename;
-
-            if (HasOSVersion(9))
-                originalFilename = PHAssetResource.GetAssetResources(phAsset).FirstOrDefault()?.OriginalFilename;
-            else
-                originalFilename = phAsset.ValueForKey(new NSString("filename")) as NSString;
-
-            return MediaFile.Create(
-                originalFilename,
-                () =>
-                {
-                    var tcsStream = new TaskCompletionSource<Stream>();
-
-                    PHImageManager.DefaultManager.RequestImageData(phAsset, null, new PHImageDataHandler((data, str, orientation, dict) =>
-                        tcsStream.TrySetResult(data.AsStream())));
-
-                    return tcsStream.Task;
-                },
-                null,
-                assetUrl.PathExtension);
+            return new UIDocumentFile(assetUrl);
         }
 
         static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
@@ -181,7 +118,10 @@ namespace Xamarin.MediaGallery
             }
 
             public override void Canceled(UIImagePickerController picker)
-                => tcs?.TrySetResult(null);
+            {
+                picker.DismissViewController(true, null);
+                tcs?.TrySetResult(null);
+            }
         }
 
         class PHPickerDelegate : PHPickerViewControllerDelegate

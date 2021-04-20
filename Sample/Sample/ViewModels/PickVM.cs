@@ -38,6 +38,10 @@ namespace Sample.ViewModels
         {
             try
             {
+                if (SelectedItems?.Count() > 0)
+                    foreach (var item in SelectedItems)
+                        item.Dispose();
+
                 var result = await MediaGallery.PickAsync(SelectionLimit, types);
                 SelectedItems = result?.Files?.ToArray();
             }

@@ -75,7 +75,7 @@ if (results?.Files == null)
 
 foreach(var res in results.Files)
 {
-    var fileName = file.FileName;
+    var fileName = file.FileNameWithoutExtension; //Can return an null or empty value
     var extension = file.Extension;
     var contentType = file.ContentType;
     using var stream = await file.OpenReadAsync();
@@ -104,6 +104,13 @@ await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
 ## iOS
 
 - Multi picking is supported from iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
+
+# Minimum Available Operating Systems
+
+| OS | Version |
+| --- | --- |
+| Android | 5.0|
+| iOS | 11.0 |
 
 # Screenshots
 

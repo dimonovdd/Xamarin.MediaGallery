@@ -3,13 +3,18 @@ using System.Threading.Tasks;
 
 namespace Xamarin.MediaGallery
 {
-    public partial class MediaFile : IMediaFile
+    internal partial class MediaFile : IMediaFile
     {
-        public string FileName => $"{FileNameWithoutExtension}.{Extension}";
+        private string extension;
 
         public string FileNameWithoutExtension { get; protected internal set; }
 
-        public string Extension { get; protected internal set; }
+        public string Extension
+        {
+            get => extension;
+            protected internal set
+                => extension = value?.TrimStart('.')?.ToLower();
+        }
 
         public string ContentType { get; protected internal set; }
 
@@ -21,5 +26,8 @@ namespace Xamarin.MediaGallery
 
         public Task<Stream> OpenReadAsync()
             => PlatformOpenReadAsync();
+
+        public void Dispose()
+            => PlatformDispose();
     }
 }

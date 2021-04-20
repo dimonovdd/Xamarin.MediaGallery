@@ -27,13 +27,19 @@
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="mediagallery:IMediaFile">
                         <ContentView Padding="0,8">
-                            <Label Text="{Binding FileName}"
-                                   TextColor="DarkBlue" FontAttributes="Bold"/>
+                            <Label TextColor="DarkBlue" FontAttributes="Bold">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0}.{1}">
+                                        <Binding Path="FileNameWithoutExtension" TargetNullValue="FileEmptyName" Mode="OneTime"/>
+                                        <Binding Path="Extension" Mode="OneTime"/>
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
 
                             <ContentView.GestureRecognizers>
                                 <TapGestureRecognizer
-                                    Command="{Binding BindingContext.OpenInfoCommand, Source={x:Reference ThisPage}}"
-                                    CommandParameter="{Binding .}"/>
+                                    Command="{Binding BindingContext.OpenInfoCommand, Source={x:Reference ThisPage}, Mode=OneTime}"
+                                    CommandParameter="{Binding ., Mode=OneTime}"/>
                             </ContentView.GestureRecognizers>
                         </ContentView>
                     </DataTemplate>
