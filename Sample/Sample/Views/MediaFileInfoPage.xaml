@@ -6,18 +6,18 @@
     xmlns:vm="clr-namespace:Sample.ViewModels"
     x:Class="Sample.Views.MediaFileInfoPage"
     x:DataType="vm:MediaFileInfoVM"
-    Title="{Binding File.FileName}">
+    Title="{Binding File.FileNameWithoutExtension}">
 
     <ScrollView x:Name="Scroll"> 
         <StackLayout>
             <views:MediaFileView File="{Binding File}" FilePath="{Binding Path}"
                                  HeightRequest="400"/>
 
-            <Label Margin="0,8,0,0" FontAttributes="Bold" Text="Name:" />
-            <Label Text="{Binding File.FileNameWithoutExtension}" />
-
             <Label Margin="0,8,0,0" FontAttributes="Bold" Text="Extension:" />
             <Label Text="{Binding File.Extension}" />
+
+            <Label Margin="0,8,0,0" FontAttributes="Bold" Text="ContentType:" />
+            <Label Text="{Binding File.ContentType}" />
 
             <Label Margin="0,8,0,0" FontAttributes="Bold" Text="Metadata:" />
             <Label x:Name="MetaLabel"

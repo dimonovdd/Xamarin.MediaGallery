@@ -34,7 +34,13 @@ namespace Sample.ViewModels
             try
             {
                 using var stream = await File.OpenReadAsync();
-                Path = await FilesHelper.SaveToCacheAsync(stream, File.FileName);
+
+                var name = (string.IsNullOrWhiteSpace(File.FileNameWithoutExtension)
+                    ? Guid.NewGuid().ToString()
+                    : File.FileNameWithoutExtension)
+                    + $".{File.Extension}";
+
+                Path = await FilesHelper.SaveToCacheAsync(stream, name);
                 stream.Position = 0;
                 await ReadMeta(stream);
             }
