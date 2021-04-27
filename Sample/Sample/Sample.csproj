@@ -26,14 +26,6 @@
   <ItemGroup>
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="**\*.xaml.cs" DependentUpon="PickPage %28copy%29.xaml" />
     <EmbeddedResource Include="..\..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\PickPage %28copy%29.xaml.cs">
-      <DependentUpon>PickPage %28copy%29.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\MediaFileInfoPage.xaml.cs">
-      <DependentUpon>MediaFileInfoPage.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MediaGallery\MediaGallery.csproj" />
