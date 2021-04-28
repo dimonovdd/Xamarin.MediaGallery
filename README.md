@@ -77,7 +77,7 @@ if (results?.Files == null)
 
 foreach(var res in results.Files)
 {
-    var fileName = file.FileNameWithoutExtension; //Can return an null or empty value
+    var fileName = file.NameWithoutExtension; //Can return an null or empty value
     var extension = file.Extension;
     var contentType = file.ContentType;
     using var stream = await file.OpenReadAsync();
