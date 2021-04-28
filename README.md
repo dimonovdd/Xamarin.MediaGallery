@@ -1,6 +1,8 @@
-# Xamarin.MediaGallery [![NuGet Badge](https://img.shields.io/nuget/v/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/)
+# Xamarin.MediaGallery
 
-![header](/header.svg)
+![header](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/header.svg)
+
+[![NuGet Badge](https://img.shields.io/nuget/v/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery?style=plastic)](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/main/LICENSE)
 
 This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices.
 
@@ -9,11 +11,11 @@ This plugin is designed for picking and saving photos and video files from the n
 
 # Available Platforms
 
-| Platform | Version |
-| --- | --- |
-| Android | MonoAndroid 10.0+|
-| iOS | Xamarin.iOS10 |
-| .NET Standard | 2.1 |
+| Platform | Version | Minimum OS Version |
+| --- | --- | --- |
+| Android | MonoAndroid 10.0+| 5.0 |
+| iOS | Xamarin.iOS10 | 11.0 |
+| .NET Standard | 2.1 | - |
 
 # Getting started
 
@@ -57,11 +59,11 @@ In your `Info.plist` add the following keys:
  ```xml
 <!-- for saving photo/video on iOS 14+ -->
 <key>NSPhotoLibraryAddUsageDescription</key>
-<string>This app needs access to the photo gallery for picking photos and videos</string>
+<string>This app needs access to the photo gallery for saving photos and videos</string>
 
 <!-- for saving photo/video on older versions -->
 <key>NSPhotoLibraryUsageDescription</key>
-<string>This app needs access to the photo gallery for picking photos and videos</string>
+<string>This app needs access to the photo gallery for saving photos and videos</string>
  ```
 
 # PickAsync
@@ -95,25 +97,19 @@ if (status != PermissionStatus.Granted)
 await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
 //...
  ```
+
 # Platform Differences
 ## Android
 
 - When saving media files, the date and time are appended to the file name
-- When using `PickAsync` method `selectionLimit` parameter just sets multiple selection is allowed
+- When using `PickAsync` method `selectionLimit` parameter just sets multiple pick allowed
 
 ## iOS
 
 - Multi picking is supported from iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
 
-# Minimum Available Operating Systems
-
-| OS | Version |
-| --- | --- |
-| Android | 5.0|
-| iOS | 11.0 |
-
 # Screenshots
 
 |______________|   iOS   | Android |______________|
 |:------------:|:---:|:-------:|:------------:|
-| |![iOS](/Screenshots/ios.jpg)|![Android](/Screenshots/droid.jpg)| |
+| |![iOS](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/ios.jpg)|![Android](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/droid.jpg)| |

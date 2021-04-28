@@ -7,7 +7,7 @@ namespace Xamarin.MediaGallery
     {
         private string extension;
 
-        public string FileNameWithoutExtension { get; protected internal set; }
+        public string NameWithoutExtension { get; protected internal set; }
 
         public string Extension
         {

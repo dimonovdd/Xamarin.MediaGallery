@@ -2,7 +2,8 @@
 
 namespace Xamarin.MediaGallery
 {
-    public partial class SaveMediaPermission : BasePlatformPermission
+    /// <summary>Permission "NSPhotoLibraryAddUsageDescription" for iOS and "WRITE_EXTERNAL_STORAGE" for Android</summary>
+    public sealed partial class SaveMediaPermission : BasePlatformPermission
     {
         
     }

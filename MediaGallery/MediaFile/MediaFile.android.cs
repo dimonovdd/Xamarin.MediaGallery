@@ -11,7 +11,7 @@ namespace Xamarin.MediaGallery
 
         internal MediaFile(string fileName, Uri uri)
         {
-            FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+            NameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             Extension = Path.GetExtension(fileName);
             ContentType = MimeTypeMap.Singleton.GetMimeTypeFromExtension(Extension);
             this.uri = uri;
