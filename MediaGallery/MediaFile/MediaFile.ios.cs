@@ -29,7 +29,7 @@ namespace Xamarin.MediaGallery
         internal PHPickerFile(NSItemProvider provider)
         {
             this.provider = provider;
-            FileNameWithoutExtension = provider?.SuggestedName;
+            NameWithoutExtension = provider?.SuggestedName;
             identifier = provider?.RegisteredTypeIdentifiers?.FirstOrDefault();
 
             if (string.IsNullOrWhiteSpace(identifier))
@@ -59,7 +59,7 @@ namespace Xamarin.MediaGallery
             document = new UIDocument(assetUrl);
             Extension = document.FileUrl.PathExtension;
             ContentType = GetMIMEType(document.FileType);
-            FileNameWithoutExtension = document.LocalizedName;
+            NameWithoutExtension = document.LocalizedName;
         }
 
         protected override Task<Stream> PlatformOpenReadAsync()
