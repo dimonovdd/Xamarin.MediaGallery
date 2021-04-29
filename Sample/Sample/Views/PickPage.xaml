@@ -30,7 +30,7 @@
                             <Label TextColor="DarkBlue" FontAttributes="Bold">
                                 <Label.Text>
                                     <MultiBinding StringFormat="{}{0}.{1}">
-                                        <Binding Path="FileNameWithoutExtension" TargetNullValue="FileEmptyName" Mode="OneTime"/>
+                                        <Binding Path="NameWithoutExtension" TargetNullValue="FileEmptyName" Mode="OneTime"/>
                                         <Binding Path="Extension" Mode="OneTime"/>
                                     </MultiBinding>
                                 </Label.Text>

@@ -6,7 +6,7 @@
     xmlns:vm="clr-namespace:Sample.ViewModels"
     x:Class="Sample.Views.MediaFileInfoPage"
     x:DataType="vm:MediaFileInfoVM"
-    Title="{Binding File.FileNameWithoutExtension}">
+    Title="{Binding File.NameWithoutExtension}">
 
     <ScrollView x:Name="Scroll"> 
         <StackLayout>
