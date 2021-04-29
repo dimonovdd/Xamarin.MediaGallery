@@ -15,7 +15,7 @@ This plugin is designed for picking and saving photos and video files from the n
 | --- | --- | --- |
 | Android | MonoAndroid 10.0+| 5.0 |
 | iOS | Xamarin.iOS10 | 11.0 |
-| .NET Standard | 2.1 | - |
+| .NET Standard | 2.0 | - |
 
 # Getting started
 
