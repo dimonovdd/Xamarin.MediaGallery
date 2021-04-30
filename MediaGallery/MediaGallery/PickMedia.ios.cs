@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Foundation;
 using MobileCoreServices;
+using Photos;
 using PhotosUI;
 using UIKit;
 using Xamarin.Essentials;
@@ -93,7 +94,7 @@ namespace Xamarin.MediaGallery
             if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
                 return null;
 
-            return new UIDocumentFile(assetUrl);
+            return new UIDocumentFile(assetUrl, GetOriginalName(info));
         }
 
         static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
@@ -103,9 +104,22 @@ namespace Xamarin.MediaGallery
                     yield return new PHPickerFile(res.ItemProvider);
         }
 
+        static string GetOriginalName(NSDictionary info)
+        {
+            if (PHPhotoLibrary.AuthorizationStatus != PHAuthorizationStatus.Authorized
+                || !info.ContainsKey(UIImagePickerController.PHAsset))
+                return null;
+
+            using var asset = info.ValueForKey(UIImagePickerController.PHAsset) as PHAsset;
+
+            return asset != null
+                ? PHAssetResource.GetAssetResources(asset)?.FirstOrDefault()?.OriginalFilename
+                : null;
+        }
+
         class PhotoPickerDelegate : UIImagePickerControllerDelegate
         {
-            TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
+            readonly TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
 
             internal PhotoPickerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
                 => this.tcs = tcs;
@@ -126,7 +140,7 @@ namespace Xamarin.MediaGallery
 
         class PHPickerDelegate : PHPickerViewControllerDelegate
         {
-            TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
+            readonly TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
 
             internal PHPickerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
                 => this.tcs = tcs;
@@ -140,7 +154,7 @@ namespace Xamarin.MediaGallery
 
         class PresentatControllerDelegate : UIAdaptivePresentationControllerDelegate
         {
-            TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
+            readonly TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
 
             internal PresentatControllerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
                 => this.tcs = tcs;

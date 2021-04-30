@@ -68,6 +68,8 @@ In your `Info.plist` add the following keys:
 
 # PickAsync
 
+This method does not require requesting permissions from users
+
 ```csharp
 //...
 var results = await MediaGallery.PickAsync(1, MediaFileType.Image, MediaFileType.Video);
@@ -107,6 +109,7 @@ await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
 ## iOS
 
 - Multi picking is supported from iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
+- `NameWithoutExtension` property in iOS versions before 14 returns an null value if permission to access photos was not granted
 
 # Screenshots
 

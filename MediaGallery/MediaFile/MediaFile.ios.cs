@@ -54,12 +54,14 @@ namespace Xamarin.MediaGallery
     {
         UIDocument document;
 
-        internal UIDocumentFile(NSUrl assetUrl)
+        internal UIDocumentFile(NSUrl assetUrl, string fileName)
         {
             document = new UIDocument(assetUrl);
             Extension = document.FileUrl.PathExtension;
             ContentType = GetMIMEType(document.FileType);
-            NameWithoutExtension = document.LocalizedName;
+            NameWithoutExtension = !string.IsNullOrWhiteSpace(fileName)
+                ? Path.GetFileNameWithoutExtension(fileName)
+                : null;
         }
 
         protected override Task<Stream> PlatformOpenReadAsync()
