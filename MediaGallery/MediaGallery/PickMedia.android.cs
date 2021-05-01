@@ -87,7 +87,6 @@ namespace Xamarin.MediaGallery
                 }
         }
 
-
         static IMediaFile GetFileResult(Uri uri)
         {
             var name = QueryContentResolverColumn(uri, MediaColumns.DisplayName);
@@ -95,7 +94,6 @@ namespace Xamarin.MediaGallery
                 ? null
                 : new MediaFile(name, uri);
         }
-
 
         static string QueryContentResolverColumn(Uri contentUri, string columnName)
         {

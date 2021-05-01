@@ -13,6 +13,7 @@ namespace Xamarin.MediaGallery
         /// <returns>Media files selected by a user.</returns>
         public static async Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)
         {
+            ExeptionHelper.CheckSupport();
             if(!(types?.Length > 0))
                 types = new MediaFileType[] { MediaFileType.Image, MediaFileType.Video };
 
@@ -29,6 +30,7 @@ namespace Xamarin.MediaGallery
         /// <returns>A task representing the asynchronous save operation.</returns>
         public static Task SaveAsync(MediaFileType type, Stream fileStream, string fileName)
         {
+            ExeptionHelper.CheckSupport();
             if (fileStream == null)
                 throw new ArgumentNullException(nameof(fileStream));
             CheckFileName(fileName);
@@ -43,6 +45,7 @@ namespace Xamarin.MediaGallery
         /// <returns>A task representing the asynchronous save operation.</returns>
         public static Task SaveAsync(MediaFileType type, byte[] data, string fileName)
         {
+            ExeptionHelper.CheckSupport();
             if (!(data?.Length > 0))
                 throw new ArgumentNullException(nameof(data));
             CheckFileName(fileName);
@@ -56,6 +59,7 @@ namespace Xamarin.MediaGallery
         /// <returns>A task representing the asynchronous save operation.</returns>
         public static Task SaveAsync(MediaFileType type, string filePath)
         {
+            ExeptionHelper.CheckSupport();
             if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
                 throw new ArgumentException(nameof(filePath));
 

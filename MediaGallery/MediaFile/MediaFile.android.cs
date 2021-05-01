@@ -5,7 +5,7 @@ using Uri = Android.Net.Uri;
 
 namespace Xamarin.MediaGallery
 {
-    internal partial class MediaFile
+    partial class MediaFile
     {
         readonly Uri uri;
 

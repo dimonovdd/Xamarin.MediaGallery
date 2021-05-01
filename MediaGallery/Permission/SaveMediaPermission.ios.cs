@@ -10,7 +10,7 @@ namespace Xamarin.MediaGallery
     {
         /// <summary>List of required keys in Info.plis.</summary>
         protected override Func<IEnumerable<string>> RequiredInfoPlistKeys =>
-                 () => MediaGallery.HasOSVersion(14)
+                 () => Platform.HasOSVersion(14)
                  ? new string[] { "NSPhotoLibraryAddUsageDescription" }
                  : new string[] { "NSPhotoLibraryUsageDescription" };
 
@@ -19,7 +19,7 @@ namespace Xamarin.MediaGallery
         public override Task<PermissionStatus> CheckStatusAsync()
         {
             EnsureDeclared();
-            var auth = MediaGallery.HasOSVersion(14)
+            var auth = Platform.HasOSVersion(14)
                 ? PHPhotoLibrary.GetAuthorizationStatus(PHAccessLevel.AddOnly)
                 : PHPhotoLibrary.AuthorizationStatus;
 
@@ -34,10 +34,9 @@ namespace Xamarin.MediaGallery
             if (status == PermissionStatus.Granted)
                 return status;
 
-            var auth = MediaGallery.HasOSVersion(14)
+            var auth = Platform.HasOSVersion(14)
                 ? await PHPhotoLibrary.RequestAuthorizationAsync(PHAccessLevel.AddOnly)
                 : await PHPhotoLibrary.RequestAuthorizationAsync();
-
 
             return Convert(auth);
         }

@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 
 namespace Xamarin.MediaGallery
 {
-    internal partial class MediaFile : IMediaFile
+    partial class MediaFile : IMediaFile
     {
         Task<Stream> PlatformOpenReadAsync()
-            => throw MediaGallery.NotSupportedOrImplementedException;
+            => throw ExeptionHelper.NotSupportedOrImplementedException;
 
         void PlatformDispose()
-            => throw MediaGallery.NotSupportedOrImplementedException;
+            => throw ExeptionHelper.NotSupportedOrImplementedException;
     }
 }
