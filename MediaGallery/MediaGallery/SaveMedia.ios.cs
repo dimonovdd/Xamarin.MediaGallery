@@ -5,7 +5,7 @@ using Foundation;
 using Photos;
 using Xamarin.Essentials;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     public static partial class MediaGallery
     {

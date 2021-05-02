@@ -3,8 +3,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using MetadataExtractor;
+using NativeMedia;
 using Sample.Helpers;
-using Xamarin.MediaGallery;
 
 namespace Sample.ViewModels
 {

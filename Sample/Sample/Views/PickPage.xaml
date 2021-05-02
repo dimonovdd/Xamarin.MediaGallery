@@ -4,7 +4,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:Sample.ViewModels"
-    xmlns:mediagallery="clr-namespace:Xamarin.MediaGallery;assembly=Xamarin.MediaGallery"
+    xmlns:media="clr-namespace:NativeMedia;assembly=NativeMedia"
     x:Class="Sample.Views.PickPage"
     x:DataType="vm:PickVM"
     Title="Pick"
@@ -25,7 +25,7 @@
                          BindableLayout.ItemsSource="{Binding SelectedItems}">
 
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="mediagallery:IMediaFile">
+                    <DataTemplate x:DataType="media:IMediaFile">
                         <ContentView Padding="0,8">
                             <Label TextColor="DarkBlue" FontAttributes="Bold">
                                 <Label.Text>

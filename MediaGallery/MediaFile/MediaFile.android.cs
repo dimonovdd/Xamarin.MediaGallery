@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Android.Webkit;
 using Uri = Android.Net.Uri;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     partial class MediaFile
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using NativeMedia;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-using Xamarin.MediaGallery;
 
 namespace Sample.ViewModels
 {

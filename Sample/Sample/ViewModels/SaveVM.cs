@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Input;
+using NativeMedia;
 using Sample.Helpers;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Xamarin.MediaGallery;
 
 namespace Sample.ViewModels
 {

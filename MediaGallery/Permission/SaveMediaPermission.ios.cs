@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Photos;
 using Xamarin.Essentials;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     public partial class SaveMediaPermission
     {

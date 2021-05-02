@@ -2,20 +2,20 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     public static partial class MediaGallery
     {
         static Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, params MediaFileType[] types)
-            => throw ExeptionHelper.NotSupportedOrImplementedException;
+            => Task.FromResult<IEnumerable<IMediaFile>>(null);
 
         static Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
-             => throw ExeptionHelper.NotSupportedOrImplementedException;
+             => Task.CompletedTask;
 
         static Task PlatformSaveAsync(MediaFileType type, string filePath)
-            => throw ExeptionHelper.NotSupportedOrImplementedException;
+            => Task.CompletedTask;
 
         static Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName)
-            => throw ExeptionHelper.NotSupportedOrImplementedException;
+            => Task.CompletedTask;
     }
 }

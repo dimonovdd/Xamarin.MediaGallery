@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     partial class MediaFile : IMediaFile
     {

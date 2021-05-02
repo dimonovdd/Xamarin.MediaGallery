@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     /// <summary>Describes and allows to open a media file</summary>
     public interface IMediaFile : IDisposable
