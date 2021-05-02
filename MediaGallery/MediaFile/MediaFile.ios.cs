@@ -7,7 +7,7 @@ using UIKit;
 
 namespace Xamarin.MediaGallery
 {
-    internal partial class MediaFile
+    partial class MediaFile
     {
         protected virtual Task<Stream> PlatformOpenReadAsync()
            => Task.FromResult<Stream>(null);
@@ -21,7 +21,7 @@ namespace Xamarin.MediaGallery
             => UTType.CopyAllTags(identifier, UTType.TagClassMIMEType)?.FirstOrDefault();
     }
 
-    internal class PHPickerFile : MediaFile
+    class PHPickerFile : MediaFile
     {
         readonly string identifier;
         NSItemProvider provider;
@@ -50,7 +50,7 @@ namespace Xamarin.MediaGallery
         }
     }
 
-    internal class UIDocumentFile : MediaFile
+    class UIDocumentFile : MediaFile
     {
         UIDocument document;
 

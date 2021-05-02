@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using Android.Content;
-using Android.OS;
 using Android.Provider;
 using Android.Webkit;
 using Xamarin.Essentials;
@@ -62,7 +61,7 @@ namespace Xamarin.MediaGallery
                 ? Environment.DirectoryPictures
                 : Environment.DirectoryMovies;
 
-            if ((int)Build.VERSION.SdkInt >= 29)
+            if (Platform.HasSdkVersion(29))
             {
                 values.Put(MediaColumns.RelativePath, Path.Combine(relativePath, albumName));
                 values.Put(MediaColumns.IsPending, true);

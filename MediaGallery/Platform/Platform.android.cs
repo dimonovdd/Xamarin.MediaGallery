@@ -30,7 +30,9 @@ namespace Xamarin.MediaGallery
 
         internal static Activity AppActivity
             => currentActivity
-            ?? throw new NullReferenceException("The current Activity can not be detected. " +
-                "Ensure that you have called Init in your Activity or Application class.");
+            ?? throw ExeptionHelper.ActivityNotDetected;
+
+        internal static bool HasSdkVersion(int version)
+            => (int)Build.VERSION.SdkInt >= version;
     }
 }

@@ -25,7 +25,7 @@ namespace Xamarin.MediaGallery
 
             var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>();
 
-            if (HasOSVersion(14))
+            if (Platform.HasOSVersion(14))
             {
                 var config = new PHPickerConfiguration();
                 config.SelectionLimit = selectionLimit;
@@ -116,6 +116,10 @@ namespace Xamarin.MediaGallery
                 ? PHAssetResource.GetAssetResources(asset)?.FirstOrDefault()?.OriginalFilename
                 : null;
         }
+
+        static UIViewController GetCurrentUIViewController()
+          => Xamarin.Essentials.Platform.GetCurrentUIViewController()
+          ?? throw ExeptionHelper.ControllerNotFound;
 
         class PhotoPickerDelegate : UIImagePickerControllerDelegate
         {

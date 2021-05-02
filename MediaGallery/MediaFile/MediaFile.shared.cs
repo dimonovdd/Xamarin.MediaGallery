@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Xamarin.MediaGallery
 {
-    internal partial class MediaFile : IMediaFile
+    partial class MediaFile : IMediaFile
     {
         private string extension;
 
