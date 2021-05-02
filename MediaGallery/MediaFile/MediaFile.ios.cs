@@ -5,7 +5,7 @@ using Foundation;
 using MobileCoreServices;
 using UIKit;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     partial class MediaFile
     {

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;Xamarin.iOS10;MonoAndroid10.0;MonoAndroid11.0;</TargetFrameworks>
-    <AssemblyName>Xamarin.MediaGallery</AssemblyName>
-    <RootNamespace>Xamarin.MediaGallery</RootNamespace>
+    <AssemblyName>NativeMedia</AssemblyName>
+    <RootNamespace>NativeMedia</RootNamespace>
     <PackageId>Xamarin.MediaGallery</PackageId>
     <PackageIcon>icon.png</PackageIcon>
     <Summary>This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices</Summary>
@@ -13,7 +13,7 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
     <Version>1.0.0.0</Version>
-    <PackageVersion>1.0.0.0-alpha003</PackageVersion>
+    <PackageVersion>1.0.0.0-alpha005</PackageVersion>
     <Authors>dimonovdd</Authors>
     <Owners>dimonovdd</Owners>
     <PackageProjectUrl>https://github.com/dimonovdd/Xamarin.MediaGallery</PackageProjectUrl>

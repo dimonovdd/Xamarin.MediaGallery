@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     /// <summary>Describes the result of the <see cref="MediaGallery.PickAsync"/> method</summary>
     public sealed class MediaPickResult

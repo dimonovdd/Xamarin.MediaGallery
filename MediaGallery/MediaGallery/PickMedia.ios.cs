@@ -10,7 +10,7 @@ using PhotosUI;
 using UIKit;
 using Xamarin.Essentials;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     public static partial class MediaGallery
     {

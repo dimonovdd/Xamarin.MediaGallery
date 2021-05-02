@@ -1,5 +1,5 @@
 ﻿
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     /// <summary>Enumeration media files</summary>
     public enum MediaFileType

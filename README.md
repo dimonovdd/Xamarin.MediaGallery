@@ -28,7 +28,7 @@ protected override void OnCreate(Bundle savedInstanceState)
 {
     //...
     base.OnCreate(savedInstanceState);
-    Xamarin.MediaGallery.Platform.Init(this, savedInstanceState);
+    NativeMedia.Platform.Init(this, savedInstanceState);
     //...
 }
  ```
@@ -38,8 +38,8 @@ protected override void OnCreate(Bundle savedInstanceState)
  ```csharp
 protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
 {
-    if (Xamarin.MediaGallery.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
-    Xamarin.MediaGallery.Platform.OnActivityResult(requestCode, resultCode, intent);
+    if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
+    NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
     
     base.OnActivityResult(requestCode, resultCode, intent);
 }
@@ -77,13 +77,14 @@ var results = await MediaGallery.PickAsync(1, MediaFileType.Image, MediaFileType
 if (results?.Files == null)
     return;
 
-foreach(var res in results.Files)
+foreach(var file in results.Files)
 {
     var fileName = file.NameWithoutExtension; //Can return an null or empty value
     var extension = file.Extension;
     var contentType = file.ContentType;
     using var stream = await file.OpenReadAsync();
 //...
+    file.Dispose();
 }
  ```
 

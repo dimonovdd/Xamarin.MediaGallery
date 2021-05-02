@@ -3,7 +3,7 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     /// <summary>Platform specific helpers.</summary>
     public static partial class Platform

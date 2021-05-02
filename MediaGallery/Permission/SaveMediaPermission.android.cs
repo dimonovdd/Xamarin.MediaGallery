@@ -1,6 +1,6 @@
 ﻿using Android;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     public partial class SaveMediaPermission
     {

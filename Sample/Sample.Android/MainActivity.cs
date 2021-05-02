@@ -15,7 +15,7 @@ namespace Sample.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-            Xamarin.MediaGallery.Platform.Init(this, savedInstanceState);
+            NativeMedia.Platform.Init(this, savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
@@ -30,8 +30,8 @@ namespace Sample.Droid
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
         {
-            if (Xamarin.MediaGallery.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
-                Xamarin.MediaGallery.Platform.OnActivityResult(requestCode, resultCode, intent);
+            if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
+                NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
 
             base.OnActivityResult(requestCode, resultCode, intent);
         }

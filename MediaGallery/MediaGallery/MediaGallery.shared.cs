@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     /// <summary>Performs operations with media files.</summary>
     public static partial class MediaGallery

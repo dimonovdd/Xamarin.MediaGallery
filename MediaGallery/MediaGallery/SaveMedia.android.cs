@@ -16,7 +16,7 @@ using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
 using MediaColumns = Android.Provider.MediaStore.MediaColumns;
 #endif
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     public static partial class MediaGallery
     {
