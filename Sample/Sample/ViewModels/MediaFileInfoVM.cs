@@ -27,28 +27,34 @@ namespace Sample.ViewModels
 
         public bool IsVideo { get; }
 
-        public async override void OnAppearing()
+        public bool IsBusy { get; private set; }
+
+        public override void OnAppearing()
         {
             base.OnAppearing();
 
-            try
+            Task.Run(async () =>
             {
-                using var stream = await File.OpenReadAsync();
+                IsBusy = true;
+                try
+                {
+                    using var stream = await File.OpenReadAsync();
 
-                var name = (string.IsNullOrWhiteSpace(File.NameWithoutExtension)
-                    ? Guid.NewGuid().ToString()
-                    : File.NameWithoutExtension)
-                    + $".{File.Extension}";
+                    var name = (string.IsNullOrWhiteSpace(File.NameWithoutExtension)
+                        ? Guid.NewGuid().ToString()
+                        : File.NameWithoutExtension)
+                        + $".{File.Extension}";
 
-                Path = await FilesHelper.SaveToCacheAsync(stream, name);
-                stream.Position = 0;
-                await ReadMeta(stream);
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlertAsync(ex.Message);
-            }
-
+                    Path = await FilesHelper.SaveToCacheAsync(stream, name);
+                    stream.Position = 0;
+                    await ReadMeta(stream);
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlertAsync(ex.Message);
+                }
+                IsBusy = false;
+            });      
         }
 
         async Task ReadMeta(Stream stream)
