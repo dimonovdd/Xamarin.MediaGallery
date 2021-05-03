@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using NativeMedia;
@@ -42,7 +43,14 @@ namespace Sample.ViewModels
                     foreach (var item in SelectedItems)
                         item.Dispose();
 
-                var result = await MediaGallery.PickAsync(SelectionLimit, types);
+                var cts = new CancellationTokenSource(50000);
+
+                var task = MediaGallery.PickAsync(SelectionLimit, cts.Token, types);
+
+                var result = await task;
+
+
+
                 SelectedItems = result?.Files?.ToArray();
             }
             catch(Exception ex)

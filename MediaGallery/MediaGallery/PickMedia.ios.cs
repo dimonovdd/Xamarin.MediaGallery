@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Foundation;
 using MobileCoreServices;
@@ -16,9 +17,9 @@ namespace NativeMedia
     {
         static UIViewController pickerRef;
 
-        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, params MediaFileType[] types)
+        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, CancellationToken token, params MediaFileType[] types)
         {
-            var vc = GetCurrentUIViewController();
+            var vc = Platform.GetCurrentUIViewController();
 
             var isVideo = types.Contains(MediaFileType.Video);
             var isImage = types.Contains(MediaFileType.Image);
@@ -71,14 +72,30 @@ namespace NativeMedia
             if (DeviceInfo.Idiom == DeviceIdiom.Tablet && pickerRef.PopoverPresentationController != null && vc.View != null)
                 pickerRef.PopoverPresentationController.SourceRect = vc.View.Bounds;
 
+            if (token.IsCancellationRequested)
+                Finish();
+            else if (token.CanBeCanceled)
+                token.Register(() =>
+                {
+                    MainThread.BeginInvokeOnMainThread(()
+                        => pickerRef?.DismissViewController(true, null));
+                    tcs.TrySetResult(null);
+                });
+
             await vc.PresentViewControllerAsync(pickerRef, true);
 
             var result = await tcs.Task;
-
-            pickerRef?.Dispose();
-            pickerRef = null;
+            Finish();
 
             return result;
+
+            void Finish()
+            {
+                pickerRef?.Dispose();
+                pickerRef = null;
+                if (token.IsCancellationRequested)
+                    token.ThrowIfCancellationRequested();
+            }
         }
 
         static IMediaFile ConvertPickerResults(NSDictionary info)
@@ -116,10 +133,6 @@ namespace NativeMedia
                 ? PHAssetResource.GetAssetResources(asset)?.FirstOrDefault()?.OriginalFilename
                 : null;
         }
-
-        static UIViewController GetCurrentUIViewController()
-          => Xamarin.Essentials.Platform.GetCurrentUIViewController()
-          ?? throw ExeptionHelper.ControllerNotFound;
 
         class PhotoPickerDelegate : UIImagePickerControllerDelegate
         {
@@ -163,8 +176,8 @@ namespace NativeMedia
             internal PresentatControllerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
                 => this.tcs = tcs;
 
-            public override void DidDismiss(UIPresentationController presentationController) =>
-                tcs?.TrySetResult(null);
+            public override void DidDismiss(UIPresentationController presentationController)
+                => tcs?.TrySetResult(null);
         }
     }
 }
