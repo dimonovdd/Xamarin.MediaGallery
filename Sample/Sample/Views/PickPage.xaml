@@ -16,6 +16,9 @@
                 <Label Text="SelectionLimit:"/>
                 <Entry Text="{Binding SelectionLimit}" Keyboard="Numeric"/>
 
+                <Label Text="Cancel after:"/>
+                <Entry Text="{Binding DelayMilliseconds}" Placeholder="Milliseconds" Keyboard="Numeric"/>
+
                 <Button Text="Any" Command="{Binding PickAnyCommand, Mode=OneTime}"/>
                 <Button Text="Image" Command="{Binding PickImageCommand, Mode=OneTime}"/>
                 <Button Text="Video" Command="{Binding PickVideoCommand, Mode=OneTime}"/>

@@ -7,6 +7,7 @@ using Android.Content;
 using Uri = Android.Net.Uri;
 using Android.Provider;
 using System.Threading;
+using Xamarin.Essentials;
 #if MONOANDROID11_0
 using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
 #else
@@ -46,16 +47,38 @@ namespace NativeMedia
                     isImage
                     ? new string[] { imageType, videoType }
                     : new string[] { videoType });
+                intent.AddCategory(Intent.CategoryOpenable);
             }
 
             intent.PutExtra(Intent.ExtraLocalOnly, false);
             intent.PutExtra(Intent.ExtraAllowMultiple, selectionLimit > 1);
+            intent.AddFlags(ActivityFlags.ClearTop);
+
+            if (token.IsCancellationRequested)
+                Finish();
+            else if (token.CanBeCanceled)
+                token.Register(() =>
+                {
+                    MainThread.BeginInvokeOnMainThread(()
+                       => Platform.AppActivity.FinishActivity(Platform.requestCode));
+                    tcs.TrySetResult(null);
+                });
+
 
             Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
 
             var result = await tcs.Task;
+            Finish();
 
             return GetFilesFromIntent(result);
+
+            void Finish()
+            {
+                //intent?.Dispose();
+                //intent = null;
+                if (token.IsCancellationRequested)
+                    token.ThrowIfCancellationRequested();
+            }
         }
 
         internal static void OnActivityResult(int requestCode, Result resultCode, Intent intent)

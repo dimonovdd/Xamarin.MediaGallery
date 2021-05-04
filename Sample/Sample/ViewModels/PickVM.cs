@@ -13,6 +13,8 @@ namespace Sample.ViewModels
     
     public class PickVM : BaseVM
     {
+        private int delayMilliseconds = 5000;
+
         public PickVM()
         {
             PickAnyCommand = new Command(async () => await Pick());
@@ -22,6 +24,15 @@ namespace Sample.ViewModels
         }
 
         public int SelectionLimit { get; set; } = 3;
+
+        public int DelayMilliseconds
+        {
+            get => delayMilliseconds;
+            set
+            {
+                delayMilliseconds = value > 0 ? value : 1;
+            }
+        }
 
         public IEnumerable<IMediaFile> SelectedItems { get; set; }
 
@@ -40,19 +51,20 @@ namespace Sample.ViewModels
             try
             {
                 if (SelectedItems?.Count() > 0)
-                    foreach (var item in SelectedItems)
-                        item.Dispose();
+                    if (SelectedItems?.Any() ?? false)
+                        foreach (var item in SelectedItems)
+                            item.Dispose();
+                SelectedItems = null;
 
-                var cts = new CancellationTokenSource(50000);
+                var cts = new CancellationTokenSource(
+                    TimeSpan.FromMilliseconds(DelayMilliseconds));
 
                 var task = MediaGallery.PickAsync(SelectionLimit, cts.Token, types);
 
                 var result = await task;
 
-
-
                 SelectedItems = result?.Files?.ToArray();
-            }
+    }
             catch(Exception ex)
             {
                 await DisplayAlertAsync(ex.Message);
