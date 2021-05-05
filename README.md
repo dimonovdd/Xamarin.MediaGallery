@@ -2,7 +2,7 @@
 
 ![header](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/header.svg)
 
-[![NuGet Badge](https://img.shields.io/nuget/v/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery?style=plastic)](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/main/LICENSE)
+[![NuGet Badge](https://img.shields.io/nuget/v/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery?style=plastic)](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/main/LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery)
 
 This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices.
 
@@ -92,12 +92,19 @@ foreach(var file in results.Files)
 
 ```csharp
 //...
-var status = await Permissions.CheckStatusAsync<SaveMediaPermission>();
+var status = await Permissions.RequestAsync<SaveMediaPermission>();
 
 if (status != PermissionStatus.Granted)
     return;
 
 await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
+
+//OR Using a byte array or a stream
+
+await MediaGallery.SaveAsync(MediaFileType.Image, stream, fileName);
+
+//The name or the path to the saved file must contain the extension.
+
 //...
  ```
 
@@ -105,12 +112,12 @@ await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
 ## Android
 
 - When saving media files, the date and time are appended to the file name
-- When using `PickAsync` method `selectionLimit` parameter just sets multiple pick allowed
+- When using the `PickAsync` method the `selectionLimit` parameter just sets multiple pick allowed
 
 ## iOS
 
-- Multi picking is supported from iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
-- `NameWithoutExtension` property in iOS versions before 14 returns an null value if permission to access photos was not granted
+- Multi picking is supported since iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
+- The `NameWithoutExtension` property on iOS versions before 14 returns a null value if the permission to access photos was not granted
 
 # Screenshots
 
