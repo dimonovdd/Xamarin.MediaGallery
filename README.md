@@ -2,7 +2,7 @@
 
 ![header](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/header.svg)
 
-[![NuGet Badge](https://img.shields.io/nuget/v/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery?style=plastic)](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/main/LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery)
+[![NuGet Badge](https://img.shields.io/nuget/v/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery)](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/main/LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery) [![YouTube Video Views](https://img.shields.io/youtube/views/8JvgnlHVyrI?style=social)](https://youtu.be/8JvgnlHVyrI)
 
 This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices.
 
@@ -20,6 +20,8 @@ This plugin is designed for picking and saving photos and video files from the n
 # Getting started
 
 ## Android
+
+You can just watch the [Video](https://youtu.be/8JvgnlHVyrI) that [@jfversluis](https://github.com/jfversluis) published
 
 In the Android project's MainLauncher or any Activity that is launched, this plugin must be initialized in the OnCreate method:
 
