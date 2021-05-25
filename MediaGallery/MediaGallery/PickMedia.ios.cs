@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreGraphics;
 using Foundation;
 using MobileCoreServices;
 using Photos;
@@ -16,8 +18,9 @@ namespace NativeMedia
     {
         static UIViewController pickerRef;
 
-        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, params MediaFileType[] types)
+        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, object presentationSourceBoundsObj, params MediaFileType[] types)
         {
+            var presentationSourceBounds = (Rectangle)(presentationSourceBoundsObj ?? Rectangle.Empty);
             var vc = GetCurrentUIViewController();
 
             var isVideo = types.Contains(MediaFileType.Video);
@@ -65,11 +68,20 @@ namespace NativeMedia
                 };
             }
 
+            if (presentationSourceBounds != Rectangle.Empty && DeviceInfo.Idiom == DeviceIdiom.Tablet)
+                pickerRef.ModalPresentationStyle = UIModalPresentationStyle.Popover;
+
             if (pickerRef.PresentationController != null)
                 pickerRef.PresentationController.Delegate = new PresentatControllerDelegate(tcs);
 
-            if (DeviceInfo.Idiom == DeviceIdiom.Tablet && pickerRef.PopoverPresentationController != null && vc.View != null)
-                pickerRef.PopoverPresentationController.SourceRect = vc.View.Bounds;
+            if (pickerRef.PopoverPresentationController != null)
+            {
+                pickerRef.PopoverPresentationController.SourceView = vc.View;
+                pickerRef.PopoverPresentationController.SourceRect
+                        = presentationSourceBounds != Rectangle.Empty
+                        ? presentationSourceBounds.ToPlatformRectangle()
+                        : new CGRect(new CGPoint(vc.View.Bounds.Width / 2, vc.View.Bounds.Height), CGRect.Empty.Size);
+            }
 
             await vc.PresentViewControllerAsync(pickerRef, true);
 

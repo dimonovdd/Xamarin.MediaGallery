@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace NativeMedia
 {
@@ -11,16 +12,19 @@ namespace NativeMedia
         /// <param name="selectionLimit">Maximum count of files to pick. On Android the option just sets multiple pick allowed.</param>
         /// <param name="types">Media file types available for picking</param>
         /// <returns>Media files selected by a user.</returns>
-        public static async Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)
+        public static Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)
+            => PickAsync(selectionLimit, null, types);
+
+        public static async Task<MediaPickResult> PickAsync(int selectionLimit, object presentationSourceBounds, params MediaFileType[] types)
         {
             ExeptionHelper.CheckSupport();
-            if(!(types?.Length > 0))
+            if (!(types?.Length > 0))
                 types = new MediaFileType[] { MediaFileType.Image, MediaFileType.Video };
 
             if (selectionLimit < 0)
                 selectionLimit = 1;
 
-            return new MediaPickResult(await PlatformPickAsync(selectionLimit, types));
+            return new MediaPickResult(await PlatformPickAsync(selectionLimit, presentationSourceBounds, types));
         }
 
         /// <summary>Saves a media file with metadata </summary>

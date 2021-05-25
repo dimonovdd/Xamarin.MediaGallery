@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using NativeMedia;
+using Sample.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -14,9 +15,9 @@ namespace Sample.ViewModels
     {
         public PickVM()
         {
-            PickAnyCommand = new Command(async () => await Pick());
-            PickImageCommand = new Command(async () => await Pick(MediaFileType.Image));
-            PickVideoCommand = new Command(async () => await Pick(MediaFileType.Video));
+            PickAnyCommand = new Command<View>(async view => await Pick(view));
+            PickImageCommand = new Command<View>(async view => await Pick(view, MediaFileType.Image));
+            PickVideoCommand = new Command(async view => await Pick(null, MediaFileType.Video));
             OpenInfoCommand = new Command<IMediaFile>(async file => await NavigateAsync(new MediaFileInfoVM(file)));
         }
 
@@ -34,7 +35,7 @@ namespace Sample.ViewModels
         public ICommand OpenInfoCommand { get; }
 
 
-        async Task Pick(params MediaFileType[] types)
+        async Task Pick(View view, params MediaFileType[] types)
         {
             try
             {
@@ -42,7 +43,8 @@ namespace Sample.ViewModels
                     foreach (var item in SelectedItems)
                         item.Dispose();
 
-                var result = await MediaGallery.PickAsync(SelectionLimit, types);
+                var rect = view == null ? System.Drawing.Rectangle.Empty : view.GetAbsoluteBounds().ToSystemRectangle(40);
+                var result = await MediaGallery.PickAsync(SelectionLimit, rect, types);
                 SelectedItems = result?.Files?.ToArray();
             }
             catch(Exception ex)

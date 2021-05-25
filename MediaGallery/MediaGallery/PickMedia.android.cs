@@ -21,7 +21,7 @@ namespace NativeMedia
         const string videoType = "video/*";
         static TaskCompletionSource<Intent> tcs;
 
-        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, params MediaFileType[] types)
+        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, object presentationSourceBounds, params MediaFileType[] types)
         {
             var isImage = types.Contains(MediaFileType.Image);
             tcs = new TaskCompletionSource<Intent>();
