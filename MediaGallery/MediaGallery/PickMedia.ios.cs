@@ -68,20 +68,23 @@ namespace NativeMedia
                 };
             }
 
-            if (presentationSourceBounds != Rectangle.Empty && DeviceInfo.Idiom == DeviceIdiom.Tablet)
-                pickerRef.ModalPresentationStyle = UIModalPresentationStyle.Popover;
+            if (DeviceInfo.Idiom == DeviceIdiom.Tablet)
+            {
+                pickerRef.ModalPresentationStyle
+                    = presentationSourceBounds != Rectangle.Empty
+                    ? UIModalPresentationStyle.Popover
+                    : UIModalPresentationStyle.PageSheet;
+
+                if (pickerRef.PopoverPresentationController != null)
+                {
+                    pickerRef.PopoverPresentationController.SourceView = vc.View;
+                    pickerRef.PopoverPresentationController.SourceRect
+                        = presentationSourceBounds.ToPlatformRectangle();
+                }
+            }
 
             if (pickerRef.PresentationController != null)
                 pickerRef.PresentationController.Delegate = new PresentatControllerDelegate(tcs);
-
-            if (pickerRef.PopoverPresentationController != null)
-            {
-                pickerRef.PopoverPresentationController.SourceView = vc.View;
-                pickerRef.PopoverPresentationController.SourceRect
-                        = presentationSourceBounds != Rectangle.Empty
-                        ? presentationSourceBounds.ToPlatformRectangle()
-                        : new CGRect(new CGPoint(vc.View.Bounds.Width / 2, vc.View.Bounds.Height), CGRect.Empty.Size);
-            }
 
             await vc.PresentViewControllerAsync(pickerRef, true);
 
