@@ -74,8 +74,8 @@ namespace NativeMedia
 
             void Finish()
             {
-                //intent?.Dispose();
-                //intent = null;
+                intent?.Dispose();
+                intent = null;
                 if (token.IsCancellationRequested)
                     token.ThrowIfCancellationRequested();
             }

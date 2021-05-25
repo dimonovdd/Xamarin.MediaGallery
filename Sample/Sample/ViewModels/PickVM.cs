@@ -34,6 +34,8 @@ namespace Sample.ViewModels
             }
         }
 
+        public string OperationInfo { get; set; }
+
         public IEnumerable<IMediaFile> SelectedItems { get; set; }
 
         public ICommand PickAnyCommand { get; }
@@ -64,10 +66,14 @@ namespace Sample.ViewModels
                 var result = await task;
 
                 SelectedItems = result?.Files?.ToArray();
-    }
+
+                OperationInfo = SelectedItems?.Any() ?? false
+                    ? "Successfully"
+                    : "Media files not selected";
+            }
             catch(Exception ex)
             {
-                await DisplayAlertAsync(ex.Message);
+                OperationInfo = ex.Message;
             }
         }
     }
