@@ -15,9 +15,9 @@ namespace Sample.ViewModels
     {
         public PickVM()
         {
-            PickAnyCommand = new Command<View>(async view => await Pick(view));
+            PickAnyCommand = new Command(async () => await Pick(null));
             PickImageCommand = new Command<View>(async view => await Pick(view, MediaFileType.Image));
-            PickVideoCommand = new Command(async view => await Pick(null, MediaFileType.Video));
+            PickVideoCommand = new Command<View>(async view => await Pick(view, MediaFileType.Video));
             OpenInfoCommand = new Command<IMediaFile>(async file => await NavigateAsync(new MediaFileInfoVM(file)));
         }
 
@@ -43,8 +43,14 @@ namespace Sample.ViewModels
                     foreach (var item in SelectedItems)
                         item.Dispose();
 
-                var rect = view == null ? System.Drawing.Rectangle.Empty : view.GetAbsoluteBounds().ToSystemRectangle(40);
-                var result = await MediaGallery.PickAsync(SelectionLimit, rect, types);
+                var result = await MediaGallery.PickAsync(
+                    new MediaPickRequest(SelectionLimit, types)
+                    {
+                        PresentationSourceBounds = view == null
+                            ? System.Drawing.Rectangle.Empty
+                            : view.GetAbsoluteBounds().ToSystemRectangle(40)
+                    });
+
                 SelectedItems = result?.Files?.ToArray();
             }
             catch(Exception ex)

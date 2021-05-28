@@ -21,15 +21,15 @@ namespace NativeMedia
         const string videoType = "video/*";
         static TaskCompletionSource<Intent> tcs;
 
-        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, object presentationSourceBounds, params MediaFileType[] types)
+        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request)
         {
-            var isImage = types.Contains(MediaFileType.Image);
+            var isImage = request.Types.Contains(MediaFileType.Image);
             tcs = new TaskCompletionSource<Intent>();
 
             Intent intent;
 
             // https://github.com/dimonovdd/Xamarin.MediaGallery/pull/5
-            if (isImage && types.Length == 1)
+            if (isImage && request.Types.Length == 1)
             {
                 intent = new Intent(Intent.ActionPick, MediaStore.Images.Media.ExternalContentUri);
                 intent.SetType(imageType);
@@ -48,7 +48,7 @@ namespace NativeMedia
             }
 
             intent.PutExtra(Intent.ExtraLocalOnly, false);
-            intent.PutExtra(Intent.ExtraAllowMultiple, selectionLimit > 1);
+            intent.PutExtra(Intent.ExtraAllowMultiple, request.SelectionLimit > 1);
 
             Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
 

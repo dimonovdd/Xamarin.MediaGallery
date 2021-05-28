@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreGraphics;
 using Foundation;
 using MobileCoreServices;
 using Photos;
@@ -18,20 +17,19 @@ namespace NativeMedia
     {
         static UIViewController pickerRef;
 
-        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, object presentationSourceBoundsObj, params MediaFileType[] types)
+        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request)
         {
-            var presentationSourceBounds = (Rectangle)(presentationSourceBoundsObj ?? Rectangle.Empty);
             var vc = GetCurrentUIViewController();
 
-            var isVideo = types.Contains(MediaFileType.Video);
-            var isImage = types.Contains(MediaFileType.Image);
+            var isVideo = request.Types.Contains(MediaFileType.Video);
+            var isImage = request.Types.Contains(MediaFileType.Image);
 
             var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>();
 
             if (Platform.HasOSVersion(14))
             {
                 var config = new PHPickerConfiguration();
-                config.SelectionLimit = selectionLimit;
+                config.SelectionLimit = request.SelectionLimit;
 
                 if (!(isVideo && isImage))
                     config.Filter = isVideo
@@ -71,7 +69,7 @@ namespace NativeMedia
             if (DeviceInfo.Idiom == DeviceIdiom.Tablet)
             {
                 pickerRef.ModalPresentationStyle
-                    = presentationSourceBounds != Rectangle.Empty
+                    = request.PresentationSourceBounds != Rectangle.Empty
                     ? UIModalPresentationStyle.Popover
                     : UIModalPresentationStyle.PageSheet;
 
@@ -79,7 +77,7 @@ namespace NativeMedia
                 {
                     pickerRef.PopoverPresentationController.SourceView = vc.View;
                     pickerRef.PopoverPresentationController.SourceRect
-                        = presentationSourceBounds.ToPlatformRectangle();
+                        = request.PresentationSourceBounds.ToPlatformRectangle();
                 }
             }
 
