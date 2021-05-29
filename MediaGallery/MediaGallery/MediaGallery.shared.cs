@@ -29,43 +29,50 @@ namespace NativeMedia
         /// <param name="fileStream">The stream to output the file to.</param>
         /// <param name="fileName">The name of the saved file including the extension.</param>
         /// <returns>A task representing the asynchronous save operation.</returns>
-        public static Task SaveAsync(MediaFileType type, Stream fileStream, string fileName)
+        public static async Task SaveAsync(MediaFileType type, Stream fileStream, string fileName)
         {
-            ExeptionHelper.CheckSupport();
+            await CheckPossibilitySave();
             if (fileStream == null)
                 throw new ArgumentNullException(nameof(fileStream));
             CheckFileName(fileName);
 
-            return PlatformSaveAsync(type, fileStream, fileName);
+           await PlatformSaveAsync(type, fileStream, fileName);
         }
 
         /// <param name="data">A byte array to save to the file.</param>
         /// <inheritdoc cref = "SaveAsync(MediaFileType, Stream, string)" path=""/>
-        public static Task SaveAsync(MediaFileType type, byte[] data, string fileName)
+        public static async Task SaveAsync(MediaFileType type, byte[] data, string fileName)
         {
-            ExeptionHelper.CheckSupport();
+            await CheckPossibilitySave();
             if (!(data?.Length > 0))
                 throw new ArgumentNullException(nameof(data));
             CheckFileName(fileName);
 
-            return PlatformSaveAsync(type, data, fileName);
+            await PlatformSaveAsync(type, data, fileName);
         }
 
         /// <param name="filePath">Full path to a local file.</param>
         /// <inheritdoc cref = "SaveAsync(MediaFileType, Stream, string)" path=""/>
-        public static Task SaveAsync(MediaFileType type, string filePath)
+        public static async Task SaveAsync(MediaFileType type, string filePath)
         {
-            ExeptionHelper.CheckSupport();
+            await CheckPossibilitySave();
             if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
                 throw new ArgumentException(nameof(filePath));
 
-            return PlatformSaveAsync(type, filePath);
+            await PlatformSaveAsync(type, filePath);
         }
 
         static void CheckFileName(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentException(nameof(fileName));
+        }
+
+
+        static async Task CheckPossibilitySave()
+        {
+            ExeptionHelper.CheckSupport();
+            await SaveMediaPermission.EnsureGrantedAsync();
         }
     }
 }
