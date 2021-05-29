@@ -9,28 +9,20 @@ namespace NativeMedia
     public static partial class MediaGallery
     {
         /// <summary>Opens media files Picker</summary>
-        /// <param name="selectionLimit">Maximum count of files to pick. On Android the option just sets multiple pick allowed.</param>
-        /// <param name="types">Media file types available for picking</param>
         /// <returns>Media files selected by a user.</returns>
+        /// <inheritdoc cref = "MediaPickRequest(int, MediaFileType[])" path="/param"/>
         public static Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)
-            => PickAsync(selectionLimit, default, types);
+            => PickAsync(new MediaPickRequest(selectionLimit, types), default);
 
-        /// <summary>Opens media files Picker</summary>
-        /// <param name="selectionLimit">Maximum count of files to pick. On Android the option just sets multiple pick allowed.</param>
-        /// <param name="types">Media file types available for picking</param>
-        /// <returns>Media files selected by a user.</returns>
-        public static async Task<MediaPickResult> PickAsync(int selectionLimit = 1, CancellationToken token = default, params MediaFileType[] types)
+        /// <param name="request">Media file request to pick.</param>
+        /// <inheritdoc cref = "PickAsync(int, MediaFileType[])" path="//*[not(self::param)]"/>
+        public static async Task<MediaPickResult> PickAsync(MediaPickRequest request, CancellationToken token = default)
         {
             ExeptionHelper.CheckSupport();
-            if (!(types?.Length > 0))
-                types = new MediaFileType[] { MediaFileType.Image, MediaFileType.Video };
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
 
-            if (selectionLimit < 0)
-                selectionLimit = 1;
-
-            var res  = await PlatformPickAsync(selectionLimit, token, types);
-
-            return new MediaPickResult(res);
+            return new MediaPickResult(await PlatformPickAsync(request, token));
         }
 
         /// <summary>Saves a media file with metadata </summary>
@@ -38,48 +30,50 @@ namespace NativeMedia
         /// <param name="fileStream">The stream to output the file to.</param>
         /// <param name="fileName">The name of the saved file including the extension.</param>
         /// <returns>A task representing the asynchronous save operation.</returns>
-        public static Task SaveAsync(MediaFileType type, Stream fileStream, string fileName)
+        public static async Task SaveAsync(MediaFileType type, Stream fileStream, string fileName)
         {
-            ExeptionHelper.CheckSupport();
+            await CheckPossibilitySave();
             if (fileStream == null)
                 throw new ArgumentNullException(nameof(fileStream));
             CheckFileName(fileName);
 
-            return PlatformSaveAsync(type, fileStream, fileName);
+           await PlatformSaveAsync(type, fileStream, fileName);
         }
 
-        /// <summary>Saves a media file with metadata </summary>
-        /// <param name="type">Type of media file to save.</param>
         /// <param name="data">A byte array to save to the file.</param>
-        /// <param name="fileName">The name of the saved file including the extension.</param>
-        /// <returns>A task representing the asynchronous save operation.</returns>
-        public static Task SaveAsync(MediaFileType type, byte[] data, string fileName)
+        /// <inheritdoc cref = "SaveAsync(MediaFileType, Stream, string)" path=""/>
+        public static async Task SaveAsync(MediaFileType type, byte[] data, string fileName)
         {
-            ExeptionHelper.CheckSupport();
+            await CheckPossibilitySave();
             if (!(data?.Length > 0))
                 throw new ArgumentNullException(nameof(data));
             CheckFileName(fileName);
 
-            return PlatformSaveAsync(type, data, fileName);
+            await PlatformSaveAsync(type, data, fileName);
         }
 
-        /// <summary>Saves a media file with metadata </summary>
-        /// <param name="type">Type of media file to save.</param>
         /// <param name="filePath">Full path to a local file.</param>
-        /// <returns>A task representing the asynchronous save operation.</returns>
-        public static Task SaveAsync(MediaFileType type, string filePath)
+        /// <inheritdoc cref = "SaveAsync(MediaFileType, Stream, string)" path=""/>
+        public static async Task SaveAsync(MediaFileType type, string filePath)
         {
-            ExeptionHelper.CheckSupport();
+            await CheckPossibilitySave();
             if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
                 throw new ArgumentException(nameof(filePath));
 
-            return PlatformSaveAsync(type, filePath);
+            await PlatformSaveAsync(type, filePath);
         }
 
         static void CheckFileName(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentException(nameof(fileName));
+        }
+
+
+        static async Task CheckPossibilitySave()
+        {
+            ExeptionHelper.CheckSupport();
+            await SaveMediaPermission.EnsureGrantedAsync();
         }
     }
 }

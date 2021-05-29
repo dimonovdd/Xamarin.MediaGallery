@@ -2,7 +2,7 @@
 
 ![header](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/header.svg)
 
-[![NuGet Badge](https://img.shields.io/nuget/v/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery)](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/main/LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery) [![YouTube Video Views](https://img.shields.io/youtube/views/8JvgnlHVyrI?style=social)](https://youtu.be/8JvgnlHVyrI)
+[![NuGet Badge](https://img.shields.io/nuget/vpre/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery)](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/main/LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery) [![YouTube Video Views](https://img.shields.io/youtube/views/8JvgnlHVyrI?style=social)](https://youtu.be/8JvgnlHVyrI)
 
 This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices.
 
@@ -19,9 +19,9 @@ This plugin is designed for picking and saving photos and video files from the n
 
 # Getting started
 
-## Android
-
 You can just watch the [Video](https://youtu.be/8JvgnlHVyrI) that [@jfversluis](https://github.com/jfversluis) published
+
+## Android
 
 In the Android project's MainLauncher or any Activity that is launched, this plugin must be initialized in the OnCreate method:
 
@@ -74,7 +74,12 @@ This method does not require requesting permissions from users
 
 ```csharp
 //...
-var results = await MediaGallery.PickAsync(1, MediaFileType.Image, MediaFileType.Video);
+var request = new MediaPickRequest(1, MediaFileType.Image, MediaFileType.Video)
+{
+    PresentationSourceBounds = Rectangle.Empty
+};
+
+var results = await MediaGallery.PickAsync(request);
 
 if (results?.Files == null)
     return;
@@ -89,6 +94,14 @@ foreach(var file in results.Files)
     file.Dispose();
 }
  ```
+
+## Presentation Location
+
+When picking files on iPadOS you have the ability to present in a pop over control. This specifies where the pop over will appear and point an arrow directly to. You can specify the location using the `PresentationSourceBounds` property. Setting this property has the same behavior as [Launcher or Share in Xamarin.Essentials](https://docs.microsoft.com/en-us/xamarin/essentials/share?tabs=android#presentation-location).
+
+**Screenshots:**
+- [Popover](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/iPadPopover.png)
+- [PageSheet](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/iPadPageSheet.png)
 
 # SaveAsync
 

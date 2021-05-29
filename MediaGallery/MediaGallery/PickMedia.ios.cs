@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -17,19 +18,19 @@ namespace NativeMedia
     {
         static UIViewController pickerRef;
 
-        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, CancellationToken token, params MediaFileType[] types)
+        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
         {
             var vc = Platform.GetCurrentUIViewController();
 
-            var isVideo = types.Contains(MediaFileType.Video);
-            var isImage = types.Contains(MediaFileType.Image);
+            var isVideo = request.Types.Contains(MediaFileType.Video);
+            var isImage = request.Types.Contains(MediaFileType.Image);
 
             var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>();
 
             if (Platform.HasOSVersion(14))
             {
                 var config = new PHPickerConfiguration();
-                config.SelectionLimit = selectionLimit;
+                config.SelectionLimit = request.SelectionLimit;
 
                 if (!(isVideo && isImage))
                     config.Filter = isVideo
@@ -66,11 +67,23 @@ namespace NativeMedia
                 };
             }
 
+            if (DeviceInfo.Idiom == DeviceIdiom.Tablet)
+            {
+                pickerRef.ModalPresentationStyle
+                    = request.PresentationSourceBounds != Rectangle.Empty
+                    ? UIModalPresentationStyle.Popover
+                    : UIModalPresentationStyle.PageSheet;
+
+                if (pickerRef.PopoverPresentationController != null)
+                {
+                    pickerRef.PopoverPresentationController.SourceView = vc.View;
+                    pickerRef.PopoverPresentationController.SourceRect
+                        = request.PresentationSourceBounds.ToPlatformRectangle();
+                }
+            }
+
             if (pickerRef.PresentationController != null)
                 pickerRef.PresentationController.Delegate = new PresentatControllerDelegate(tcs);
-
-            if (DeviceInfo.Idiom == DeviceIdiom.Tablet && pickerRef.PopoverPresentationController != null && vc.View != null)
-                pickerRef.PopoverPresentationController.SourceRect = vc.View.Bounds;
 
             if (token.IsCancellationRequested)
                 Finish();
@@ -93,8 +106,7 @@ namespace NativeMedia
             {
                 pickerRef?.Dispose();
                 pickerRef = null;
-                if (token.IsCancellationRequested)
-                    token.ThrowIfCancellationRequested();
+                token.ThrowIfCancellationRequested();
             }
         }
 

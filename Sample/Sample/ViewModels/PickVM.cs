@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using NativeMedia;
+using Sample.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -17,9 +18,9 @@ namespace Sample.ViewModels
 
         public PickVM()
         {
-            PickAnyCommand = new Command(async () => await Pick());
-            PickImageCommand = new Command(async () => await Pick(MediaFileType.Image));
-            PickVideoCommand = new Command(async () => await Pick(MediaFileType.Video));
+            PickAnyCommand = new Command(async () => await Pick(null));
+            PickImageCommand = new Command<View>(async view => await Pick(view, MediaFileType.Image));
+            PickVideoCommand = new Command<View>(async view => await Pick(view, MediaFileType.Video));
             OpenInfoCommand = new Command<IMediaFile>(async file => await NavigateAsync(new MediaFileInfoVM(file)));
         }
 
@@ -48,24 +49,29 @@ namespace Sample.ViewModels
         public ICommand OpenInfoCommand { get; }
 
 
-        async Task Pick(params MediaFileType[] types)
+        async Task Pick(View view, params MediaFileType[] types)
         {
+            CancellationTokenSource cts = null;
             try
             {
-                if (SelectedItems?.Count() > 0)
-                    if (SelectedItems?.Any() ?? false)
-                        foreach (var item in SelectedItems)
-                            item.Dispose();
+                if (SelectedItems?.Any() ?? false)
+                    foreach (var item in SelectedItems)
+                        item.Dispose();
                 SelectedItems = null;
 
-                var cts = new CancellationTokenSource(
+                cts = new CancellationTokenSource(
                     TimeSpan.FromMilliseconds(DelayMilliseconds));
 
-                var task = MediaGallery.PickAsync(SelectionLimit, cts.Token, types);
+                var result = await MediaGallery.PickAsync(
+                    new MediaPickRequest(SelectionLimit, types)
+                    {
+                        PresentationSourceBounds = view == null
+                            ? System.Drawing.Rectangle.Empty
+                            : view.GetAbsoluteBounds().ToSystemRectangle(40)
+                    },
+                    cts.Token);
 
-                var result = await task;
-
-                SelectedItems = result?.Files?.ToArray();
+                SelectedItems = result?.Files;
 
                 OperationInfo = SelectedItems?.Any() ?? false
                     ? "Successfully"
@@ -74,6 +80,10 @@ namespace Sample.ViewModels
             catch(Exception ex)
             {
                 OperationInfo = ex.Message;
+            }
+            finally
+            {
+                cts?.Dispose();
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Xamarin.Essentials;
 
 namespace NativeMedia
 {
@@ -7,6 +8,9 @@ namespace NativeMedia
         internal static Exception NotSupportedOrImplementedException
             => new NotImplementedException("This functionality is not implemented in the portable version of this assembly. " +
                 "You should reference the NuGet package from your main application project in order to reference the platform-specific implementation.");
+
+        internal static PermissionException PermissionException(PermissionStatus status)
+            => new PermissionException($"{nameof(SaveMediaPermission)} was not granted: {status}");
 
         internal static void CheckSupport()
         {
