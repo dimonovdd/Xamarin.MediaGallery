@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NativeMedia
@@ -11,17 +12,17 @@ namespace NativeMedia
         /// <returns>Media files selected by a user.</returns>
         /// <inheritdoc cref = "MediaPickRequest(int, MediaFileType[])" path="/param"/>
         public static Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)
-            => PickAsync(new MediaPickRequest(selectionLimit, types));
+            => PickAsync(new MediaPickRequest(selectionLimit, types), default);
 
         /// <param name="request">Media file request to pick.</param>
         /// <inheritdoc cref = "PickAsync(int, MediaFileType[])" path="//*[not(self::param)]"/>
-        public static async Task<MediaPickResult> PickAsync(MediaPickRequest request)
+        public static async Task<MediaPickResult> PickAsync(MediaPickRequest request, CancellationToken token = default)
         {
             ExeptionHelper.CheckSupport();
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            return new MediaPickResult(await PlatformPickAsync(request));
+            return new MediaPickResult(await PlatformPickAsync(request, token));
         }
 
         /// <summary>Saves a media file with metadata </summary>

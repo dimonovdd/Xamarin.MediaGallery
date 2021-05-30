@@ -6,6 +6,7 @@ using Android.App;
 using Android.Content;
 using Uri = Android.Net.Uri;
 using Android.Provider;
+using System.Threading;
 #if MONOANDROID11_0
 using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
 #else
@@ -21,40 +22,72 @@ namespace NativeMedia
         const string videoType = "video/*";
         static TaskCompletionSource<Intent> tcs;
 
-        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request)
+        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
         {
-            var isImage = request.Types.Contains(MediaFileType.Image);
-            tcs = new TaskCompletionSource<Intent>();
+            token.ThrowIfCancellationRequested();
+            Intent intent = null;
 
-            Intent intent;
-
-            // https://github.com/dimonovdd/Xamarin.MediaGallery/pull/5
-            if (isImage && request.Types.Length == 1)
+            try
             {
-                intent = new Intent(Intent.ActionPick, MediaStore.Images.Media.ExternalContentUri);
-                intent.SetType(imageType);
-                intent.PutExtra(Intent.ExtraMimeTypes, new string[] { imageType });
+                var isImage = request.Types.Contains(MediaFileType.Image);
+                tcs = new TaskCompletionSource<Intent>();
+
+                CancelTaskIfRequested(false);
+
+                // https://github.com/dimonovdd/Xamarin.MediaGallery/pull/5
+                if (isImage && request.Types.Length == 1)
+                {
+                    intent = new Intent(Intent.ActionPick, MediaStore.Images.Media.ExternalContentUri);
+                    intent.SetType(imageType);
+                    intent.PutExtra(Intent.ExtraMimeTypes, new string[] { imageType });
+                }
+                else
+                {
+                    intent = new Intent(Intent.ActionGetContent);
+
+                    intent.SetType(isImage ? $"{imageType}, {videoType}" : videoType);
+                    intent.PutExtra(
+                        Intent.ExtraMimeTypes,
+                        isImage
+                        ? new string[] { imageType, videoType }
+                        : new string[] { videoType });
+                    intent.AddCategory(Intent.CategoryOpenable);
+                }
+
+                intent.PutExtra(Intent.ExtraLocalOnly, true);
+                intent.PutExtra(Intent.ExtraAllowMultiple, request.SelectionLimit > 1);
+
+                CancelTaskIfRequested();
+
+                if (token.CanBeCanceled)
+                    token.Register(() =>
+                        {
+                            Platform.AppActivity.FinishActivity(Platform.requestCode);
+                            tcs?.TrySetCanceled(token);
+                        });
+
+                Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
+
+                CancelTaskIfRequested(false);
+                var result = await tcs.Task;
+                return GetFilesFromIntent(result);
+
+                void CancelTaskIfRequested(bool needThrow = true)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        tcs?.TrySetCanceled(token);
+                        if (needThrow)
+                            token.ThrowIfCancellationRequested();
+                    }
+                }
             }
-            else
+            finally
             {
-                intent = new Intent(Intent.ActionGetContent);
-
-                intent.SetType(isImage ? $"{imageType}, {videoType}" : videoType);
-                intent.PutExtra(
-                    Intent.ExtraMimeTypes,
-                    isImage
-                    ? new string[] { imageType, videoType }
-                    : new string[] { videoType });
+                intent?.Dispose();
+                intent = null;
+                tcs = null;
             }
-
-            intent.PutExtra(Intent.ExtraLocalOnly, false);
-            intent.PutExtra(Intent.ExtraAllowMultiple, request.SelectionLimit > 1);
-
-            Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
-
-            var result = await tcs.Task;
-
-            return GetFilesFromIntent(result);
         }
 
         internal static void OnActivityResult(int requestCode, Result resultCode, Intent intent)

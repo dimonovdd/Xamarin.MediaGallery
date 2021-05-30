@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NativeMedia
 {
     public static partial class MediaGallery
     {
-        static Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request)
+        static Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
             => Task.FromResult<IEnumerable<IMediaFile>>(null);
 
         static Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
