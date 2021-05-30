@@ -73,27 +73,53 @@ In your `Info.plist` add the following keys:
 This method does not require requesting permissions from users
 
 ```csharp
-//...
-var request = new MediaPickRequest(1, MediaFileType.Image, MediaFileType.Video)
+var cts = new CancellationTokenSource();
+IMediaFile[] files = null;
+
+try
 {
-    PresentationSourceBounds = Rectangle.Empty
-};
+    var request = new MediaPickRequest(1, MediaFileType.Image, MediaFileType.Video)
+    {
+        PresentationSourceBounds = System.Drawing.Rectangle.Empty
+    };
 
-var results = await MediaGallery.PickAsync(request);
+    cts.CancelAfter(TimeSpan.FromMinutes(5));
 
-if (results?.Files == null)
+    var results = await MediaGallery.PickAsync(request, cts.Token);
+    files = results?.Files?.ToArray();
+}
+catch (OperationCanceledException)
+{
+    // handling a cancellation request
+}
+catch (Exception)
+{
+    // handling other exceptions
+}
+finally
+{
+    cts.Dispose();
+}
+
+
+if (files == null)
     return;
 
-foreach(var file in results.Files)
+foreach (var file in files)
 {
     var fileName = file.NameWithoutExtension; //Can return an null or empty value
     var extension = file.Extension;
     var contentType = file.ContentType;
     using var stream = await file.OpenReadAsync();
-//...
+    //...
     file.Dispose();
 }
  ```
+
+ This method has two overloads:
+
+- `Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)`
+- `Task<MediaPickResult> PickAsync(MediaPickRequest request, CancellationToken token = default)`
 
 ## Presentation Location
 
@@ -128,6 +154,7 @@ await MediaGallery.SaveAsync(MediaFileType.Image, stream, fileName);
 
 - When saving media files, the date and time are appended to the file name
 - When using the `PickAsync` method the `selectionLimit` parameter just sets multiple pick allowed
+- A request to cancel `PickAsync` method will cancel a task, but the picker UI can remain open until it is closed by the user.
 
 ## iOS
 

@@ -20,10 +20,10 @@ namespace NativeMedia
 
         static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             try
             {
-                token.ThrowIfCancellationRequested();
-
                 var isVideo = request.Types.Contains(MediaFileType.Video);
                 var isImage = request.Types.Contains(MediaFileType.Image);
 
@@ -106,17 +106,21 @@ namespace NativeMedia
                         token.Register(()
                             => MainThread.BeginInvokeOnMainThread(()
                                 => pickerRef?.DismissViewController(true, ()
-                                    => tcs.TrySetCanceled(token))));
+                                    => tcs?.TrySetCanceled(token))));
                     });
                 });
 
-                CancelTaskIfRequested();
+                CancelTaskIfRequested(false);
                 return await tcs.Task;
 
-                void CancelTaskIfRequested()
+                void CancelTaskIfRequested(bool needThrow = true)
                 {
                     if (token.IsCancellationRequested)
+                    {
                         tcs?.TrySetCanceled(token);
+                        if (needThrow)
+                            token.ThrowIfCancellationRequested();
+                    }
                 }
             }
             finally
@@ -142,9 +146,9 @@ namespace NativeMedia
             static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
                 => results
                 .Select(res => res.ItemProvider)
-                .ToArray()
                 .Where(provider => provider != null)
-                .Select(provider => new PHPickerFile(provider));
+                .Select(provider => new PHPickerFile(provider))
+                .ToArray();
         }
 
         class PhotoPickerDelegate : UIImagePickerControllerDelegate

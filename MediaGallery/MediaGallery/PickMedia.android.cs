@@ -7,7 +7,6 @@ using Android.Content;
 using Uri = Android.Net.Uri;
 using Android.Provider;
 using System.Threading;
-using Xamarin.Essentials;
 #if MONOANDROID11_0
 using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
 #else
@@ -25,57 +24,69 @@ namespace NativeMedia
 
         static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
         {
-            var isImage = request.Types.Contains(MediaFileType.Image);
-            tcs = new TaskCompletionSource<Intent>();
+            token.ThrowIfCancellationRequested();
+            Intent intent = null;
 
-            Intent intent;
-
-            // https://github.com/dimonovdd/Xamarin.MediaGallery/pull/5
-            if (isImage && request.Types.Length == 1)
+            try
             {
-                intent = new Intent(Intent.ActionPick, MediaStore.Images.Media.ExternalContentUri);
-                intent.SetType(imageType);
-                intent.PutExtra(Intent.ExtraMimeTypes, new string[] { imageType });
-            }
-            else
-            {
-                intent = new Intent(Intent.ActionGetContent);
+                var isImage = request.Types.Contains(MediaFileType.Image);
+                tcs = new TaskCompletionSource<Intent>();
 
-                intent.SetType(isImage ? $"{imageType}, {videoType}" : videoType);
-                intent.PutExtra(
-                    Intent.ExtraMimeTypes,
-                    isImage
-                    ? new string[] { imageType, videoType }
-                    : new string[] { videoType });
-                intent.AddCategory(Intent.CategoryOpenable);
-            }
+                CancelTaskIfRequested(false);
 
-            intent.PutExtra(Intent.ExtraLocalOnly, true);
-            intent.PutExtra(Intent.ExtraAllowMultiple, request.SelectionLimit > 1);
-
-            if (token.IsCancellationRequested)
-                Finish();
-            else if (token.CanBeCanceled)
-                token.Register(() =>
+                // https://github.com/dimonovdd/Xamarin.MediaGallery/pull/5
+                if (isImage && request.Types.Length == 1)
                 {
-                    MainThread.BeginInvokeOnMainThread(()
-                       => Platform.AppActivity.FinishActivity(Platform.requestCode));
-                    tcs.TrySetResult(null);
-                });
+                    intent = new Intent(Intent.ActionPick, MediaStore.Images.Media.ExternalContentUri);
+                    intent.SetType(imageType);
+                    intent.PutExtra(Intent.ExtraMimeTypes, new string[] { imageType });
+                }
+                else
+                {
+                    intent = new Intent(Intent.ActionGetContent);
 
+                    intent.SetType(isImage ? $"{imageType}, {videoType}" : videoType);
+                    intent.PutExtra(
+                        Intent.ExtraMimeTypes,
+                        isImage
+                        ? new string[] { imageType, videoType }
+                        : new string[] { videoType });
+                    intent.AddCategory(Intent.CategoryOpenable);
+                }
 
-            Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
+                intent.PutExtra(Intent.ExtraLocalOnly, true);
+                intent.PutExtra(Intent.ExtraAllowMultiple, request.SelectionLimit > 1);
 
-            var result = await tcs.Task;
-            Finish();
+                CancelTaskIfRequested();
 
-            return GetFilesFromIntent(result);
+                if (token.CanBeCanceled)
+                    token.Register(() =>
+                        {
+                            Platform.AppActivity.FinishActivity(Platform.requestCode);
+                            tcs?.TrySetCanceled(token);
+                        });
 
-            void Finish()
+                Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
+
+                CancelTaskIfRequested(false);
+                var result = await tcs.Task;
+                return GetFilesFromIntent(result);
+
+                void CancelTaskIfRequested(bool needThrow = true)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        tcs?.TrySetCanceled(token);
+                        if (needThrow)
+                            token.ThrowIfCancellationRequested();
+                    }
+                }
+            }
+            finally
             {
                 intent?.Dispose();
                 intent = null;
-                token.ThrowIfCancellationRequested();
+                tcs = null;
             }
         }
 
