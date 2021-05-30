@@ -11,16 +11,16 @@ using Xamarin.Forms.Internals;
 
 namespace Sample.ViewModels
 {
-    
+
     public class PickVM : BaseVM
     {
         private int delayMilliseconds = 5000;
 
         public PickVM()
         {
-            PickAnyCommand = new Command(async () => await Pick(null));
-            PickImageCommand = new Command<View>(async view => await Pick(view, MediaFileType.Image));
-            PickVideoCommand = new Command<View>(async view => await Pick(view, MediaFileType.Video));
+            PickAnyCommand = new Command(() => Pick(null));
+            PickImageCommand = new Command<View>(view => Pick(view, MediaFileType.Image));
+            PickVideoCommand = new Command<View>(view => Pick(view, MediaFileType.Video));
             OpenInfoCommand = new Command<IMediaFile>(async file => await NavigateAsync(new MediaFileInfoVM(file)));
         }
 
@@ -49,42 +49,56 @@ namespace Sample.ViewModels
         public ICommand OpenInfoCommand { get; }
 
 
-        async Task Pick(View view, params MediaFileType[] types)
+        void Pick(View view, params MediaFileType[] types)
         {
-            CancellationTokenSource cts = null;
-            try
+            Task.Run(async () =>
             {
-                if (SelectedItems?.Any() ?? false)
-                    foreach (var item in SelectedItems)
-                        item.Dispose();
-                SelectedItems = null;
+                CancellationTokenSource cts = null;
+                try
+                {
+                    if (SelectedItems?.Any() ?? false)
+                        foreach (var item in SelectedItems)
+                            item.Dispose();
+                    SelectedItems = null;
 
-                cts = new CancellationTokenSource(
-                    TimeSpan.FromMilliseconds(DelayMilliseconds));
+                    cts = new CancellationTokenSource(
+                        TimeSpan.FromMilliseconds(DelayMilliseconds));
 
-                var result = await MediaGallery.PickAsync(
-                    new MediaPickRequest(SelectionLimit, types)
+                    Task<MediaPickResult> task = null;
+                    try
                     {
-                        PresentationSourceBounds = view == null
-                            ? System.Drawing.Rectangle.Empty
-                            : view.GetAbsoluteBounds().ToSystemRectangle(40)
-                    },
-                    cts.Token);
+                        task = MediaGallery.PickAsync(
+                            new MediaPickRequest(SelectionLimit, types)
+                            {
+                                PresentationSourceBounds = view == null
+                                    ? System.Drawing.Rectangle.Empty
+                                    : view.GetAbsoluteBounds().ToSystemRectangle(40)
+                            },
+                            cts.Token);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
 
-                SelectedItems = result?.Files;
 
-                OperationInfo = SelectedItems?.Any() ?? false
-                    ? "Successfully"
-                    : "Media files not selected";
-            }
-            catch(Exception ex)
-            {
-                OperationInfo = ex.Message;
-            }
-            finally
-            {
-                cts?.Dispose();
-            }
+                    var result = await task;
+
+                    SelectedItems = result?.Files;
+
+                    OperationInfo = SelectedItems?.Any() ?? false
+                        ? "Successfully"
+                        : "Media files not selected";
+                }
+                catch (Exception ex)
+                {
+                    OperationInfo = ex.Message;
+                }
+                finally
+                {
+                    cts?.Dispose();
+                }
+            });
         }
     }
 }

@@ -20,130 +20,131 @@ namespace NativeMedia
 
         static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
         {
-            var vc = Platform.GetCurrentUIViewController();
-
-            var isVideo = request.Types.Contains(MediaFileType.Video);
-            var isImage = request.Types.Contains(MediaFileType.Image);
-
-            var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>();
-
-            if (Platform.HasOSVersion(14))
+            try
             {
-                var config = new PHPickerConfiguration();
-                config.SelectionLimit = request.SelectionLimit;
+                token.ThrowIfCancellationRequested();
 
-                if (!(isVideo && isImage))
-                    config.Filter = isVideo
-                        ? PHPickerFilter.VideosFilter
-                        : PHPickerFilter.ImagesFilter;
+                var isVideo = request.Types.Contains(MediaFileType.Video);
+                var isImage = request.Types.Contains(MediaFileType.Image);
 
-                pickerRef = new PHPickerViewController(config)
+                var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>();
+
+                CancelTaskIfRequested();
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    Delegate = new PHPickerDelegate(tcs)
-                };
-            }
-            else
-            {
-                var sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+                    CancelTaskIfRequested();
 
-                if (!UIImagePickerController.IsSourceTypeAvailable(sourceType))
-                    throw new FeatureNotSupportedException();
+                    if (Platform.HasOSVersion(14))
+                    {
+                        var config = new PHPickerConfiguration();
+                        config.SelectionLimit = request.SelectionLimit;
 
-                var availableTypes = UIImagePickerController.AvailableMediaTypes(sourceType);
-                isVideo = isVideo && availableTypes.Contains(UTType.Movie);
-                isImage = isImage && availableTypes.Contains(UTType.Image);
-                if (!(isVideo || isImage))
-                    throw new FeatureNotSupportedException();
+                        if (!(isVideo && isImage))
+                            config.Filter = isVideo
+                                ? PHPickerFilter.VideosFilter
+                                : PHPickerFilter.ImagesFilter;
 
-                pickerRef = new UIImagePickerController
-                {
-                    SourceType = sourceType,
-                    AllowsEditing = false,
-                    AllowsImageEditing = false,
-                    Delegate = new PhotoPickerDelegate(tcs),
-                    MediaTypes = isVideo && isImage
-                        ? new string[] { UTType.Movie, UTType.Image }
-                        : new string[] { isVideo ? UTType.Movie : UTType.Image }
-                };
-            }
+                        pickerRef = new PHPickerViewController(config)
+                        {
+                            Delegate = new PHPickerDelegate(tcs)
+                        };
+                    }
+                    else
+                    {
+                        var sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
 
-            if (DeviceInfo.Idiom == DeviceIdiom.Tablet)
-            {
-                pickerRef.ModalPresentationStyle
-                    = request.PresentationSourceBounds != Rectangle.Empty
-                    ? UIModalPresentationStyle.Popover
-                    : UIModalPresentationStyle.PageSheet;
+                        if (!UIImagePickerController.IsSourceTypeAvailable(sourceType))
+                            throw new FeatureNotSupportedException();
 
-                if (pickerRef.PopoverPresentationController != null)
-                {
-                    pickerRef.PopoverPresentationController.SourceView = vc.View;
-                    pickerRef.PopoverPresentationController.SourceRect
-                        = request.PresentationSourceBounds.ToPlatformRectangle();
-                }
-            }
+                        var availableTypes = UIImagePickerController.AvailableMediaTypes(sourceType);
+                        isVideo = isVideo && availableTypes.Contains(UTType.Movie);
+                        isImage = isImage && availableTypes.Contains(UTType.Image);
+                        if (!(isVideo || isImage))
+                            throw new FeatureNotSupportedException();
 
-            if (pickerRef.PresentationController != null)
-                pickerRef.PresentationController.Delegate = new PresentatControllerDelegate(tcs);
+                        pickerRef = new UIImagePickerController
+                        {
+                            SourceType = sourceType,
+                            AllowsEditing = false,
+                            AllowsImageEditing = false,
+                            Delegate = new PhotoPickerDelegate(tcs),
+                            MediaTypes = isVideo && isImage
+                                ? new string[] { UTType.Movie, UTType.Image }
+                                : new string[] { isVideo ? UTType.Movie : UTType.Image }
+                        };
+                    }
 
-            if (token.IsCancellationRequested)
-                Finish();
-            else if (token.CanBeCanceled)
-                token.Register(() =>
-                {
-                    MainThread.BeginInvokeOnMainThread(()
-                        => pickerRef?.DismissViewController(true, null));
-                    tcs.TrySetResult(null);
+                    CancelTaskIfRequested();
+                    var vc = Platform.GetCurrentUIViewController();
+
+                    if (DeviceInfo.Idiom == DeviceIdiom.Tablet)
+                    {
+                        pickerRef.ModalPresentationStyle
+                            = request.PresentationSourceBounds != Rectangle.Empty
+                            ? UIModalPresentationStyle.Popover
+                            : UIModalPresentationStyle.PageSheet;
+
+                        if (pickerRef.PopoverPresentationController != null)
+                        {
+                            pickerRef.PopoverPresentationController.SourceView = vc.View;
+                            pickerRef.PopoverPresentationController.SourceRect
+                            = request.PresentationSourceBounds.ToPlatformRectangle();
+                        }
+                    }
+
+                    if (pickerRef.PresentationController != null)
+                        pickerRef.PresentationController.Delegate = new PresentatControllerDelegate(tcs);
+
+                    CancelTaskIfRequested();
+
+                    vc.PresentViewController(pickerRef, true, () =>
+                    {
+                        if (!token.CanBeCanceled)
+                            return;
+
+                        token.Register(()
+                            => MainThread.BeginInvokeOnMainThread(()
+                                => pickerRef?.DismissViewController(true, ()
+                                    => tcs.TrySetCanceled(token))));
+                    });
                 });
 
-            await vc.PresentViewControllerAsync(pickerRef, true);
+                CancelTaskIfRequested();
+                return await tcs.Task;
 
-            var result = await tcs.Task;
-            Finish();
-
-            return result;
-
-            void Finish()
+                void CancelTaskIfRequested()
+                {
+                    if (token.IsCancellationRequested)
+                        tcs?.TrySetCanceled(token);
+                }
+            }
+            finally
             {
                 pickerRef?.Dispose();
                 pickerRef = null;
-                token.ThrowIfCancellationRequested();
             }
         }
 
-        static IMediaFile ConvertPickerResults(NSDictionary info)
+        class PHPickerDelegate : PHPickerViewControllerDelegate
         {
-            if (info == null)
-                return null;
+            readonly TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
 
-            using var assetUrl = (info.ValueForKey(UIImagePickerController.ImageUrl)
-                ?? info.ValueForKey(UIImagePickerController.MediaURL)) as NSUrl;
+            internal PHPickerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
+                => this.tcs = tcs;
 
-            var path = assetUrl?.Path;
+            public override void DidFinishPicking(PHPickerViewController picker, PHPickerResult[] results)
+            {
+                picker.DismissViewController(true, null);
+                tcs?.TrySetResult(results?.Any() ?? false ? ConvertPickerResults(results) : null);
+            }
 
-            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
-                return null;
-
-            return new UIDocumentFile(assetUrl, GetOriginalName(info));
-        }
-
-        static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
-        {
-            foreach (var res in results)
-                if(res?.ItemProvider != null)
-                    yield return new PHPickerFile(res.ItemProvider);
-        }
-
-        static string GetOriginalName(NSDictionary info)
-        {
-            if (PHPhotoLibrary.AuthorizationStatus != PHAuthorizationStatus.Authorized
-                || !info.ContainsKey(UIImagePickerController.PHAsset))
-                return null;
-
-            using var asset = info.ValueForKey(UIImagePickerController.PHAsset) as PHAsset;
-
-            return asset != null
-                ? PHAssetResource.GetAssetResources(asset)?.FirstOrDefault()?.OriginalFilename
-                : null;
+            static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
+                => results
+                .Select(res => res.ItemProvider)
+                .ToArray()
+                .Where(provider => provider != null)
+                .Select(provider => new PHPickerFile(provider));
         }
 
         class PhotoPickerDelegate : UIImagePickerControllerDelegate
@@ -165,19 +166,34 @@ namespace NativeMedia
                 picker.DismissViewController(true, null);
                 tcs?.TrySetResult(null);
             }
-        }
 
-        class PHPickerDelegate : PHPickerViewControllerDelegate
-        {
-            readonly TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
-
-            internal PHPickerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
-                => this.tcs = tcs;
-
-            public override void DidFinishPicking(PHPickerViewController picker, PHPickerResult[] results)
+            IMediaFile ConvertPickerResults(NSDictionary info)
             {
-                picker.DismissViewController(true, null);
-                tcs?.TrySetResult(results == null ? null : ConvertPickerResults(results));
+                if (info == null)
+                    return null;
+
+                using var assetUrl = (info.ValueForKey(UIImagePickerController.ImageUrl)
+                    ?? info.ValueForKey(UIImagePickerController.MediaURL)) as NSUrl;
+
+                var path = assetUrl?.Path;
+
+                if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+                    return null;
+
+                return new UIDocumentFile(assetUrl, GetOriginalName(info));
+            }
+
+            string GetOriginalName(NSDictionary info)
+            {
+                if (PHPhotoLibrary.AuthorizationStatus != PHAuthorizationStatus.Authorized
+                    || !info.ContainsKey(UIImagePickerController.PHAsset))
+                    return null;
+
+                using var asset = info.ValueForKey(UIImagePickerController.PHAsset) as PHAsset;
+
+                return asset != null
+                    ? PHAssetResource.GetAssetResources(asset)?.FirstOrDefault()?.OriginalFilename
+                    : null;
             }
         }
 
