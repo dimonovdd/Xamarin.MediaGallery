@@ -30,7 +30,11 @@ namespace NativeMedia
         {
             this.provider = provider;
             NameWithoutExtension = provider?.SuggestedName;
-            identifier = provider?.RegisteredTypeIdentifiers?.FirstOrDefault();
+            var identifiers = provider?.RegisteredTypeIdentifiers;
+
+            identifier = (identifiers?.Any(i => i.StartsWith(UTType.LivePhoto)) ?? false) && (identifiers?.Contains(UTType.JPEG) ?? false)
+                ? identifiers?.FirstOrDefault(i => i == UTType.JPEG)
+                : identifiers?.FirstOrDefault();
 
             if (string.IsNullOrWhiteSpace(identifier))
                 return;
