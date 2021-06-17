@@ -22,7 +22,21 @@ namespace NativeMedia
         const string videoType = "video/*";
         static TaskCompletionSource<Intent> tcs;
 
-        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
+        public static Task<IEnumerable<IMediaFile>> PickAsync(Activity activity, MediaPickRequest request, CancellationToken token = default)
+        {
+            ExeptionHelper.CheckSupport();
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+            if(activity == null)
+                throw new ArgumentNullException(nameof(activity));
+
+            return PlatformPickAsync(activity, request, token);
+        }
+
+        static Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
+            => PlatformPickAsync(Platform.AppActivity, request, token);
+
+        static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(Activity activity, MediaPickRequest request, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             Intent intent = null;
@@ -39,7 +53,7 @@ namespace NativeMedia
                 {
                     intent = new Intent(Intent.ActionPick, MediaStore.Images.Media.ExternalContentUri);
                     intent.SetType(imageType);
-                    intent.PutExtra(Intent.ExtraMimeTypes, new string[] { imageType });
+                    intent.PutExtra(Intent.ExtraMimeTypes, new [] { imageType });
                 }
                 else
                 {
@@ -49,8 +63,8 @@ namespace NativeMedia
                     intent.PutExtra(
                         Intent.ExtraMimeTypes,
                         isImage
-                        ? new string[] { imageType, videoType }
-                        : new string[] { videoType });
+                        ? new [] { imageType, videoType }
+                        : new [] { videoType });
                     intent.AddCategory(Intent.CategoryOpenable);
                 }
 
@@ -66,7 +80,7 @@ namespace NativeMedia
                             tcs?.TrySetCanceled(token);
                         });
 
-                Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
+                activity.StartActivityForResult(intent, Platform.requestCode);
 
                 CancelTaskIfRequested(false);
                 var result = await tcs.Task;
