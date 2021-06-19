@@ -22,7 +22,7 @@ namespace NativeMedia
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            return new MediaPickResult(await PlatformPickAsync(request, token));
+            return new MediaPickResult(await PlatformPickAsync(request, token).ConfigureAwait(false));
         }
 
         /// <summary>Saves a media file with metadata </summary>
@@ -37,7 +37,7 @@ namespace NativeMedia
                 throw new ArgumentNullException(nameof(fileStream));
             CheckFileName(fileName);
 
-           await PlatformSaveAsync(type, fileStream, fileName);
+           await PlatformSaveAsync(type, fileStream, fileName).ConfigureAwait(false);
         }
 
         /// <param name="data">A byte array to save to the file.</param>
@@ -49,7 +49,7 @@ namespace NativeMedia
                 throw new ArgumentNullException(nameof(data));
             CheckFileName(fileName);
 
-            await PlatformSaveAsync(type, data, fileName);
+            await PlatformSaveAsync(type, data, fileName).ConfigureAwait(false);
         }
 
         /// <param name="filePath">Full path to a local file.</param>
@@ -60,7 +60,7 @@ namespace NativeMedia
             if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
                 throw new ArgumentException(nameof(filePath));
 
-            await PlatformSaveAsync(type, filePath);
+            await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
         }
 
         static void CheckFileName(string fileName)
@@ -73,7 +73,7 @@ namespace NativeMedia
         static async Task CheckPossibilitySave()
         {
             ExeptionHelper.CheckSupport();
-            await SaveMediaPermission.EnsureGrantedAsync();
+            await SaveMediaPermission.EnsureGrantedAsync().ConfigureAwait(false);
         }
     }
 }

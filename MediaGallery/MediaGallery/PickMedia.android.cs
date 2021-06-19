@@ -69,7 +69,7 @@ namespace NativeMedia
                 Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
 
                 CancelTaskIfRequested(false);
-                var result = await tcs.Task;
+                var result = await tcs.Task.ConfigureAwait(false);
                 return GetFilesFromIntent(result);
 
                 void CancelTaskIfRequested(bool needThrow = true)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -111,7 +111,7 @@ namespace NativeMedia
                 });
 
                 CancelTaskIfRequested(false);
-                return await tcs.Task;
+                return await tcs.Task.ConfigureAwait(false);
 
                 void CancelTaskIfRequested(bool needThrow = true)
                 {

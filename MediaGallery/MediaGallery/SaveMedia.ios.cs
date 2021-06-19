@@ -20,7 +20,7 @@ namespace NativeMedia
                 filePath = GetFilePath(fileName);
                 await File.WriteAllBytesAsync(filePath, data);
 
-                await PlatformSaveAsync(type, filePath);
+                await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
             }
             finally
             {
@@ -39,7 +39,7 @@ namespace NativeMedia
                 await fileStream.CopyToAsync(stream);
                 stream.Close();
 
-                await PlatformSaveAsync(type, filePath);
+                await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
             }
             finally
             {
@@ -56,7 +56,7 @@ namespace NativeMedia
                 using var request = type == MediaFileType.Video
                 ? PHAssetChangeRequest.FromVideo(fileUri)
                 : PHAssetChangeRequest.FromImage(fileUri);
-            });
+            }).ConfigureAwait(false);
         }
 
         static async Task PhotoLibraryPerformChanges(Action action)
