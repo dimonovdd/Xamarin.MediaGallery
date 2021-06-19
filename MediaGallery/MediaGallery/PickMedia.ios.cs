@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -140,7 +140,7 @@ namespace NativeMedia
             public override void DidFinishPicking(PHPickerViewController picker, PHPickerResult[] results)
             {
                 picker.DismissViewController(true, null);
-                tcs?.TrySetResult(results?.Any() ?? false ? ConvertPickerResults(results) : null);
+                tcs?.TrySetResult(results?.Length > 0 ? ConvertPickerResults(results) : null);
             }
 
             static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
