@@ -30,7 +30,7 @@ namespace NativeMedia
             try
             {
                 var isImage = request.Types.Contains(MediaFileType.Image);
-                tcs = new TaskCompletionSource<Intent>();
+                tcs = new TaskCompletionSource<Intent>(TaskCreationOptions.RunContinuationsAsynchronously);
 
                 CancelTaskIfRequested(false);
 

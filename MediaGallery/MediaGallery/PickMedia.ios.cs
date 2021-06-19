@@ -27,7 +27,7 @@ namespace NativeMedia
                 var isVideo = request.Types.Contains(MediaFileType.Video);
                 var isImage = request.Types.Contains(MediaFileType.Image);
 
-                var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>();
+                var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>(TaskCreationOptions.RunContinuationsAsynchronously);
 
                 CancelTaskIfRequested();
 

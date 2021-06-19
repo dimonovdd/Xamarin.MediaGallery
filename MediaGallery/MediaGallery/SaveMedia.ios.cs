@@ -61,7 +61,7 @@ namespace NativeMedia
 
         static async Task PhotoLibraryPerformChanges(Action action)
         {
-            var tcs = new TaskCompletionSource<Exception>();
+            var tcs = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             PHPhotoLibrary.SharedPhotoLibrary.PerformChanges(
                 () =>
