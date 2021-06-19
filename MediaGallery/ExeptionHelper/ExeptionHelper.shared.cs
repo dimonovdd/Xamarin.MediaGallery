@@ -24,10 +24,10 @@ namespace NativeMedia
 #elif __IOS__
                  = Platform.HasOSVersion(11);
 #else
-                 = false; 
-            }
+                 = false;
 #endif
-            if(!isSupported.Value)
+			}
+			if (!isSupported.Value)
                 throw NotSupportedOrImplementedException;
         }
 
