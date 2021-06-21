@@ -27,7 +27,7 @@ namespace NativeMedia
                 var isVideo = request.Types.Contains(MediaFileType.Video);
                 var isImage = request.Types.Contains(MediaFileType.Image);
 
-                var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>();
+                var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>(TaskCreationOptions.RunContinuationsAsynchronously);
 
                 CancelTaskIfRequested();
 
@@ -111,7 +111,7 @@ namespace NativeMedia
                 });
 
                 CancelTaskIfRequested(false);
-                return await tcs.Task;
+                return await tcs.Task.ConfigureAwait(false);
 
                 void CancelTaskIfRequested(bool needThrow = true)
                 {
@@ -140,7 +140,7 @@ namespace NativeMedia
             public override void DidFinishPicking(PHPickerViewController picker, PHPickerResult[] results)
             {
                 picker.DismissViewController(true, null);
-                tcs?.TrySetResult(results?.Any() ?? false ? ConvertPickerResults(results) : null);
+                tcs?.TrySetResult(results?.Length > 0 ? ConvertPickerResults(results) : null);
             }
 
             static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)

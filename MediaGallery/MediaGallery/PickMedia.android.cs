@@ -30,7 +30,7 @@ namespace NativeMedia
             try
             {
                 var isImage = request.Types.Contains(MediaFileType.Image);
-                tcs = new TaskCompletionSource<Intent>();
+                tcs = new TaskCompletionSource<Intent>(TaskCreationOptions.RunContinuationsAsynchronously);
 
                 CancelTaskIfRequested(false);
 
@@ -69,7 +69,7 @@ namespace NativeMedia
                 Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
 
                 CancelTaskIfRequested(false);
-                var result = await tcs.Task;
+                var result = await tcs.Task.ConfigureAwait(false);
                 return GetFilesFromIntent(result);
 
                 void CancelTaskIfRequested(bool needThrow = true)

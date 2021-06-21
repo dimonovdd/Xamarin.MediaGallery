@@ -23,13 +23,13 @@ namespace NativeMedia
         static async Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
         {
             using var ms = new MemoryStream(data);
-            await PlatformSaveAsync(type, ms, fileName);
+            await PlatformSaveAsync(type, ms, fileName).ConfigureAwait(false);
         }
 
         static async Task PlatformSaveAsync(MediaFileType type, string filePath)
         {
             using var fileStream = System.IO.File.OpenRead(filePath);
-            await PlatformSaveAsync(type, fileStream, Path.GetFileName(filePath));
+            await PlatformSaveAsync(type, fileStream, Path.GetFileName(filePath)).ConfigureAwait(false);
         }
 
         static async Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName)

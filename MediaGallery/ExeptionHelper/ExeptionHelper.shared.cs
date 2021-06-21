@@ -12,17 +12,22 @@ namespace NativeMedia
         internal static PermissionException PermissionException(PermissionStatus status)
             => new PermissionException($"{nameof(SaveMediaPermission)} was not granted: {status}");
 
+        private static bool? isSupported;
+
         internal static void CheckSupport()
         {
-            var supported
+            if (!isSupported.HasValue)
+            {
+                 isSupported
 #if MONOANDROID
-            = Platform.HasSdkVersion(21);
+                 = Platform.HasSdkVersion(21);
 #elif __IOS__
-            = Platform.HasOSVersion(11);
+                 = Platform.HasOSVersion(11);
 #else
-            = false;
+                 = false;
 #endif
-            if(!supported)
+			}
+			if (!isSupported.Value)
                 throw NotSupportedOrImplementedException;
         }
 
