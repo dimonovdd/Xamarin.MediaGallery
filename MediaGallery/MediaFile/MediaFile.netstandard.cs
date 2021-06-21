@@ -6,9 +6,9 @@ namespace NativeMedia
     partial class MediaFile : IMediaFile
     {
         Task<Stream> PlatformOpenReadAsync()
-            => throw ExeptionHelper.NotSupportedOrImplementedException;
+            => throw ExceptionHelper.NotSupportedOrImplementedException;
 
         void PlatformDispose()
-            => throw ExeptionHelper.NotSupportedOrImplementedException;
+            => throw ExceptionHelper.NotSupportedOrImplementedException;
     }
 }

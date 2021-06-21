@@ -3,7 +3,7 @@ using Xamarin.Essentials;
 
 namespace NativeMedia
 {
-    static class ExeptionHelper
+    static class ExceptionHelper
     {
         internal static Exception NotSupportedOrImplementedException
             => new NotImplementedException("This functionality is not implemented in the portable version of this assembly. " +

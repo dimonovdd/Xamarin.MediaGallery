@@ -9,6 +9,6 @@ namespace NativeMedia
 
         internal static UIViewController GetCurrentUIViewController()
           => Xamarin.Essentials.Platform.GetCurrentUIViewController()
-          ?? throw ExeptionHelper.ControllerNotFound;
+          ?? throw ExceptionHelper.ControllerNotFound;
     }
 }
