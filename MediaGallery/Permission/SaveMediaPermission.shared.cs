@@ -12,7 +12,7 @@ namespace NativeMedia
             var status = await CheckStatusAsync<SaveMediaPermission>();
 
             if (status != PermissionStatus.Granted)
-                throw ExeptionHelper.PermissionException(status);
+                throw ExceptionHelper.PermissionException(status);
         }
     }
 }

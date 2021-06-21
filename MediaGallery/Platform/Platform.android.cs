@@ -30,7 +30,7 @@ namespace NativeMedia
 
         internal static Activity AppActivity
             => currentActivity
-            ?? throw ExeptionHelper.ActivityNotDetected;
+            ?? throw ExceptionHelper.ActivityNotDetected;
 
         internal static bool HasSdkVersion(int version)
             => (int)Build.VERSION.SdkInt >= version;

@@ -18,7 +18,7 @@ namespace NativeMedia
         /// <inheritdoc cref = "PickAsync(int, MediaFileType[])" path="//*[not(self::param)]"/>
         public static async Task<MediaPickResult> PickAsync(MediaPickRequest request, CancellationToken token = default)
         {
-            ExeptionHelper.CheckSupport();
+            ExceptionHelper.CheckSupport();
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
@@ -72,7 +72,7 @@ namespace NativeMedia
 
         static async Task CheckPossibilitySave()
         {
-            ExeptionHelper.CheckSupport();
+            ExceptionHelper.CheckSupport();
             await SaveMediaPermission.EnsureGrantedAsync().ConfigureAwait(false);
         }
     }
