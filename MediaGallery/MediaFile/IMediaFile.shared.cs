@@ -19,6 +19,9 @@ namespace NativeMedia
         /// <summary>Returns the file type. Can return an null value.</summary>
         MediaFileType? Type { get; }
 
+        /// <summary>returns the platform specific identifier of the media object.</summary>
+        string MediaIdentifier { get; }
+
         /// <summary>Opens a read-only stream containing the file.</summary>
         /// <returns>The task object representing the asynchronous operation. The task returns a Stream used to read data from the file.</returns>
         Task<Stream> OpenReadAsync();

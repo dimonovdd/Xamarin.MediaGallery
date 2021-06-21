@@ -37,8 +37,10 @@ namespace NativeMedia
 
                     if (Platform.HasOSVersion(14))
                     {
-                        var config = new PHPickerConfiguration();
-                        config.SelectionLimit = request.SelectionLimit;
+                        var config = new PHPickerConfiguration(PHPhotoLibrary.SharedPhotoLibrary)
+                        {
+                            SelectionLimit = request.SelectionLimit
+                        };
 
                         if (!(isVideo && isImage))
                             config.Filter = isVideo
@@ -145,9 +147,9 @@ namespace NativeMedia
 
             static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
                 => results
-                .Select(res => res.ItemProvider)
+                .Select(res => new { res.ItemProvider, res.AssetIdentifier })
                 .Where(provider => provider != null)
-                .Select(provider => new PHPickerFile(provider))
+                .Select(provider => new PHPickerFile(provider.ItemProvider, provider.AssetIdentifier))
                 .ToArray();
         }
 

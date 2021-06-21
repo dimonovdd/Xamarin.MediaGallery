@@ -26,7 +26,7 @@ namespace NativeMedia
         readonly string typeIdentifier;
         NSItemProvider provider;
 
-        internal PHPickerFile(NSItemProvider provider)
+        internal PHPickerFile(NSItemProvider provider, string assetIdentifier)
         {
             this.provider = provider;
             NameWithoutExtension = provider?.SuggestedName;
@@ -41,6 +41,7 @@ namespace NativeMedia
 
             Extension = GetExtension(typeIdentifier);
             ContentType = GetMIMEType(typeIdentifier);
+            MediaIdentifier = assetIdentifier;
         }
 
         protected override async Task<Stream> PlatformOpenReadAsync()
@@ -66,6 +67,7 @@ namespace NativeMedia
             NameWithoutExtension = !string.IsNullOrWhiteSpace(fileName)
                 ? Path.GetFileNameWithoutExtension(fileName)
                 : null;
+            MediaIdentifier = assetUrl.Path;
         }
 
         protected override Task<Stream> PlatformOpenReadAsync()

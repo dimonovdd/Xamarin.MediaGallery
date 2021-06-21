@@ -14,6 +14,7 @@ namespace NativeMedia
             NameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             Extension = Path.GetExtension(fileName);
             ContentType = MimeTypeMap.Singleton.GetMimeTypeFromExtension(Extension);
+            MediaIdentifier = uri.ToString();
             this.uri = uri;
         }
 

@@ -24,6 +24,8 @@ namespace NativeMedia
                     ? MediaFileType.Video
                     : (MediaFileType?)null;
 
+        public string MediaIdentifier { get; protected internal set; }
+
         public Task<Stream> OpenReadAsync()
             => PlatformOpenReadAsync();
 
