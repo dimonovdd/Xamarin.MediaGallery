@@ -23,7 +23,7 @@ namespace NativeMedia
 
     class PHPickerFile : MediaFile
     {
-        readonly string identifier;
+        readonly string typeIdentifier;
         NSItemProvider provider;
 
         internal PHPickerFile(NSItemProvider provider)
@@ -32,19 +32,19 @@ namespace NativeMedia
             NameWithoutExtension = provider?.SuggestedName;
             var identifiers = provider?.RegisteredTypeIdentifiers;
 
-            identifier = (identifiers?.Any(i => i.StartsWith(UTType.LivePhoto)) ?? false) && (identifiers?.Contains(UTType.JPEG) ?? false)
+            typeIdentifier = (identifiers?.Any(i => i.StartsWith(UTType.LivePhoto)) ?? false) && (identifiers?.Contains(UTType.JPEG) ?? false)
                 ? identifiers?.FirstOrDefault(i => i == UTType.JPEG)
                 : identifiers?.FirstOrDefault();
 
-            if (string.IsNullOrWhiteSpace(identifier))
+            if (string.IsNullOrWhiteSpace(typeIdentifier))
                 return;
 
-            Extension = GetExtension(identifier);
-            ContentType = GetMIMEType(identifier);
+            Extension = GetExtension(typeIdentifier);
+            ContentType = GetMIMEType(typeIdentifier);
         }
 
         protected override async Task<Stream> PlatformOpenReadAsync()
-            => (await provider?.LoadDataRepresentationAsync(identifier))?.AsStream();
+            => (await provider?.LoadDataRepresentationAsync(typeIdentifier))?.AsStream();
 
         protected override void PlatformDispose()
         {
