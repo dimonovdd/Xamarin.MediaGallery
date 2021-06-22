@@ -1,5 +1,4 @@
-﻿using System;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.OS;
 
@@ -8,15 +7,12 @@ namespace NativeMedia
     /// <summary>Platform specific helpers.</summary>
     public static partial class Platform
     {
-        static Activity currentActivity;
-
         internal static int requestCode = 1111;
 
         /// <summary>Initialize Xamarin.MediaGallery with Android's activity and bundle.</summary>
         /// <param name="activity">Activity to use for initialization.</param>
         /// <param name="bundle">Bundle of the activity.</param>
-        public static void Init(Activity activity, Bundle bundle)
-            => currentActivity = activity;
+        public static void Init(Activity activity, Bundle bundle) { }
 
         /// <summary>This method should be used in the <see cref="Activity.OnActivityResult"/></summary>
         /// <param name="requestCode"></param> <param name="resultCode"></param> <param name="intent"></param>
@@ -29,7 +25,7 @@ namespace NativeMedia
             => MediaGallery.CheckCanProcessResult(requestCode, resultCode, intent);
 
         internal static Activity AppActivity
-            => currentActivity
+            => Xamarin.Essentials.Platform.CurrentActivity
             ?? throw ExceptionHelper.ActivityNotDetected;
 
         internal static bool HasSdkVersion(int version)
