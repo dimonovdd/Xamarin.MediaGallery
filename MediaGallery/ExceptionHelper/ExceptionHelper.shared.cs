@@ -34,7 +34,7 @@ namespace NativeMedia
 #if MONOANDROID
         internal static Exception ActivityNotDetected
             => new NullReferenceException("The current Activity can not be detected. " +
-                "Ensure that you have called Init in your Activity or Application class.");
+                $"Ensure that you have called Xamarin.Essentials.Platform.Init in your Activity or Application class.");
 #endif
 
 #if __IOS__
