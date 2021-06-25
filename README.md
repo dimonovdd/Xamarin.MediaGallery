@@ -35,38 +35,9 @@ protected override void OnCreate(Bundle savedInstanceState)
 }
  ```
 
- To handle runtime results on Android, this plugin must receive any `OnActivityResult`.
-
- ```csharp
-protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
-{
-    if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
-    NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
-    
-    base.OnActivityResult(requestCode, resultCode, intent);
-}
- ```
-
- Open the AndroidManifest.xml file under the Properties folder and add the following inside of the manifest node.
-
- ```xml
-<!-- for saving photo/video -->
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
- ```
-
 ## iOS
 
-In your `Info.plist` add the following keys:
-
- ```xml
-<!-- for saving photo/video on iOS 14+ -->
-<key>NSPhotoLibraryAddUsageDescription</key>
-<string>This app needs access to the photo gallery for saving photos and videos</string>
-
-<!-- for saving photo/video on older versions -->
-<key>NSPhotoLibraryUsageDescription</key>
-<string>This app needs access to the photo gallery for saving photos and videos</string>
- ```
+No additional setup required.
 
 # PickAsync
 
@@ -121,13 +92,36 @@ foreach (var file in files)
 - `Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)`
 - `Task<MediaPickResult> PickAsync(MediaPickRequest request, CancellationToken token = default)`
 
-## Presentation Location
+## Android
+
+ To handle runtime results on Android, this plugin must receive any `OnActivityResult`.
+
+ ```csharp
+protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
+{
+    if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
+    NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
+    
+    base.OnActivityResult(requestCode, resultCode, intent);
+}
+ ```
+
+- When using the `PickAsync` method the `selectionLimit` parameter just sets multiple pick allowed
+- A request to cancel `PickAsync` method will cancel a task, but the picker UI can remain open until it is closed by the user.
+
+## iOS
+
+- Multi picking is supported since iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
+- The `NameWithoutExtension` property on iOS versions before 14 returns a null value if the permission to access photos was not granted
+
+### Presentation Location
 
 When picking files on iPadOS you have the ability to present in a pop over control. This specifies where the pop over will appear and point an arrow directly to. You can specify the location using the `PresentationSourceBounds` property. Setting this property has the same behavior as [Launcher or Share in Xamarin.Essentials](https://docs.microsoft.com/en-us/xamarin/essentials/share?tabs=android#presentation-location).
 
 **Screenshots:**
 - [Popover](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/iPadPopover.png)
 - [PageSheet](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/iPadPageSheet.png)
+
 
 # SaveAsync
 
@@ -149,17 +143,30 @@ await MediaGallery.SaveAsync(MediaFileType.Image, stream, fileName);
 //...
  ```
 
-# Platform Differences
 ## Android
 
+Open the AndroidManifest.xml file under the Properties folder and add the following inside of the manifest node.
+
+ ```xml
+<!-- for saving photo/video -->
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+ ```
+
 - When saving media files, the date and time are appended to the file name
-- When using the `PickAsync` method the `selectionLimit` parameter just sets multiple pick allowed
-- A request to cancel `PickAsync` method will cancel a task, but the picker UI can remain open until it is closed by the user.
 
 ## iOS
 
-- Multi picking is supported since iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
-- The `NameWithoutExtension` property on iOS versions before 14 returns a null value if the permission to access photos was not granted
+In your `Info.plist` add the following keys:
+
+ ```xml
+<!-- for saving photo/video on iOS 14+ -->
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>This app needs access to the photo gallery for saving photos and videos</string>
+
+<!-- for saving photo/video on older versions -->
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app needs access to the photo gallery for saving photos and videos</string>
+ ```
 
 # Screenshots
 
