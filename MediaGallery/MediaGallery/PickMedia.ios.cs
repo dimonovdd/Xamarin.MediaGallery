@@ -146,11 +146,9 @@ namespace NativeMedia
             }
 
             static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
-                => results
-                .Select(res => new { res.ItemProvider, res.AssetIdentifier })
-                .Where(provider => provider != null)
-                .Select(provider => new PHPickerFile(provider.ItemProvider, provider.AssetIdentifier))
-                .ToArray();
+                 => results.Where(res => res.ItemProvider != null)
+                 .Select(res => new PHPickerFile(res.ItemProvider, res.AssetIdentifier))
+                 .ToArray();
         }
 
         class PhotoPickerDelegate : UIImagePickerControllerDelegate
