@@ -35,9 +35,29 @@ protected override void OnCreate(Bundle savedInstanceState)
 }
  ```
 
-## iOS
+## iOS (Optional)
 
-No additional setup required.
+In the iOS project's AppDelegate that is launched, this plugin must be initialized in the FinishedLaunching method:
+
+```csharp
+public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+{
+    NativeMedia.Platform.Init(GetTopViewController);
+    global::Xamarin.Forms.Forms.Init();
+    LoadApplication(new App());
+    return base.FinishedLaunching(app, options);
+}
+
+public UIViewController GetTopViewController()
+{
+    var window = UIApplication.SharedApplication.KeyWindow.RootViewController;
+
+    if (vc is UINavigationController navController)
+        vc = navController.ViewControllers.Last();
+
+    return vc;
+}
+ ```
 
 # PickAsync
 
