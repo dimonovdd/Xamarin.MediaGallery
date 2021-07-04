@@ -210,6 +210,12 @@ namespace NativeMedia
 
             public override void DidDismiss(UIPresentationController presentationController)
                 => tcs?.TrySetResult(null);
+
+            protected override void Dispose(bool disposing)
+            {
+                tcs?.TrySetResult(null);
+                base.Dispose(disposing);
+            }
         }
     }
 }

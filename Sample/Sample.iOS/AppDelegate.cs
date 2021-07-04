@@ -1,5 +1,8 @@
-﻿using Foundation;
+﻿using System.Linq;
+using Foundation;
+using Rg.Plugins.Popup.Services;
 using UIKit;
+using Xamarin.Forms.Platform.iOS;
 
 namespace Sample.iOS
 {
@@ -18,10 +21,27 @@ namespace Sample.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            Rg.Plugins.Popup.Popup.Init();
+            NativeMedia.Platform.Init(GetTopViewController);
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
+        }
+
+        public UIViewController GetTopViewController()
+        {
+            if (!(PopupNavigation.Instance?.PopupStack?.Any() ?? false))
+                return null;
+
+            var vc = UIApplication.SharedApplication.Windows
+                ?.FirstOrDefault(w => w.RootViewController != null && !(w.RootViewController is Rg.Plugins.Popup.IOS.Renderers.PopupPageRenderer))
+                ?.RootViewController;
+
+            if (vc is UINavigationController navController)
+                vc = navController.ViewControllers.Last();
+            
+            return vc;
         }
     }
 }
