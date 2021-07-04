@@ -22,12 +22,20 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="MetadataExtractor" Version="2.4.3" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.12" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="**\*.xaml.cs" DependentUpon="PickPage %28copy%29.xaml" />
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="**\*.xaml.cs" DependentUpon="HomePage %28copy%29.xaml" />
     <EmbeddedResource Include="..\..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\HomePage %28copy%29.xaml.cs">
+      <DependentUpon>HomePage %28copy%29.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MediaGallery\MediaGallery.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Rg.Plugins.Popup" />
   </ItemGroup>
 </Project>

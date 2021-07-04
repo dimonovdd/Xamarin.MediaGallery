@@ -71,6 +71,9 @@
     <PackageReference Include="MetadataExtractor">
       <Version>2.4.3</Version>
     </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>2.0.0.12</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />

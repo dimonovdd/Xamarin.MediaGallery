@@ -11,5 +11,6 @@
     <StackLayout>
         <Button Text="Pick" Command="{Binding NavigateToPickCommand, Mode=OneTime}"/>
         <Button Text="Save" Command="{Binding NavigateToSaveCommand, Mode=OneTime}"/>
+        <Button Text="Pick Popup" Command="{Binding NavigateToPopupCommand, Mode=OneTime}"/>
     </StackLayout>
 </views:BasePage>
