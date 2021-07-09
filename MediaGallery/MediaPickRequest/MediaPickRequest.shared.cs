@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-
 using System.Linq;
 
 namespace NativeMedia
@@ -8,8 +7,8 @@ namespace NativeMedia
     public class MediaPickRequest
     {
         /// <summary></summary>
-        /// <param name="selectionLimit">Maximum count of files to pick. On Android the option just sets multiple pick allowed.</param>
-        /// <param name="types">Media file types available for picking</param>
+        /// <param name="selectionLimit"><inheritdoc cref="SelectionLimit" path="/summary"/></param>
+        /// <param name="types"><inheritdoc cref="Types" path="/summary"/></param>
         public MediaPickRequest(int selectionLimit = 1, params MediaFileType[] types)
         {
             SelectionLimit = selectionLimit > 0 ? selectionLimit : 1;
@@ -18,10 +17,14 @@ namespace NativeMedia
                 : new MediaFileType[] { MediaFileType.Image, MediaFileType.Video };
         }
 
-
+        /// <summary>Maximum count of files to pick. On Android the option just sets multiple pick allowed.</summary>
         public int SelectionLimit { get; }
+
+        /// <summary>Media file types available for picking.</summary>
         public MediaFileType[] Types { get; }
 
+        /// <summary>Media file types available for picking.</summary>
+        public string Title { get; set; }
 
         /// <summary>Gets or sets the source rectangle to display the Share UI from. This is only used on iPad currently.</summary>
         public Rectangle PresentationSourceBounds { get; set; } = default;

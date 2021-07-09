@@ -70,6 +70,7 @@ namespace Sample.ViewModels
                         task = MediaGallery.PickAsync(
                             new MediaPickRequest(SelectionLimit, types)
                             {
+                                Title = $"Select {SelectionLimit} photos",
                                 PresentationSourceBounds = view == null
                                     ? System.Drawing.Rectangle.Empty
                                     : view.GetAbsoluteBounds().ToSystemRectangle(40)
