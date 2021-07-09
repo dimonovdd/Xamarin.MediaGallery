@@ -6,7 +6,7 @@ namespace NativeMedia
     /// <summary>Request for picking a media file.</summary>
     public class MediaPickRequest
     {
-        /// <summary>vre</summary>
+        /// <summary></summary>
         /// <param name="selectionLimit"><inheritdoc cref="SelectionLimit" path="/summary"/></param>
         /// <param name="types"><inheritdoc cref="Types" path="/summary"/></param>
         public MediaPickRequest(int selectionLimit = 1, params MediaFileType[] types)
