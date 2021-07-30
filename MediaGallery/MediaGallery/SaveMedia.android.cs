@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using Android.Content;
-using Android.OS;
 using Android.Provider;
 using Android.Webkit;
 using Xamarin.Essentials;
@@ -17,20 +16,20 @@ using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
 using MediaColumns = Android.Provider.MediaStore.MediaColumns;
 #endif
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     public static partial class MediaGallery
     {
         static async Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
         {
             using var ms = new MemoryStream(data);
-            await PlatformSaveAsync(type, ms, fileName);
+            await PlatformSaveAsync(type, ms, fileName).ConfigureAwait(false);
         }
 
         static async Task PlatformSaveAsync(MediaFileType type, string filePath)
         {
             using var fileStream = System.IO.File.OpenRead(filePath);
-            await PlatformSaveAsync(type, fileStream, Path.GetFileName(filePath));
+            await PlatformSaveAsync(type, fileStream, Path.GetFileName(filePath)).ConfigureAwait(false);
         }
 
         static async Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName)
@@ -62,7 +61,7 @@ namespace Xamarin.MediaGallery
                 ? Environment.DirectoryPictures
                 : Environment.DirectoryMovies;
 
-            if ((int)Build.VERSION.SdkInt >= 29)
+            if (Platform.HasSdkVersion(29))
             {
                 values.Put(MediaColumns.RelativePath, Path.Combine(relativePath, albumName));
                 values.Put(MediaColumns.IsPending, true);

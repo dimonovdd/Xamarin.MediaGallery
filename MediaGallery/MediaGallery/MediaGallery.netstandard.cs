@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     public static partial class MediaGallery
     {
-        static Task<IEnumerable<IMediaFile>> PlatformPickAsync(int selectionLimit, params MediaFileType[] types)
-            => throw NotSupportedOrImplementedException;
+        static Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
+            => Task.FromResult<IEnumerable<IMediaFile>>(null);
 
         static Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
-             => throw NotSupportedOrImplementedException;
+             => Task.CompletedTask;
 
         static Task PlatformSaveAsync(MediaFileType type, string filePath)
-            => throw NotSupportedOrImplementedException;
+            => Task.CompletedTask;
 
         static Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName)
-            => throw NotSupportedOrImplementedException;
-
-        static Exception NotSupportedOrImplementedException
-            => new NotImplementedException("This functionality is not implemented in the portable version of this assembly. " +
-                "You should reference the NuGet package from your main application project in order to reference the platform-specific implementation.");
+            => Task.CompletedTask;
     }
 }

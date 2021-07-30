@@ -1,6 +1,8 @@
-# Xamarin.MediaGallery [![NuGet Badge](https://img.shields.io/nuget/v/Xamarin.MediaGallery?style=plastic)](https://www.nuget.org/packages/Xamarin.MediaGallery/)
+# Xamarin.MediaGallery
 
-![header](/header.svg)
+![header](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/header.svg)
+
+[![NuGet Badge](https://img.shields.io/nuget/vpre/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery)](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/main/LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery) [![YouTube Video Views](https://img.shields.io/youtube/views/8JvgnlHVyrI?style=social)](https://youtu.be/8JvgnlHVyrI)
 
 This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices.
 
@@ -9,13 +11,15 @@ This plugin is designed for picking and saving photos and video files from the n
 
 # Available Platforms
 
-| Platform | Version |
-| --- | --- |
-| Android | MonoAndroid 10.0+|
-| iOS | Xamarin.iOS10 |
-| .NET Standard | 2.1 |
+| Platform | Version | Minimum OS Version |
+| --- | --- | --- |
+| Android | MonoAndroid 10.0+| 5.0 |
+| iOS | Xamarin.iOS10 | 11.0 |
+| .NET Standard | 2.0 | - |
 
 # Getting started
+
+You can just watch the [Video](https://youtu.be/8JvgnlHVyrI) that [@jfversluis](https://github.com/jfversluis) published
 
 ## Android
 
@@ -26,29 +30,152 @@ protected override void OnCreate(Bundle savedInstanceState)
 {
     //...
     base.OnCreate(savedInstanceState);
-    Xamarin.MediaGallery.Platform.Init(this, savedInstanceState);
+    NativeMedia.Platform.Init(this, savedInstanceState);
     //...
 }
  ```
+
+## iOS (Optional)
+
+In the iOS project's AppDelegate that is launched, this plugin must be initialized in the FinishedLaunching method:
+
+```csharp
+public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+{
+    NativeMedia.Platform.Init(GetTopViewController);
+    global::Xamarin.Forms.Forms.Init();
+    LoadApplication(new App());
+    return base.FinishedLaunching(app, options);
+}
+
+public UIViewController GetTopViewController()
+{
+    var window = UIApplication.SharedApplication.KeyWindow.RootViewController;
+
+    if (vc is UINavigationController navController)
+        vc = navController.ViewControllers.Last();
+
+    return vc;
+}
+ ```
+
+# PickAsync
+
+This method does not require requesting permissions from users
+
+```csharp
+var cts = new CancellationTokenSource();
+IMediaFile[] files = null;
+
+try
+{
+    var request = new MediaPickRequest(1, MediaFileType.Image, MediaFileType.Video)
+    {
+        PresentationSourceBounds = System.Drawing.Rectangle.Empty,
+        Title = "Select"
+    };
+
+    cts.CancelAfter(TimeSpan.FromMinutes(5));
+
+    var results = await MediaGallery.PickAsync(request, cts.Token);
+    files = results?.Files?.ToArray();
+}
+catch (OperationCanceledException)
+{
+    // handling a cancellation request
+}
+catch (Exception)
+{
+    // handling other exceptions
+}
+finally
+{
+    cts.Dispose();
+}
+
+
+if (files == null)
+    return;
+
+foreach (var file in files)
+{
+    var fileName = file.NameWithoutExtension; //Can return an null or empty value
+    var extension = file.Extension;
+    var contentType = file.ContentType;
+    using var stream = await file.OpenReadAsync();
+    //...
+    file.Dispose();
+}
+ ```
+
+ This method has two overloads:
+
+- `Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)`
+- `Task<MediaPickResult> PickAsync(MediaPickRequest request, CancellationToken token = default)`
+
+## Android
 
  To handle runtime results on Android, this plugin must receive any `OnActivityResult`.
 
  ```csharp
 protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
 {
-    if (Xamarin.MediaGallery.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
-    Xamarin.MediaGallery.Platform.OnActivityResult(requestCode, resultCode, intent);
+    if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
+    NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
     
     base.OnActivityResult(requestCode, resultCode, intent);
 }
  ```
 
- Open the AndroidManifest.xml file under the Properties folder and add the following inside of the manifest node.
+- When using the `PickAsync` method the `selectionLimit` parameter just sets multiple pick allowed
+- A request to cancel `PickAsync` method will cancel a task, but the picker UI can remain open until it is closed by the user
+- The use of `Title` property depends on each device
+
+## iOS
+
+- Multi picking is supported since iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
+- The `NameWithoutExtension` property on iOS versions before 14 returns a null value if the permission to access photos was not granted
+- `Title` property not used
+
+### Presentation Location
+
+When picking files on iPadOS you have the ability to present in a pop over control. This specifies where the pop over will appear and point an arrow directly to. You can specify the location using the `PresentationSourceBounds` property. Setting this property has the same behavior as [Launcher or Share in Xamarin.Essentials](https://docs.microsoft.com/en-us/xamarin/essentials/share?tabs=android#presentation-location).
+
+**Screenshots:**
+- [Popover](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/iPadPopover.png)
+- [PageSheet](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/iPadPageSheet.png)
+
+
+# SaveAsync
+
+```csharp
+//...
+var status = await Permissions.RequestAsync<SaveMediaPermission>();
+
+if (status != PermissionStatus.Granted)
+    return;
+
+await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
+
+//OR Using a byte array or a stream
+
+await MediaGallery.SaveAsync(MediaFileType.Image, stream, fileName);
+
+//The name or the path to the saved file must contain the extension.
+
+//...
+ ```
+
+## Android
+
+Open the AndroidManifest.xml file under the Properties folder and add the following inside of the manifest node.
 
  ```xml
 <!-- for saving photo/video -->
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
  ```
+
+- When saving media files, the date and time are appended to the file name
 
 ## iOS
 
@@ -57,56 +184,15 @@ In your `Info.plist` add the following keys:
  ```xml
 <!-- for saving photo/video on iOS 14+ -->
 <key>NSPhotoLibraryAddUsageDescription</key>
-<string>This app needs access to the photo gallery for picking photos and videos</string>
+<string>This app needs access to the photo gallery for saving photos and videos</string>
 
 <!-- for saving photo/video on older versions -->
 <key>NSPhotoLibraryUsageDescription</key>
-<string>This app needs access to the photo gallery for picking photos and videos</string>
+<string>This app needs access to the photo gallery for saving photos and videos</string>
  ```
-
-# PickAsync
-
-```csharp
-//...
-var results = await MediaGallery.PickAsync(1, MediaFileType.Image, MediaFileType.Video);
-
-if (results?.Files == null)
-    return;
-
-foreach(var res in results.Files)
-{
-    var fileName = file.FileName;
-    var extension = file.Extension;
-    var contentType = file.ContentType;
-    using var stream = await file.OpenReadAsync();
-//...
-}
- ```
-
-# SaveAsync
-
-```csharp
-//...
-var status = await Permissions.CheckStatusAsync<SaveMediaPermission>();
-
-if (status != PermissionStatus.Granted)
-    return;
-
-await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
-//...
- ```
-# Platform Differences
-## Android
-
-- When saving media files, the date and time are appended to the file name
-- When using `PickAsync` method `selectionLimit` parameter just sets multiple selection is allowed
-
-## iOS
-
-- Multi picking is supported from iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
 
 # Screenshots
 
 |______________|   iOS   | Android |______________|
 |:------------:|:---:|:-------:|:------------:|
-| |![iOS](/Screenshots/ios.jpg)|![Android](/Screenshots/droid.jpg)| |
+| |![iOS](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/ios.jpg)|![Android](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/droid.jpg)| |

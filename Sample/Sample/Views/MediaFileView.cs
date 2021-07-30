@@ -1,6 +1,6 @@
-﻿using Xamarin.CommunityToolkit.UI.Views;
+﻿using NativeMedia;
+using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.Forms;
-using Xamarin.MediaGallery;
 
 namespace Sample.Views
 {

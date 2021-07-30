@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Sample.ViewModels;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Sample.Views
@@ -31,10 +32,9 @@ namespace Sample.Views
             }
         }
 
-        Task OnDisplayAlert(string message)
-        {
-            return DisplayAlert(null, message, "Ok");
-        }
+        async Task OnDisplayAlert(string message)
+            => await MainThread.InvokeOnMainThreadAsync(
+                ()=> DisplayAlert(null, message, "Ok"));
 
         Task OnNavigate(BaseVM vm, bool showModal)
         {

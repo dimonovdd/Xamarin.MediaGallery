@@ -17,23 +17,16 @@
     <PackageReference Include="PropertyChanged.Fody" Version="3.3.3">
         <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Fody" Version="6.5.0">
+    <PackageReference Include="Fody" Version="6.5.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="MetadataExtractor" Version="2.4.3" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.12" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="**\*.xaml.cs" DependentUpon="PickPage %28copy%29.xaml" />
+    <Compile Update="**\*.xaml.cs" />
     <EmbeddedResource Include="..\..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\PickPage %28copy%29.xaml.cs">
-      <DependentUpon>PickPage %28copy%29.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\MediaFileInfoPage.xaml.cs">
-      <DependentUpon>MediaFileInfoPage.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MediaGallery\MediaGallery.csproj" />

@@ -5,7 +5,7 @@ using Foundation;
 using Photos;
 using Xamarin.Essentials;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
     public static partial class MediaGallery
     {
@@ -20,7 +20,7 @@ namespace Xamarin.MediaGallery
                 filePath = GetFilePath(fileName);
                 await File.WriteAllBytesAsync(filePath, data);
 
-                await PlatformSaveAsync(type, filePath);
+                await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
             }
             finally
             {
@@ -39,7 +39,7 @@ namespace Xamarin.MediaGallery
                 await fileStream.CopyToAsync(stream);
                 stream.Close();
 
-                await PlatformSaveAsync(type, filePath);
+                await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
             }
             finally
             {
@@ -56,12 +56,12 @@ namespace Xamarin.MediaGallery
                 using var request = type == MediaFileType.Video
                 ? PHAssetChangeRequest.FromVideo(fileUri)
                 : PHAssetChangeRequest.FromImage(fileUri);
-            });
+            }).ConfigureAwait(false);
         }
 
         static async Task PhotoLibraryPerformChanges(Action action)
         {
-            var tcs = new TaskCompletionSource<Exception>();
+            var tcs = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             PHPhotoLibrary.SharedPhotoLibrary.PerformChanges(
                 () =>

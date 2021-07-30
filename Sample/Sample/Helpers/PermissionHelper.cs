@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Xamarin.MediaGallery;
 using static Xamarin.Essentials.Permissions;
 
 namespace Sample.Helpers

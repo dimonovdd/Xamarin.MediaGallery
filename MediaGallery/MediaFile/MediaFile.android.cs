@@ -3,17 +3,23 @@ using System.Threading.Tasks;
 using Android.Webkit;
 using Uri = Android.Net.Uri;
 
-namespace Xamarin.MediaGallery
+namespace NativeMedia
 {
-    public partial class MediaFile
+    partial class MediaFile
     {
+        readonly Uri uri;
+
         internal MediaFile(string fileName, Uri uri)
         {
-            FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-            Extension = Path.GetExtension(fileName)?.TrimStart('.');
+            NameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+            Extension = Path.GetExtension(fileName);
             ContentType = MimeTypeMap.Singleton.GetMimeTypeFromExtension(Extension);
-            openReadAsync =
-                () => Task.FromResult(Platform.AppActivity.ContentResolver.OpenInputStream(uri));
+            this.uri = uri;
         }
+
+        Task<Stream> PlatformOpenReadAsync()
+            => Task.FromResult(Platform.AppActivity.ContentResolver.OpenInputStream(uri));
+
+        void PlatformDispose() { }
     }
 }
