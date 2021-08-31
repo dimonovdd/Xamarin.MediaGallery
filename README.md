@@ -37,7 +37,7 @@ protected override void OnCreate(Bundle savedInstanceState)
 
 ## iOS (Optional)
 
-In the iOS project's AppDelegate that is launched, this plugin must be initialized in the FinishedLaunching method:
+In the iOS project's AppDelegate that is launched, this plugin can be initialized in the FinishedLaunching method:
 
 ```csharp
 public override bool FinishedLaunching(UIApplication app, NSDictionary options)
@@ -50,7 +50,7 @@ public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 
 public UIViewController GetTopViewController()
 {
-    var window = UIApplication.SharedApplication.KeyWindow.RootViewController;
+    var vc = UIApplication.SharedApplication.KeyWindow.RootViewController;
 
     if (vc is UINavigationController navController)
         vc = navController.ViewControllers.Last();
