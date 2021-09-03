@@ -26,7 +26,6 @@ namespace NativeMedia
         {
             token.ThrowIfCancellationRequested();
             Intent intent = null;
-            Intent chooserIntent = null;
 
             try
             {
@@ -62,7 +61,9 @@ namespace NativeMedia
                 if (!string.IsNullOrWhiteSpace(request.Title))
                     intent.PutExtra(Intent.ExtraTitle, request.Title);
 
-                chooserIntent = Intent.CreateChooser(intent, request.Title ?? string.Empty);
+                intent = !Platform.HasSdkVersion(30)
+                    ? Intent.CreateChooser(intent, request.Title ?? string.Empty)
+                    : intent;
 
                 CancelTaskIfRequested();
 
@@ -73,7 +74,7 @@ namespace NativeMedia
                             tcs?.TrySetCanceled(token);
                         });
 
-                Platform.AppActivity.StartActivityForResult(chooserIntent, Platform.requestCode);
+                Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
 
                 CancelTaskIfRequested(false);
                 var result = await tcs.Task.ConfigureAwait(false);
@@ -93,8 +94,6 @@ namespace NativeMedia
             {
                 intent?.Dispose();
                 intent = null;
-                chooserIntent?.Dispose();
-                chooserIntent = null;
                 tcs = null;
             }
         }
