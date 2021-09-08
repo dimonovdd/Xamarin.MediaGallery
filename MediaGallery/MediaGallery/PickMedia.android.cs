@@ -61,7 +61,7 @@ namespace NativeMedia
                 if (!string.IsNullOrWhiteSpace(request.Title))
                     intent.PutExtra(Intent.ExtraTitle, request.Title);
 
-                intent = !Platform.HasSdkVersion(30)
+                intent = request.NeedUseCreateChooser
                     ? Intent.CreateChooser(intent, request.Title ?? string.Empty)
                     : intent;
 

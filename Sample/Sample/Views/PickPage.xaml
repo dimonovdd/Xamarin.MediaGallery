@@ -18,6 +18,11 @@
             <Label Text="Cancel after:"/>
             <Entry Text="{Binding DelayMilliseconds}" Placeholder="Milliseconds" Keyboard="Numeric"/>
 
+            <Grid ColumnDefinitions="auto,auto">
+                <Label Grid.Column="0" Text="Need use Intent.CreateChooser:"/>
+                <Switch Grid.Column="1" IsToggled="{Binding NeedUseCreateChooser}"/>
+            </Grid>
+
             <Button Text="Any" Command="{Binding PickAnyCommand, Mode=OneTime}"/>
             <Button Text="Image" Command="{Binding PickImageCommand, Mode=OneTime}"
                     CommandParameter="{Binding Source={RelativeSource Self}}"/>
