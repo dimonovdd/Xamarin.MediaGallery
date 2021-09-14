@@ -72,7 +72,7 @@ try
     var request = new MediaPickRequest(1, MediaFileType.Image, MediaFileType.Video)
     {
         PresentationSourceBounds = System.Drawing.Rectangle.Empty,
-        NeedUseCreateChooser = true,
+        UseCreateChooser = true,
         Title = "Select"
     };
 
@@ -131,13 +131,14 @@ protected override void OnActivityResult(int requestCode, Result resultCode, Int
 - When using the `PickAsync` method the `selectionLimit` parameter just sets multiple pick allowed
 - A request to cancel `PickAsync` method will cancel a task, but the picker UI can remain open until it is closed by the user
 - The use of `Title` property depends on each device
-- `NeedUseCreateChooser` specifies whether to use Intent.createChooser for picking.
+- `UseCreateChooser` specifies whether to use Intent.createChooser for picking.
 
 ## iOS
 
 - Multi picking is supported since iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
 - The `NameWithoutExtension` property on iOS versions before 14 returns a null value if the permission to access photos was not granted
 - `Title` property not used
+- `UseCreateChooser` property not used
 
 ### Presentation Location
 
