@@ -26,6 +26,7 @@ namespace NativeMedia
         {
             token.ThrowIfCancellationRequested();
             Intent intent = null;
+            Intent intentDisposable = null;
 
             try
             {
@@ -61,9 +62,11 @@ namespace NativeMedia
                 if (!string.IsNullOrWhiteSpace(request.Title))
                     intent.PutExtra(Intent.ExtraTitle, request.Title);
 
-                intent = request.NeedUseCreateChooser
-                    ? Intent.CreateChooser(intent, request.Title ?? string.Empty)
-                    : intent;
+                if (request.UseCreateChooser)
+                {
+                    intentDisposable = intent;
+                    intent = Intent.CreateChooser(intentDisposable, request.Title ?? string.Empty);
+                }
 
                 CancelTaskIfRequested();
 
@@ -92,6 +95,8 @@ namespace NativeMedia
             }
             finally
             {
+                intentDisposable?.Dispose();
+                intentDisposable = null;
                 intent?.Dispose();
                 intent = null;
                 tcs = null;

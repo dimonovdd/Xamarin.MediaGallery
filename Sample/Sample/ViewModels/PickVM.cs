@@ -76,7 +76,7 @@ namespace Sample.ViewModels
                                 PresentationSourceBounds = view == null
                                     ? System.Drawing.Rectangle.Empty
                                     : view.GetAbsoluteBounds().ToSystemRectangle(40),
-                                NeedUseCreateChooser = NeedUseCreateChooser
+                                UseCreateChooser = NeedUseCreateChooser
                             },
                             cts.Token);
                     }

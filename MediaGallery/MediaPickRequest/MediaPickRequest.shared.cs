@@ -30,6 +30,6 @@ namespace NativeMedia
         public Rectangle PresentationSourceBounds { get; set; } = default;
 
         /// <summary>Gets or sets whether to use Intent.CreateChooser for picking. Currently used only for Android.</summary>
-        public bool NeedUseCreateChooser { get; set; } = true;
+        public bool UseCreateChooser { get; set; } = true;
     }
 }
