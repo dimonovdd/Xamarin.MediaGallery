@@ -20,7 +20,7 @@
 
             <Grid ColumnDefinitions="auto,auto">
                 <Label Grid.Column="0" Text="Need use Intent.CreateChooser:"/>
-                <Switch Grid.Column="1" IsToggled="{Binding NeedUseCreateChooser}"/>
+                <Switch Grid.Column="1" IsToggled="{Binding UseCreateChooser}"/>
             </Grid>
 
             <Button Text="Any" Command="{Binding PickAnyCommand, Mode=OneTime}"/>

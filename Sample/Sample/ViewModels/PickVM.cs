@@ -37,7 +37,7 @@ namespace Sample.ViewModels
 
         public string OperationInfo { get; set; }
 
-        public bool NeedUseCreateChooser { get; set; } = true;
+        public bool UseCreateChooser { get; set; } = true;
 
         public IEnumerable<IMediaFile> SelectedItems { get; set; }
 
@@ -76,7 +76,7 @@ namespace Sample.ViewModels
                                 PresentationSourceBounds = view == null
                                     ? System.Drawing.Rectangle.Empty
                                     : view.GetAbsoluteBounds().ToSystemRectangle(40),
-                                UseCreateChooser = NeedUseCreateChooser
+                                UseCreateChooser = UseCreateChooser
                             },
                             cts.Token);
                     }
