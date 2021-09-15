@@ -29,7 +29,7 @@ namespace NativeMedia
         /// <summary>Gets or sets the source rectangle to display the Share UI from. This is only used on iPad currently.</summary>
         public Rectangle PresentationSourceBounds { get; set; } = default;
 
-        /// <summary>Gets or sets whether to use Intent.CreateChooser for picking. Currently used only for Android.</summary>
+        /// <summary>Gets or sets whether to use Intent.CreateChooser. Currently used only for Android.</summary>
         public bool UseCreateChooser { get; set; } = true;
     }
 }
