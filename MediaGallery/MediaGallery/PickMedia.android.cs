@@ -65,7 +65,7 @@ namespace NativeMedia
                 if (request.UseCreateChooser)
                 {
                     intentDisposable = intent;
-                    intent = Intent.CreateChooser(intentDisposable, request.Title ?? string.Empty);
+                    intent = Intent.CreateChooser(intent, request.Title ?? string.Empty);
                 }
 
                 CancelTaskIfRequested();
