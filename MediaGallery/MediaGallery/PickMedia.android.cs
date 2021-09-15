@@ -26,7 +26,7 @@ namespace NativeMedia
         {
             token.ThrowIfCancellationRequested();
             Intent intent = null;
-            Intent intentDisposable = null;
+            IDisposable intentDisposable = null;
 
             try
             {
