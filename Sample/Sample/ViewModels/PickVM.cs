@@ -37,6 +37,8 @@ namespace Sample.ViewModels
 
         public string OperationInfo { get; set; }
 
+        public bool UseCreateChooser { get; set; } = true;
+
         public IEnumerable<IMediaFile> SelectedItems { get; set; }
 
         public ICommand PickAnyCommand { get; }
@@ -73,7 +75,8 @@ namespace Sample.ViewModels
                                 Title = $"Select {SelectionLimit} photos",
                                 PresentationSourceBounds = view == null
                                     ? System.Drawing.Rectangle.Empty
-                                    : view.GetAbsoluteBounds().ToSystemRectangle(40)
+                                    : view.GetAbsoluteBounds().ToSystemRectangle(40),
+                                UseCreateChooser = UseCreateChooser
                             },
                             cts.Token);
                     }

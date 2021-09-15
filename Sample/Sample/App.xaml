@@ -45,6 +45,10 @@
             <Style TargetType="Label">
                 <Setter Property="Margin" Value="0" />
             </Style>
+            <Style TargetType="Switch">
+                <Setter Property="OnColor" Value="LightGray" />
+                <Setter Property="ThumbColor" Value="#990000ff" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
