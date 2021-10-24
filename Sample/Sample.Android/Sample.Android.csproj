@@ -86,7 +86,7 @@
       <Name>Sample</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\MediaGallery\MediaGallery.csproj">
-      <Project>{B4A8D46C-A595-44DD-961B-D1BE3BCCCFFE}</Project>
+      <Project>{7159996A-4248-436D-9111-49DABB895B90}</Project>
       <Name>MediaGallery</Name>
     </ProjectReference>
   </ItemGroup>

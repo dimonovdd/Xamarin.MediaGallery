@@ -28,5 +28,9 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>For adding mediafiles</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>For adding mediafiles</string>
 </dict>
 </plist>

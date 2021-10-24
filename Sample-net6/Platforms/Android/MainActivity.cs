@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content.PM;
+using Android.Content;
 using Android.OS;
 using Microsoft.Maui;
 
@@ -12,6 +13,14 @@ namespace Sample_net6
         {
 			base.OnCreate(savedInstanceState);
 			NativeMedia.Platform.Init(this, savedInstanceState);
+		}
+
+		protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
+		{
+			if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
+				NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
+
+			base.OnActivityResult(requestCode, resultCode, intent);
 		}
 	}
 }
