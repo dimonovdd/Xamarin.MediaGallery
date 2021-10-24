@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Foundation;
 using Photos;
-using Xamarin.Essentials;
 
 namespace NativeMedia
 {

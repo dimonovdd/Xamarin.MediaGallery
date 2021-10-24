@@ -17,8 +17,6 @@ namespace Sample_net6
 		{
 			count++;
 			CounterLabel.Text = $"Current count: {count}";
-
-			SemanticScreenReader.Announce(CounterLabel.Text);
 		}
 	}
 }

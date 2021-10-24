@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Photos;
-using Xamarin.Essentials;
 
 namespace NativeMedia
 {
