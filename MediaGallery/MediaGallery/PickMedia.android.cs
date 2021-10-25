@@ -7,12 +7,11 @@ using Android.Content;
 using Uri = Android.Net.Uri;
 using Android.Provider;
 using System.Threading;
-#if MONOANDROID11_0 || NET6_0
-using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
-#else
+#if MONOANDROID10_0
 using MediaColumns = Android.Provider.MediaStore.MediaColumns;
+#else
+using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
 #endif
-
 
 namespace NativeMedia
 {

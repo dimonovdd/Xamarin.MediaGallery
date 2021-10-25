@@ -6,7 +6,7 @@
     <PackageId>Xamarin.MediaGallery</PackageId>
     <PackageTags>maui, xamarin, .net6, ios, android, toolkit, xamarin.forms, media, picker, photos, videos, mediapicker</PackageTags>
     <Description>This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices</Description>
-    <Version>2.0.0-preview</Version>
+    <Version>2.0.0-preview1</Version>
     <Authors>dimonovdd</Authors>
     <Owners>dimonovdd</Owners>
     <RepositoryUrl>https://github.com/dimonovdd/Xamarin.MediaGallery</RepositoryUrl>
@@ -33,8 +33,9 @@
     <_Droid Condition=" $(TargetFramework.Contains('droid')) ">true</_Droid>
     <_IOS Condition=" $(TargetFramework.ToLowerInvariant().Contains('ios')) ">true</_IOS>
     
-    <DefineConstants Condition=" '$(_Droid)' == 'true' ">$(DefineConstants);__DROID__;</DefineConstants>
-    <DefineConstants Condition=" '$(_IOS)' == 'true' ">$(DefineConstants);__IOS__;</DefineConstants>
+    <DefineConstants Condition=" '$(_Droid)' == 'true' ">$(DefineConstants);__DROID__;__MOBILE__;</DefineConstants>
+    <DefineConstants Condition=" '$(_IOS)' == 'true' ">$(DefineConstants);__IOS__;__MOBILE__;</DefineConstants>
+    <DefineConstants Condition=" '$(_Net6)' == 'true' ">$(DefineConstants);__NET6__;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(_Net6)' == 'true' ">
     <UseMauiEssentials>true</UseMauiEssentials>
