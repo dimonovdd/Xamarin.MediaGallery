@@ -4,18 +4,25 @@
 
 [![NuGet Badge](https://img.shields.io/nuget/vpre/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery)](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/main/LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery) [![YouTube Video Views](https://img.shields.io/youtube/views/8JvgnlHVyrI?style=social)](https://youtu.be/8JvgnlHVyrI)
 
+
 This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices.
 
 *Unfortunately, at the time of the release of this plugin, [MediaPlugin](https://github.com/jamesmontemagno/MediaPlugin) by [@jamesmontemagno](https://github.com/jamesmontemagno) is no longer supported, and [Xamarin.Essentials](https://github.com/xamarin/Essentials) has not received updates for about 2 months.*
 *This plugin has fixed bugs and added some features that are missing in [Xamarin.Essentials](https://github.com/xamarin/Essentials). I hope that in the future it will be ported to [MAUI](https://github.com/dotnet/maui) so that developers have an easy way to add these features to their apps.*
 
+ [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/dimonovdd)
+
 # Available Platforms
 
-| Platform | Version | Minimum OS Version |
-| --- | --- | --- |
-| Android | MonoAndroid 10.0+| 5.0 |
-| iOS | Xamarin.iOS10 | 11.0 |
-| .NET Standard | 2.0 | - |
+| Platform | Minimum OS Version |
+| --- | --- |
+| Android | 5.0 |
+| iOS | 11.0 |
+
+## TargetFrameworks:
+- `Xamarin.iOS10`, `net6.0-ios`
+- `MonoAndroid10.0`, `MonoAndroid11.0`, `net6.0-android`
+- `netstandard2.0`, `net6.0`
 
 # Getting started
 
