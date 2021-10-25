@@ -4,13 +4,12 @@ using System.Threading.Tasks;
 using Android.Content;
 using Android.Provider;
 using Android.Webkit;
-using Xamarin.Essentials;
 using Environment = Android.OS.Environment;
 using File = Java.IO.File;
 using Path = System.IO.Path;
 using Stream = System.IO.Stream;
 using Uri = Android.Net.Uri;
-#if MONOANDROID11_0
+#if MONOANDROID11_0 || NET6_0_ANDROID
 using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
 #else
 using MediaColumns = Android.Provider.MediaStore.MediaColumns;

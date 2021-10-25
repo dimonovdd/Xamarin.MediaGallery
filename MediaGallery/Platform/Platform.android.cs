@@ -25,7 +25,7 @@ namespace NativeMedia
             => MediaGallery.CheckCanProcessResult(requestCode, resultCode, intent);
 
         internal static Activity AppActivity
-            => Xamarin.Essentials.Platform.CurrentActivity
+            => EssentialsEx.Platform.CurrentActivity
             ?? throw ExceptionHelper.ActivityNotDetected;
 
         internal static bool HasSdkVersion(int version)
