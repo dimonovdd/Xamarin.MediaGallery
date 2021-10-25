@@ -1,5 +1,4 @@
 ﻿using System;
-using Xamarin.Essentials;
 
 namespace NativeMedia
 {
@@ -19,7 +18,7 @@ namespace NativeMedia
             if (!isSupported.HasValue)
             {
                  isSupported
-#if MONOANDROID
+#if __DROID__
                  = Platform.HasSdkVersion(21);
 #elif __IOS__
                  = Platform.HasOSVersion(11);
@@ -31,7 +30,7 @@ namespace NativeMedia
                 throw NotSupportedOrImplementedException;
         }
 
-#if MONOANDROID
+#if __DROID__
         internal static Exception ActivityNotDetected
             => new NullReferenceException("The current Activity can not be detected. " +
                 $"Ensure that you have called Xamarin.Essentials.Platform.Init in your Activity or Application class.");

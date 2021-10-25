@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -10,7 +9,6 @@ using MobileCoreServices;
 using Photos;
 using PhotosUI;
 using UIKit;
-using Xamarin.Essentials;
 
 namespace NativeMedia
 {
@@ -81,7 +79,7 @@ namespace NativeMedia
                     if (DeviceInfo.Idiom == DeviceIdiom.Tablet)
                     {
                         pickerRef.ModalPresentationStyle
-                            = request.PresentationSourceBounds != Rectangle.Empty
+                            = request.PresentationSourceBounds != UsingsHelper.EmptyRectangle
                             ? UIModalPresentationStyle.Popover
                             : UIModalPresentationStyle.PageSheet;
 
@@ -89,7 +87,7 @@ namespace NativeMedia
                         {
                             pickerRef.PopoverPresentationController.SourceView = vc.View;
                             pickerRef.PopoverPresentationController.SourceRect
-                            = request.PresentationSourceBounds.ToPlatformRectangle();
+                            = request.PresentationSourceBounds.AsCGRect();
                         }
                     }
 
