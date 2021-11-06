@@ -78,8 +78,7 @@ namespace NativeMedia
                     if (DeviceInfo.Idiom == DeviceIdiom.Tablet)
                     {
                         var rect = request.PresentationSourceBounds.ToRect();
-                        pickerRef.ModalPresentationStyle
-                            = rect != UsingsHelper.EmptyRectangle
+                        pickerRef.ModalPresentationStyle = rect != UsingsHelper.EmptyRectangle
                             ? UIModalPresentationStyle.Popover
                             : UIModalPresentationStyle.PageSheet;
 

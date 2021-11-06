@@ -150,7 +150,7 @@ protected override void OnActivityResult(int requestCode, Result resultCode, Int
 
 When picking files on iPadOS you have the ability to present in a pop over control. This specifies where the pop over will appear and point an arrow directly to. You can specify the location using the `PresentationSourceBounds` property. Setting this property has the same behavior as [Launcher or Share in Xamarin.Essentials](https://docs.microsoft.com/en-us/xamarin/essentials/share?tabs=android#presentation-location).
 
-`PresentationSourceBounds` property takes `System.Drawing.Rectangle` for `Xaamrin` or `Microsoft.Maui.Graphics.Rectangle` for `.net6(MAUI)`
+`PresentationSourceBounds` property takes `System.Drawing.Rectangle` for `Xamarin` or `Microsoft.Maui.Graphics.Rectangle` for `.net6(MAUI)`
 
 **Screenshots:**
 
