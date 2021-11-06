@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -78,16 +77,15 @@ namespace NativeMedia
 
                     if (DeviceInfo.Idiom == DeviceIdiom.Tablet)
                     {
-                        pickerRef.ModalPresentationStyle
-                            = request.PresentationSourceBounds != UsingsHelper.EmptyRectangle
+                        var rect = request.PresentationSourceBounds.ToRect();
+                        pickerRef.ModalPresentationStyle = rect != UsingsHelper.EmptyRectangle
                             ? UIModalPresentationStyle.Popover
                             : UIModalPresentationStyle.PageSheet;
 
                         if (pickerRef.PopoverPresentationController != null)
                         {
                             pickerRef.PopoverPresentationController.SourceView = vc.View;
-                            pickerRef.PopoverPresentationController.SourceRect
-                            = request.PresentationSourceBounds.AsCGRect();
+                            pickerRef.PopoverPresentationController.SourceRect = rect.AsCGRect();
                         }
                     }
 
