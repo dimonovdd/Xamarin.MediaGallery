@@ -54,6 +54,6 @@
 	  <ProjectReference Include="..\MediaGallery\MediaGallery.csproj" />
 	</ItemGroup>-->
 	<ItemGroup>
-	  <PackageReference Include="Xamarin.MediaGallery" Version="2.0.0-preview" />
+	  <PackageReference Include="Xamarin.MediaGallery" Version="2.0.0-preview1" />
 	</ItemGroup>
 </Project>
