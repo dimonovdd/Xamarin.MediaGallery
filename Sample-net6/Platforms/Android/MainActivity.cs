@@ -3,6 +3,7 @@ using Android.Content.PM;
 using Android.Content;
 using Android.OS;
 using Microsoft.Maui;
+using Android.Runtime;
 
 namespace Sample_net6
 {
@@ -12,7 +13,7 @@ namespace Sample_net6
 		protected override void OnCreate(Bundle savedInstanceState)
         {
 			base.OnCreate(savedInstanceState);
-			NativeMedia.Platform.Init(this, savedInstanceState);
+			Microsoft.Maui.Essentials.Platform.Init(this, savedInstanceState);
 		}
 
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
@@ -22,5 +23,7 @@ namespace Sample_net6
 
 			base.OnActivityResult(requestCode, resultCode, intent);
 		}
+
+		
 	}
 }

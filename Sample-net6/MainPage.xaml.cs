@@ -1,11 +1,17 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Essentials;
 using NativeMedia;
 using System.Threading.Tasks;
+using Microsoft.Maui;
+using System;
+using System.IO;
 #if __IOS__
 using Foundation;
+#else
+using Microsoft.Maui.Controls.Compatibility.Platform.Android;
+using Android.Net;
+using Android.Graphics;
 #endif
 
 
@@ -53,6 +59,13 @@ namespace Sample_net6
 #if __IOS__
                 var res = NSBundle.MainBundle.PathForResource("dotnet_bot", ".png");
                 await MediaGallery.SaveAsync(MediaFileType.Image, res);
+#else
+                using var bitmap = await BitmapFactory.DecodeResourceAsync(MauiApplication.Current.Resources, Resource.Drawable.dotnet_bot);
+                using var stream = new MemoryStream();
+                bitmap.Compress(Bitmap.CompressFormat.Png, 0, stream);
+
+               await MediaGallery.SaveAsync(MediaFileType.Image, stream.ToArray(), "dotnet_bot.png");
+
 #endif
             }
             catch (Exception ex)
