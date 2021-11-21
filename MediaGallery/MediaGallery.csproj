@@ -32,6 +32,7 @@
     <_Net6 Condition=" $(TargetFramework.Contains('net6')) ">true</_Net6>
     <_Droid Condition=" $(TargetFramework.Contains('droid')) ">true</_Droid>
     <_IOS Condition=" $(TargetFramework.ToLowerInvariant().Contains('ios')) ">true</_IOS>
+    <_Mobile Condition=" '$(_Droid)' == 'true' OR '$(_IOS)' == 'true' ">true</_Mobile>
     
     <DefineConstants Condition=" '$(_Droid)' == 'true' ">$(DefineConstants);__DROID__;__MOBILE__;</DefineConstants>
     <DefineConstants Condition=" '$(_IOS)' == 'true' ">$(DefineConstants);__IOS__;__MOBILE__;</DefineConstants>
@@ -40,8 +41,14 @@
   <PropertyGroup Condition=" '$(_Net6)' == 'true' ">
     <UseMauiEssentials>true</UseMauiEssentials>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(_Net6)' != 'true' ">
+  <ItemGroup Condition=" '$(_Net6)' == 'true' AND '$(_Mobile)' == 'true' ">
+    <ProjectReference Condition="'$(Configuration)'=='Debug'" Include="..\Permission\Maui\Permission.Maui.csproj" />
+    <PackageReference Condition="'$(Configuration)'=='Release'" Include="Xamarin.MediaGallery.Permision.Maui" Version="2.0.0-preview2" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(_Net6)' != 'true' AND '$(_Mobile)' == 'true' ">
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+    <ProjectReference Condition="'$(Configuration)'=='Debug'" Include="..\Permission\Xamarin\Permission.csproj" />
+    <PackageReference Condition="'$(Configuration)'=='Release'" Include="Xamarin.MediaGallery.Permision" Version="2.0.0-preview2" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE" PackagePath="" Pack="true" />

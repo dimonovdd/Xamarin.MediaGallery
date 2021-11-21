@@ -50,10 +50,9 @@
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.26-experimental1" />
 	</ItemGroup>-->
 
-	<!--<ItemGroup>
-	  <ProjectReference Include="..\MediaGallery\MediaGallery.csproj" />
-	</ItemGroup>-->
 	<ItemGroup>
-	  <PackageReference Include="Xamarin.MediaGallery" Version="2.0.0-preview1" />
+		<ProjectReference Include="..\MediaGallery\MediaGallery.csproj" />
+		<ProjectReference Condition="'$(Configuration)'=='Debug'" Include="..\Permission\Maui\Permission.Maui.csproj" />
+		<PackageReference Condition="'$(Configuration)'=='Release'" Include="Xamarin.MediaGallery.Permision.Maui" Version="2.0.0-preview2" />
 	</ItemGroup>
 </Project>
