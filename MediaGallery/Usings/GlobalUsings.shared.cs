@@ -5,5 +5,7 @@ global using Rectangle = Microsoft.Maui.Graphics.Rectangle;
 #elif __MOBILE__
 global using EssentialsEx = Xamarin.Essentials;
 global using Xamarin.Essentials;
+#endif
+#if XAMARIN_IOS
 global using Rectangle = System.Drawing.Rectangle;
 #endif

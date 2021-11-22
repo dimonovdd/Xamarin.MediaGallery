@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <_UseNuget Condition="'$(Configuration)'=='Release'" >true</_UseNuget>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -30,7 +31,13 @@
     <Compile Update="**\*.xaml.cs" />
     <EmbeddedResource Include="..\..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\MediaGallery\MediaGallery.csproj" />
+
+  <ItemGroup Condition="'$(_UseNuget)'!='true'" >
+	<ProjectReference Include="..\MediaGallery\MediaGallery.csproj" />
+	<ProjectReference Include="..\Permission\Maui\Permission.Maui.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(_UseNuget)'=='true'" >
+    <PackageReference Include="Xamarin.MediaGallery" Version="2.0.0-preview2" />
+    <PackageReference Include="Xamarin.MediaGallery.Permision" Version="2.0.0-preview2" />
   </ItemGroup>
 </Project>

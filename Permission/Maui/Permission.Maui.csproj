@@ -26,10 +26,12 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <DocumentationFile>bin\Release\netstandard2.1\Xamarin.MediaGallery.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <UseMauiEssentials>true</UseMauiEssentials>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">11.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE" PackagePath="" Pack="true" />

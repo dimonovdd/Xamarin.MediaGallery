@@ -6,7 +6,7 @@
     <PackageId>Xamarin.MediaGallery</PackageId>
     <PackageTags>maui, xamarin, .net6, ios, android, toolkit, xamarin.forms, media, picker, photos, videos, mediapicker</PackageTags>
     <Description>This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices</Description>
-    <Version>2.0.0-preview1</Version>
+    <Version>2.0.0-preview2</Version>
     <Authors>dimonovdd</Authors>
     <Owners>dimonovdd</Owners>
     <RepositoryUrl>https://github.com/dimonovdd/Xamarin.MediaGallery</RepositoryUrl>
@@ -26,9 +26,10 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <DocumentationFile>bin\Release\netstandard2.1\Xamarin.MediaGallery.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
+    <_UseNuget Condition="'$(Configuration)'=='Release'" >true</_UseNuget>
     <_Net6 Condition=" $(TargetFramework.Contains('net6')) ">true</_Net6>
     <_Droid Condition=" $(TargetFramework.Contains('droid')) ">true</_Droid>
     <_IOS Condition=" $(TargetFramework.ToLowerInvariant().Contains('ios')) ">true</_IOS>
@@ -38,17 +39,19 @@
     <DefineConstants Condition=" '$(_IOS)' == 'true' ">$(DefineConstants);__IOS__;__MOBILE__;</DefineConstants>
     <DefineConstants Condition=" '$(_Net6)' == 'true' ">$(DefineConstants);__NET6__;</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(_Net6)' == 'true' ">
+  <PropertyGroup Condition=" '$(_Net6)' == 'true' AND '$(_Mobile)' == 'true' ">
     <UseMauiEssentials>true</UseMauiEssentials>
+    <SupportedOSPlatformVersion Condition="'$(_IOS)' == 'true'">11.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(_Droid)' == 'true'">21.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup Condition=" '$(_Net6)' == 'true' AND '$(_Mobile)' == 'true' ">
-    <ProjectReference Condition="'$(Configuration)'=='Debug'" Include="..\Permission\Maui\Permission.Maui.csproj" />
-    <PackageReference Condition="'$(Configuration)'=='Release'" Include="Xamarin.MediaGallery.Permision.Maui" Version="2.0.0-preview2" />
+    <ProjectReference Condition="'$(_UseNuget)'!='true'" Include="..\Permission\Maui\Permission.Maui.csproj" />
+    <PackageReference Condition="'$(_UseNuget)'=='true'" Include="Xamarin.MediaGallery.Permision.Maui" Version="2.0.0-preview2" />
   </ItemGroup>
   <ItemGroup Condition=" '$(_Net6)' != 'true' AND '$(_Mobile)' == 'true' ">
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
-    <ProjectReference Condition="'$(Configuration)'=='Debug'" Include="..\Permission\Xamarin\Permission.csproj" />
-    <PackageReference Condition="'$(Configuration)'=='Release'" Include="Xamarin.MediaGallery.Permision" Version="2.0.0-preview2" />
+    <ProjectReference Condition="'$(_UseNuget)'!='true'" Include="..\Permission\Xamarin\Permission.csproj" />
+    <PackageReference Condition="'$(_UseNuget)'=='true'" Include="Xamarin.MediaGallery.Permision" Version="2.0.0-preview2" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE" PackagePath="" Pack="true" />

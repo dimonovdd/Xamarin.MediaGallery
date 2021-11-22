@@ -15,6 +15,7 @@
     <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <ProvisioningType>automatic</ProvisioningType>
+    <_UseNuget Condition="'$(Configuration)'=='Release'" >true</_UseNuget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -94,10 +95,14 @@
       <Project>{E3982452-E783-448F-B9CD-8246549F0D5F}</Project>
       <Name>Sample</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\MediaGallery\MediaGallery.csproj">
-      <Project>{7159996A-4248-436D-9111-49DABB895B90}</Project>
-      <Name>MediaGallery</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(_UseNuget)'!='true'" >
+	<ProjectReference Include="..\MediaGallery\MediaGallery.csproj" />
+	<ProjectReference Include="..\Permission\Maui\Permission.Maui.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(_UseNuget)'=='true'" >
+    <PackageReference Include="Xamarin.MediaGallery" Version="2.0.0-preview2" />
+    <PackageReference Include="Xamarin.MediaGallery.Permision" Version="2.0.0-preview2" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
