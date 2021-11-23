@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Photos;
+using UIKit;
 
 namespace NativeMedia
 {
@@ -9,7 +10,7 @@ namespace NativeMedia
     {
         /// <summary>List of required keys in Info.plis.</summary>
         protected override Func<IEnumerable<string>> RequiredInfoPlistKeys =>
-                 () => Platform.HasOSVersion(14)
+                 () => HasOSVersion(14)
                  ? new string[] { "NSPhotoLibraryAddUsageDescription" }
                  : new string[] { "NSPhotoLibraryUsageDescription" };
 
@@ -18,7 +19,7 @@ namespace NativeMedia
         public override Task<PermissionStatus> CheckStatusAsync()
         {
             EnsureDeclared();
-            var auth = Platform.HasOSVersion(14)
+            var auth = HasOSVersion(14)
                 ? PHPhotoLibrary.GetAuthorizationStatus(PHAccessLevel.AddOnly)
                 : PHPhotoLibrary.AuthorizationStatus;
 
@@ -33,7 +34,7 @@ namespace NativeMedia
             if (status == PermissionStatus.Granted)
                 return status;
 
-            var auth = Platform.HasOSVersion(14)
+            var auth = HasOSVersion(14)
                 ? await PHPhotoLibrary.RequestAuthorizationAsync(PHAccessLevel.AddOnly)
                 : await PHPhotoLibrary.RequestAuthorizationAsync();
 
@@ -49,5 +50,8 @@ namespace NativeMedia
                     PHAuthorizationStatus.Restricted => PermissionStatus.Restricted,
                     _ => PermissionStatus.Unknown,
                 };
+
+        static bool HasOSVersion(int major) =>
+            UIDevice.CurrentDevice.CheckSystemVersion(major, 0);
     }
 }

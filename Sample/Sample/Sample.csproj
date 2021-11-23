@@ -28,7 +28,7 @@
     <Compile Update="**\*.xaml.cs" />
     <EmbeddedResource Include="..\..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\MediaGallery\MediaGallery.csproj" />
-  </ItemGroup>
+
+  
+  <Import Project="..\..\Xamarim.MediaGallery.targets" />
 </Project>

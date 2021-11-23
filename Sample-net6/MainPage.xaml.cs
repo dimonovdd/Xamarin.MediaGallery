@@ -62,11 +62,12 @@ namespace Sample_net6
 #else
                 using var bitmap = await BitmapFactory.DecodeResourceAsync(MauiApplication.Current.Resources, Resource.Drawable.dotnet_bot);
                 using var stream = new MemoryStream();
-                bitmap.Compress(Bitmap.CompressFormat.Png, 0, stream);
+                bitmap.Compress(Bitmap.CompressFormat.Jpeg, 0, stream);
 
-               await MediaGallery.SaveAsync(MediaFileType.Image, stream.ToArray(), "dotnet_bot.png");
+               await MediaGallery.SaveAsync(MediaFileType.Image, stream.ToArray(), "dotnet_bot.jpg");
 
 #endif
+                await DisplayAlert("Save success");
             }
             catch (Exception ex)
             {
