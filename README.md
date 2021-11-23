@@ -177,6 +177,10 @@ await MediaGallery.SaveAsync(MediaFileType.Image, stream, fileName);
 //...
  ```
 
+## Permission
+
+Add [`Xamarin.MediaGallery.Permision`](https://www.nuget.org/packages/Xamarin.MediaGallery.Permision) or [`Xamarin.MediaGallery.Permision.Maui`](https://www.nuget.org/packages/Xamarin.MediaGallery.Permision.Maui) nuget package to use the `SaveMediaPermission`
+
 ## Android
 
 Open the AndroidManifest.xml file under the Properties folder and add the following inside of the manifest node.

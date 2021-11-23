@@ -1,0 +1,18 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net6.0-ios;net6.0-android;</TargetFrameworks>
+    <AssemblyName>NativeMedia.Permision.Maui</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    <PackageId>Xamarin.MediaGallery.Permision.Maui</PackageId>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <Configurations>Release;Debug</Configurations>    
+    <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <UseMauiEssentials>true</UseMauiEssentials>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">11.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+  
+  <Import Project="..\Xamarim.MediaGallery.Permission.targets" />
+</Project>

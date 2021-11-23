@@ -68,12 +68,18 @@ namespace NativeMedia
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentException(nameof(fileName));
         }
-
-
+        
         static async Task CheckPossibilitySave()
         {
             ExceptionHelper.CheckSupport();
-            await SaveMediaPermission.EnsureGrantedAsync().ConfigureAwait(false);
+#if __MOBILE__
+            var status = await Permissions.CheckStatusAsync<SaveMediaPermission>();
+
+            if (status != PermissionStatus.Granted)
+                throw ExceptionHelper.PermissionException(status);
+#else
+            await Task.CompletedTask;
+#endif
         }
     }
 }
