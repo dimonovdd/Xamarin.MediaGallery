@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-    <_UseNuget Condition="'$(Configuration)'=='Release'" >true</_UseNuget>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,20 +23,12 @@
     </PackageReference>
     <PackageReference Include="MetadataExtractor" Version="2.4.3" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.12" />
-    <ProjectReference Condition="'$(Configuration)'=='Debug'" Include="..\..\Permission\Xamarin\Permission.csproj" />
-    <PackageReference Condition="'$(Configuration)'=='Release'" Include="Xamarin.MediaGallery.Permision" Version="2.0.0-preview2" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs" />
     <EmbeddedResource Include="..\..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(_UseNuget)'!='true'" >
-	<ProjectReference Include="..\MediaGallery\MediaGallery.csproj" />
-	<ProjectReference Include="..\Permission\Maui\Permission.Maui.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(_UseNuget)'=='true'" >
-    <PackageReference Include="Xamarin.MediaGallery" Version="2.0.0-preview2" />
-    <PackageReference Include="Xamarin.MediaGallery.Permision" Version="2.0.0-preview2" />
-  </ItemGroup>
+  
+  <Import Project="..\..\Xamarim.MediaGallery.targets" />
 </Project>

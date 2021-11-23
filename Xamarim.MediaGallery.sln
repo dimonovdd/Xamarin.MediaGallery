@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Android", "Sample\Sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.iOS", "Sample\Sample.iOS\Sample.iOS.csproj", "{BBDC8652-7409-412A-A89E-2B73AE30BE3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "Sample\Sample\Sample.csproj", "{E3982452-E783-448F-B9CD-8246549F0D5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample\Sample.csproj", "{E3982452-E783-448F-B9CD-8246549F0D5F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaGallery", "MediaGallery\MediaGallery.csproj", "{7159996A-4248-436D-9111-49DABB895B90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaGallery", "MediaGallery\MediaGallery.csproj", "{7159996A-4248-436D-9111-49DABB895B90}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample-net6", "Sample-net6\Sample-net6.csproj", "{F94EC409-1E7A-4FC5-8EC2-BEDD72DA53D3}"
 EndProject
@@ -20,6 +20,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Permission.Maui", "Permission\Maui\Permission.Maui.csproj", "{4901C8AC-333B-4B7E-945F-D399AD80D330}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Permission", "Permission\Xamarin\Permission.csproj", "{51308857-DA73-4827-A8CD-3AA5243D85A1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D150415D-5689-4878-8A96-1E0F7C2A16B7}"
+	ProjectSection(SolutionItems) = preProject
+		Xamarim.MediaGallery.targets = Xamarim.MediaGallery.targets
+		Permission\Xamarim.MediaGallery.Permission.targets = Permission\Xamarim.MediaGallery.Permission.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
