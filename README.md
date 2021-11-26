@@ -11,23 +11,26 @@ This plugin is designed for picking and saving photos and video files from the n
 
  [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/dimonovdd)
 
-# Available Platforms
+## Available Platforms
 
 | Platform | Minimum OS Version |
 | --- | --- |
 | Android | 5.0 |
 | iOS | 11.0 |
 
-## TargetFrameworks:
+### TargetFrameworks
+
 - `Xamarin.iOS10`, `net6.0-ios`
 - `MonoAndroid10.0`, `MonoAndroid11.0`, `net6.0-android`
 - `netstandard2.0`, `net6.0`
 
-# Getting started
+## Getting started
 
 You can just watch the [Video](https://youtu.be/8JvgnlHVyrI) that [@jfversluis](https://github.com/jfversluis) published
 
-## Android
+[**Migration to 2.X.X version**](./docs/migration2.x.x.md)
+
+### Android
 
 In the Android project's MainLauncher or any Activity that is launched, this plugin must be initialized in the OnCreate method:
 
@@ -41,7 +44,7 @@ protected override void OnCreate(Bundle savedInstanceState)
 }
  ```
 
-## iOS (Optional)
+### iOS (Optional)
 
 In the iOS project's AppDelegate that is launched, this plugin can be initialized in the FinishedLaunching method:
 
@@ -65,7 +68,7 @@ public UIViewController GetTopViewController()
 }
  ```
 
-# PickAsync
+## PickAsync
 
 This method does not require requesting permissions from users
 
@@ -120,7 +123,7 @@ foreach (var file in files)
 - `Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)`
 - `Task<MediaPickResult> PickAsync(MediaPickRequest request, CancellationToken token = default)`
 
-## Android
+### Android
 
  To handle runtime results on Android, this plugin must receive any `OnActivityResult`.
 
@@ -139,14 +142,14 @@ protected override void OnActivityResult(int requestCode, Result resultCode, Int
 - The use of `Title` property depends on each device
 - `UseCreateChooser` specifies whether to use `Intent.CreateChooser`
 
-## iOS
+### iOS
 
 - Multi picking is supported since iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
 - The `NameWithoutExtension` property on iOS versions before 14 returns a null value if the permission to access photos was not granted
 - `Title` property not used
 - `UseCreateChooser` property not used
 
-### Presentation Location
+#### Presentation Location
 
 When picking files on iPadOS you have the ability to present in a pop over control. This specifies where the pop over will appear and point an arrow directly to. You can specify the location using the `PresentationSourceBounds` property. Setting this property has the same behavior as [Launcher or Share in Xamarin.Essentials](https://docs.microsoft.com/en-us/xamarin/essentials/share?tabs=android#presentation-location).
 
@@ -157,7 +160,7 @@ When picking files on iPadOS you have the ability to present in a pop over contr
 - [Popover](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/iPadPopover.png)
 - [PageSheet](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/iPadPageSheet.png)
 
-# SaveAsync
+## SaveAsync
 
 ```csharp
 //...
@@ -177,11 +180,11 @@ await MediaGallery.SaveAsync(MediaFileType.Image, stream, fileName);
 //...
  ```
 
-## Permission
+### Permission
 
 Add [`Xamarin.MediaGallery.Permision`](https://www.nuget.org/packages/Xamarin.MediaGallery.Permision) or [`Xamarin.MediaGallery.Permision.Maui`](https://www.nuget.org/packages/Xamarin.MediaGallery.Permision.Maui) nuget package to use the `SaveMediaPermission`
 
-## Android
+### Android
 
 Open the AndroidManifest.xml file under the Properties folder and add the following inside of the manifest node.
 
@@ -192,7 +195,7 @@ Open the AndroidManifest.xml file under the Properties folder and add the follow
 
 - When saving media files, the date and time are appended to the file name
 
-## iOS
+### iOS
 
 In your `Info.plist` add the following keys:
 
@@ -206,7 +209,7 @@ In your `Info.plist` add the following keys:
 <string>This app needs access to the photo gallery for saving photos and videos</string>
  ```
 
-# Screenshots
+## Screenshots
 
 |______________|   iOS   | Android |______________|
 |:------------:|:---:|:-------:|:------------:|
