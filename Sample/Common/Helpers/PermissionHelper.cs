@@ -1,25 +1,25 @@
 ﻿using System.Threading.Tasks;
 
-namespace Sample.Helpers
+namespace Sample.Helpers;
+
+public static class PermissionHelper
 {
-    public static class PermissionHelper
+    public static async Task<bool> CheckAndRequest<T>(string info)
+        where T : BasePermission, new()
     {
-        public static async Task<bool> CheckAndRequest<T>(string info)
-            where T : BasePermission, new()
-        {
-            var permission = new T();
-            var status = await permission.CheckStatusAsync();
+        var permission = new T();
+        var status = await permission.CheckStatusAsync();
 
-            if (status == PermissionStatus.Granted)
-                return true;
+        if (status == PermissionStatus.Granted)
+            return true;
 
-            if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.iOS)
-                return false;
-            
-            if (permission.ShouldShowRationale())
-                status = await permission.RequestAsync();
+        if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.iOS)
+            return false;
 
-            return status == PermissionStatus.Granted;
-        }
+        status = await permission.RequestAsync();
+
+        return status == PermissionStatus.Granted;
+
     }
 }
+

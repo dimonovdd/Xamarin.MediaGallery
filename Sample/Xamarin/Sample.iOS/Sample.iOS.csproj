@@ -89,7 +89,7 @@
     <PackageReference Include="MetadataExtractor" Version="2.7.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sample\Sample.csproj"/>
+    <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>
   
   <Import Project="..\..\..\Xamarim.MediaGallery.targets" />

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.PlatformConfiguration.WindowsSpecific;
+using Sample.Common.ViewModels;
 using Application = Microsoft.Maui.Controls.Application;
 
 namespace Sample.Maui
@@ -11,7 +12,9 @@ namespace Sample.Maui
 		{
 			InitializeComponent();
 
-			MainPage = new MainPage();
+			var page = new HomePage();
+            page.BindingContext = new HomeVm();
+            MainPage = new NavigationPage(page);
 		}
 	}
 }

@@ -15,6 +15,7 @@
 
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
+		<NoWarn>CA1416</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -26,6 +27,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Common\Sample.Common.csproj" />
 	</ItemGroup>
+	
 	
   <Import Project="..\..\Xamarim.MediaGallery.targets" />
 </Project>
