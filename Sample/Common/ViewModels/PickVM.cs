@@ -69,7 +69,7 @@ namespace Sample.Common.ViewModels
                             Title = $"Select {SelectionLimit} photos",
                             PresentationSourceBounds = view == null
                                 ? null
-                                : view.GetAbsoluteBounds().ToSystemRectangle(40),
+                                : view.GetAbsoluteBounds(40),
                             UseCreateChooser = UseCreateChooser
                         },
                         cts.Token);

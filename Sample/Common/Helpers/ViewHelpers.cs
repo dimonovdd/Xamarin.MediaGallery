@@ -3,7 +3,7 @@ namespace Sample.Helpers
 {
     public static class ViewHelpers
     {
-        public static ViewRectangle GetAbsoluteBounds(this View element)
+        public static Rectangle GetAbsoluteBounds(this View element, int offsetY = 0)
         {
             Element looper = element;
 
@@ -22,10 +22,7 @@ namespace Sample.Helpers
                 }
             }
 
-            return new ViewRectangle(absoluteX, absoluteY, element.Width, element.Height);
+            return new Rectangle((int)absoluteX, (int)absoluteY + offsetY, (int)element.Width, (int)element.Height);
         }
-
-        public static Rectangle ToSystemRectangle(this ViewRectangle rect, int offsetY = 0) =>
-            new((int)rect.X, (int)rect.Y + offsetY, (int)rect.Width, (int)rect.Height);
     }
 }
