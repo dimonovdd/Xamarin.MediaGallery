@@ -1,0 +1,53 @@
+﻿<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:windows="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.WindowsSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:local="clr-namespace:Sample.Maui"
+             x:Class="Sample.Maui.App"
+             windows:Application.ImageDirectory="Assets">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Button">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#512bdf" />
+            </Style>
+            <Style TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFit" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="BackgroundColor" Value="LightGray" />
+            </Style>
+            <!--<Style TargetType="tool:MediaElement">
+                <Setter Property="Aspect" Value="AspectFit" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="BackgroundColor" Value="LightGray" />
+            </Style>-->
+            <Style TargetType="Grid">
+                <Setter Property="Margin" Value="8" />
+                <Setter Property="RowSpacing" Value="8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="Padding" Value="0" />
+            </Style>
+            <Style TargetType="StackLayout">
+                <Setter Property="Margin" Value="16" />
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="Padding" Value="0" />
+            </Style>
+            <Style TargetType="ScrollView">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+            </Style>
+            <Style TargetType="RadioButton">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="Margin" Value="0" />
+            </Style>
+            <Style TargetType="Switch">
+                <Setter Property="OnColor" Value="LightGray" />
+                <Setter Property="ThumbColor" Value="#512bdf" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
