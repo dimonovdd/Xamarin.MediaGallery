@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<v:BasePage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:v="clr-namespace:Sample.Maui"
+    xmlns:vm="clr-namespace:Sample.Common.ViewModels;assembly=Sample.Common"
+    x:Class="Sample.Maui.HomePage"
+    x:DataType="vm:HomeVm"
+    Title="Samples">
+
+    <StackLayout>
+            <Button Text="Pick" Command="{Binding NavigateToPickCommand, Mode=OneTime}"/>
+            <Button Text="Save" Command="{Binding NavigateToSaveCommand, Mode=OneTime}"/>
+    </StackLayout>
+</v:BasePage>
