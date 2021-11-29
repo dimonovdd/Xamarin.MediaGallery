@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using Foundation;
+﻿using Foundation;
 using UIKit;
-using Xamarin.Forms.Platform.iOS;
 
 namespace Sample.iOS
 {

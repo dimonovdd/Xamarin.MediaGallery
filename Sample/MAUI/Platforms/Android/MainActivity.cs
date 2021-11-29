@@ -3,7 +3,6 @@ using Android.Content.PM;
 using Android.Content;
 using Android.OS;
 using Microsoft.Maui;
-using Android.Runtime;
 
 namespace Sample.Maui
 {

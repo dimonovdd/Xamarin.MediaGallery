@@ -1,8 +1,5 @@
-﻿using Sample.Common.Helpers;
-using Sample.Common.ViewModels;
-using Sample.Helpers;
+﻿using Sample.Common.ViewModels;
 using Sample.Views;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Sample
