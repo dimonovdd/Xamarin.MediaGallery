@@ -63,6 +63,12 @@ namespace NativeMedia
             await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
         }
 
+        public static bool CheckCapturePhotoSupport()
+            => PlatformCheckCapturePhotoSupport();
+
+        public static Task<IMediaFile> CapturePhotoAsync(CancellationToken token = default)
+            => PlatformCapturePhotoAsync(token);
+
         static void CheckFileName(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))

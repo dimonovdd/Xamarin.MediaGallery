@@ -28,6 +28,7 @@
                     CommandParameter="{Binding Source={RelativeSource Self}}"/>
             <Button Text="Video" Command="{Binding PickVideoCommand, Mode=OneTime}"
                     CommandParameter="{Binding Source={RelativeSource Self}}"/>
+            <Button Text="Photo" Command="{Binding CapturePhotoCommand, Mode=OneTime}"/>
 
             <Label Text="Information about the completion of the operation:"/>
             <Label Text="{Binding OperationInfo}" MaxLines="4"/>

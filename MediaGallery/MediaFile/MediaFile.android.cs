@@ -15,6 +15,7 @@ namespace NativeMedia
             Extension = Path.GetExtension(fileName);
             ContentType = MimeTypeMap.Singleton.GetMimeTypeFromExtension(Extension);
             this.uri = uri;
+            Type = GetFileType(ContentType);
         }
 
         Task<Stream> PlatformOpenReadAsync()

@@ -102,6 +102,12 @@ namespace NativeMedia
             }
         }
 
+        static bool PlatformCheckCapturePhotoSupport()
+             => false;
+
+        static Task<IMediaFile> PlatformCapturePhotoAsync(CancellationToken token)
+            => Task.FromResult<IMediaFile>(null);
+
         internal static void OnActivityResult(int requestCode, Result resultCode, Intent intent)
         {
             if (CheckCanProcessResult(requestCode, resultCode, intent))

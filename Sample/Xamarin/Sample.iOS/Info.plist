@@ -38,5 +38,7 @@
 	<string>For adding mediafiles</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>For adding mediafiles</string>
+	<key>NSCameraUsageDescription</key>
+	<string>For Capture photo</string>
 </dict>
 </plist>
