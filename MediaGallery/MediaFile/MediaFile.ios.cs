@@ -56,7 +56,7 @@ namespace NativeMedia
 
         private string GetIdentifier(string[] identifiers)
         {
-            if (!(identifiers?.Any() ?? false))
+            if (!(identifiers?.Length > 0))
                 return null;
             if (identifiers.Any(i => i.StartsWith(UTType.LivePhoto)) && identifiers.Contains(UTType.JPEG))
                 return identifiers.FirstOrDefault(i => i == UTType.JPEG);
@@ -102,10 +102,11 @@ namespace NativeMedia
         NSDictionary metadata;
         NSMutableData imgWithMetadata;
 
-        internal PhotoFile(UIImage img, NSDictionary metadata)
+        internal PhotoFile(UIImage img, NSDictionary metadata, string name)
         {
             this.img = img;
             this.metadata = metadata;
+            NameWithoutExtension = name;
             ContentType = GetMIMEType(UTType.JPEG);
             Extension = GetExtension(UTType.JPEG);
             Type = GetFileType(ContentType);

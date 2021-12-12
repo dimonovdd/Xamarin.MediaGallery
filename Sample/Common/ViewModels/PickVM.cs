@@ -112,7 +112,7 @@ public class PickVM : BaseVM
 
             var file = await MediaGallery.CapturePhotoAsync(cts.Token);
 
-            SelectedItems = new IMediaFile[] { file };
+            SelectedItems = file != null ?  new IMediaFile[] { file } : null;
             SetInfo(SelectedItems);
         }
         catch (Exception ex)
@@ -129,7 +129,7 @@ public class PickVM : BaseVM
     {
         if (SelectedItems?.Any() ?? false)
             foreach (var item in SelectedItems)
-                item.Dispose();
+                item?.Dispose();
         SelectedItems = null;
     }
 

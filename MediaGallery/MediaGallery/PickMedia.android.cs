@@ -7,11 +7,8 @@ using Android.Content;
 using Uri = Android.Net.Uri;
 using Android.Provider;
 using System.Threading;
-#if MONOANDROID10_0
-using MediaColumns = Android.Provider.MediaStore.MediaColumns;
-#else
-using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
-#endif
+using Android.Content.PM;
+using Java.IO;
 
 namespace NativeMedia
 {
@@ -19,103 +16,133 @@ namespace NativeMedia
     {
         const string imageType = "image/*";
         const string videoType = "video/*";
-        static TaskCompletionSource<Intent> tcs;
+        static TaskCompletionSource<(Intent, Result)> tcsPick;
+        static TaskCompletionSource<(Intent, Result)> tcsCamera;
 
         static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             Intent intent = null;
-            IDisposable intentDisposable = null;
+            var mimeTypes = request.Types.Select(a => GetMimeType(a)).ToArray();
 
             try
             {
-                var isImage = request.Types.Contains(MediaFileType.Image);
-                tcs = new TaskCompletionSource<Intent>(TaskCreationOptions.RunContinuationsAsynchronously);
+                tcsPick = new TaskCompletionSource<(Intent, Result)>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-                CancelTaskIfRequested(false);
+                CancelTaskIfRequested(token, tcsPick, false);
 
-                // https://github.com/dimonovdd/Xamarin.MediaGallery/pull/5
-                if (isImage && request.Types.Length == 1)
-                {
-                    intent = new Intent(Intent.ActionPick, MediaStore.Images.Media.ExternalContentUri);
-                    intent.SetType(imageType);
-                    intent.PutExtra(Intent.ExtraMimeTypes, new string[] { imageType });
-                }
-                else
-                {
-                    intent = new Intent(Intent.ActionGetContent);
+                intent = new Intent(Intent.ActionGetContent);
 
-                    intent.SetType(isImage ? $"{imageType}, {videoType}" : videoType);
-                    intent.PutExtra(
-                        Intent.ExtraMimeTypes,
-                        isImage
-                        ? new string[] { imageType, videoType }
-                        : new string[] { videoType });
-                    intent.AddCategory(Intent.CategoryOpenable);
-                }
-
+                intent.SetType(string.Join(", ", mimeTypes));
+                intent.PutExtra(Intent.ExtraMimeTypes, mimeTypes);
+                intent.AddCategory(Intent.CategoryOpenable);
                 intent.PutExtra(Intent.ExtraLocalOnly, true);
                 intent.PutExtra(Intent.ExtraAllowMultiple, request.SelectionLimit > 1);
-
 
                 if (!string.IsNullOrWhiteSpace(request.Title))
                     intent.PutExtra(Intent.ExtraTitle, request.Title);
 
-                if (request.UseCreateChooser)
-                {
-                    intentDisposable = intent;
-                    intent = Intent.CreateChooser(intent, request.Title ?? string.Empty);
-                }
+                CancelTaskIfRequested(token, tcsPick);
 
-                CancelTaskIfRequested();
+                StartActivity(intent, Platform.pickRequestCode, token, tcsPick);
 
-                if (token.CanBeCanceled)
-                    token.Register(() =>
-                        {
-                            Platform.AppActivity.FinishActivity(Platform.requestCode);
-                            tcs?.TrySetCanceled(token);
-                        });
-
-                Platform.AppActivity.StartActivityForResult(intent, Platform.requestCode);
-
-                CancelTaskIfRequested(false);
-                var result = await tcs.Task.ConfigureAwait(false);
-                return GetFilesFromIntent(result);
-
-                void CancelTaskIfRequested(bool needThrow = true)
-                {
-                    if (token.IsCancellationRequested)
-                    {
-                        tcs?.TrySetCanceled(token);
-                        if (needThrow)
-                            token.ThrowIfCancellationRequested();
-                    }
-                }
+                CancelTaskIfRequested(token, tcsPick, false);
+                var result = await tcsPick.Task.ConfigureAwait(false);
+                return GetFilesFromIntent(result.Item1);
             }
             finally
             {
-                intentDisposable?.Dispose();
-                intentDisposable = null;
                 intent?.Dispose();
                 intent = null;
-                tcs = null;
+                tcsPick = null;
             }
         }
 
         static bool PlatformCheckCapturePhotoSupport()
-             => false;
+        {
+            if (!Platform.AppActivity.PackageManager.HasSystemFeature(PackageManager.FeatureCameraAny))
+                return false;
+            using var intent = GetCameraIntent();
+            return Platform.IsIntentSupported(intent);
+        }
 
-        static Task<IMediaFile> PlatformCapturePhotoAsync(CancellationToken token)
-            => Task.FromResult<IMediaFile>(null);
+        static async Task<IMediaFile> PlatformCapturePhotoAsync(CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            Intent intent = null;
+            Uri outputUri = null;
+
+            try
+            {
+                tcsCamera = new TaskCompletionSource<(Intent, Result)>(TaskCreationOptions.RunContinuationsAsynchronously);
+                intent = GetCameraIntent();
+
+                var fileName = $"{GetNewImageName()}.jpg";
+                var tempFilePath = GetFilePath(fileName);
+                using var file = new File(tempFilePath);
+                if (!file.Exists())
+                    file.CreateNewFile();
+                outputUri = FileProvider.GetUriForFile(Platform.AppActivity, Platform.AppActivity.PackageName + ".fileProvider", file);
+                intent.PutExtra(MediaStore.ExtraOutput, outputUri);
+
+                CancelTaskIfRequested(token, tcsCamera);
+
+                StartActivity(intent, Platform.cameraRequestCode, token, tcsCamera);
+
+                CancelTaskIfRequested(token, tcsCamera, false);
+                var result = await tcsCamera.Task.ConfigureAwait(false);
+                if (result.Item2 == Result.Ok)
+                    return new MediaFile(fileName, outputUri, tempFilePath);
+
+                outputUri?.Dispose();
+                return null;
+            }
+            catch
+            {
+                outputUri?.Dispose();
+                throw;
+            }
+            finally
+            {
+                intent?.Dispose();
+                intent = null;
+                tcsCamera = null;
+            }
+        }
 
         internal static void OnActivityResult(int requestCode, Result resultCode, Intent intent)
         {
             if (CheckCanProcessResult(requestCode, resultCode, intent))
-                tcs?.TrySetResult(resultCode == Result.Ok ? intent : null);
+                (requestCode == Platform.cameraRequestCode  ? tcsCamera : tcsPick)?
+                    .TrySetResult(resultCode == Result.Ok ? (intent, resultCode) : (null, resultCode));
         }
 
         internal static bool CheckCanProcessResult(int requestCode, Result resultCode, Intent intent)
-            => tcs != null && requestCode == Platform.requestCode;
+            => (tcsPick != null && requestCode == Platform.pickRequestCode) || (tcsCamera != null && requestCode == Platform.cameraRequestCode);
+
+        static Intent GetCameraIntent()
+            => new Intent(MediaStore.ActionImageCapture);
+
+        static void CancelTaskIfRequested(CancellationToken token, TaskCompletionSource<(Intent, Result)> tcs, bool needThrow = true)
+        {
+            if (!token.IsCancellationRequested)
+                return;
+            tcs?.TrySetCanceled(token);
+            if (needThrow)
+                token.ThrowIfCancellationRequested();
+        }
+
+        static void StartActivity(Intent intent, int requestCode, CancellationToken token, TaskCompletionSource<(Intent, Result)> tcs)
+        {
+            if (token.CanBeCanceled)
+                token.Register(() =>
+                {
+                    Platform.AppActivity.FinishActivity(requestCode);
+                    tcs?.TrySetCanceled(token);
+                });
+
+            Platform.AppActivity.StartActivityForResult(intent, requestCode);
+        }
 
         static IEnumerable<IMediaFile> GetFilesFromIntent(Intent intent)
         {
@@ -166,5 +193,12 @@ namespace NativeMedia
                 return null;
             }
         }
+
+        static string GetMimeType(MediaFileType type)
+            => type switch
+            {
+                MediaFileType.Image => imageType,
+                MediaFileType.Video => videoType
+            };
     }
 }

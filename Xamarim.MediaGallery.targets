@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Project>
 	<PropertyGroup>
-		<_UseNuget>true</_UseNuget>
+		<_UseNuget>false</_UseNuget>
 		<_UseNuget Condition="'$(Configuration)'=='Release'">true</_UseNuget>
 		<_LibVersion>2.0.0</_LibVersion>
 		<_IsSample Condition="'$(_IsSample)'!='false'">true</_IsSample>

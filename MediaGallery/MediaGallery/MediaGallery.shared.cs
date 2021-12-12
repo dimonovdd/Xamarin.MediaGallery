@@ -8,6 +8,8 @@ namespace NativeMedia
     /// <summary>Performs operations with media files.</summary>
     public static partial class MediaGallery
     {
+        static readonly string cacheDir = "XamarinMediaGalleryCacheDir";
+
         /// <summary>Opens media files Picker</summary>
         /// <returns>Media files selected by a user.</returns>
         /// <inheritdoc cref = "MediaPickRequest(int, MediaFileType[])" path="/param"/>
@@ -66,8 +68,11 @@ namespace NativeMedia
         public static bool CheckCapturePhotoSupport()
             => PlatformCheckCapturePhotoSupport();
 
-        public static Task<IMediaFile> CapturePhotoAsync(CancellationToken token = default)
-            => PlatformCapturePhotoAsync(token);
+        public static async Task<IMediaFile> CapturePhotoAsync(CancellationToken token = default)
+        {
+            await CheckPossibilityCamera();
+            return await PlatformCapturePhotoAsync(token);
+        }
 
         static void CheckFileName(string fileName)
         {
@@ -87,5 +92,46 @@ namespace NativeMedia
             await Task.CompletedTask;
 #endif
         }
+
+        static async Task CheckPossibilityCamera()
+        {
+            ExceptionHelper.CheckSupport();
+#if __MOBILE__
+            if (!CheckCapturePhotoSupport())
+                throw new FeatureNotSupportedException();
+
+
+            var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
+
+            if (status != PermissionStatus.Granted)
+                throw ExceptionHelper.PermissionException(status);
+#else
+            await Task.CompletedTask;
+#endif
+        }
+
+#if __MOBILE__
+        static void DeleteFile(string filePath)
+        {
+            if (!string.IsNullOrWhiteSpace(filePath) && File.Exists(filePath))
+                File.Delete(filePath);
+        }
+
+        static string GetFilePath(string fileName)
+        {
+            fileName = fileName.Trim();
+            var dirPath = Path.Combine(FileSystem.CacheDirectory, cacheDir);
+            var filePath = Path.Combine(dirPath, fileName);
+
+            if (!Directory.Exists(dirPath))
+                Directory.CreateDirectory(dirPath);
+            return filePath;
+        }
+#endif
+        static string GetNewImageName(string imgName = null)
+            => GetNewImageName(DateTime.Now, imgName);
+
+        static string GetNewImageName(DateTime val, string imgName = null)
+            => $"{imgName ?? "IMG"}_{val:yyyyMMdd_HHmmss}";
     }
 }

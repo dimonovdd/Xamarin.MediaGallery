@@ -113,9 +113,6 @@ namespace NativeMedia
 
         static async Task<IMediaFile> PlatformCapturePhotoAsync(CancellationToken token)
         {
-            if (!CheckCapturePhotoSupport())
-                throw new FeatureNotSupportedException();
-
             var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>(TaskCreationOptions.RunContinuationsAsynchronously);
             CancelTaskIfRequested(token, tcs, false);
 
@@ -188,7 +185,7 @@ namespace NativeMedia
             static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
                 => results
                 .Select(res => res.ItemProvider)
-                .Where(provider => provider != null)
+                .Where(provider => provider != null && provider.RegisteredTypeIdentifiers?.Length > 0)
                 .Select(provider => new PHPickerFile(provider))
                 .ToArray();
         }
@@ -231,7 +228,7 @@ namespace NativeMedia
                 var meta = info.ValueForKey(UIImagePickerController.MediaMetadata) as NSDictionary;
 
                 if (img != null && meta != null)
-                    return new PhotoFile(img, meta);
+                    return new PhotoFile(img, meta, GetNewImageName());
 
                 return null;
             }

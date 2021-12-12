@@ -7,7 +7,8 @@ namespace NativeMedia
     /// <summary>Platform specific helpers.</summary>
     public static partial class Platform
     {
-        internal static int requestCode = 1111;
+        internal static int pickRequestCode = 1111;
+        internal static int cameraRequestCode = 1112;
 
         /// <summary>Initialize Xamarin.MediaGallery with Android's activity and bundle.</summary>
         /// <param name="activity">Activity to use for initialization.</param>
@@ -30,5 +31,12 @@ namespace NativeMedia
 
         internal static bool HasSdkVersion(int version)
             => (int)Build.VERSION.SdkInt >= version;
+
+        internal static bool IsIntentSupported(Intent intent)
+        {
+            using var activity = intent.ResolveActivity(AppActivity.PackageManager);
+            return activity != null;
+        }
+            
     }
 }
