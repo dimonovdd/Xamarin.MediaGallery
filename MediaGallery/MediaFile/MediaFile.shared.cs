@@ -18,16 +18,24 @@ namespace NativeMedia
 
         public string ContentType { get; protected internal set; }
 
-        public MediaFileType? Type => ContentType.StartsWith("image")
-                ? MediaFileType.Image
-                : ContentType.StartsWith("video")
-                    ? MediaFileType.Video
-                    : (MediaFileType?)null;
+        public MediaFileType? Type { get; protected set; }
 
         public Task<Stream> OpenReadAsync()
             => PlatformOpenReadAsync();
 
         public void Dispose()
             => PlatformDispose();
+
+        protected MediaFileType? GetFileType(string contentType)
+        {
+            if (string.IsNullOrWhiteSpace(contentType))
+                return null;
+            if (ContentType.StartsWith("image"))
+                return MediaFileType.Image;
+            if (ContentType.StartsWith("video"))
+                return MediaFileType.Video;
+
+            return null;
+        }
     }
 }

@@ -9,11 +9,6 @@ using File = Java.IO.File;
 using Path = System.IO.Path;
 using Stream = System.IO.Stream;
 using Uri = Android.Net.Uri;
-#if MONOANDROID11_0 || NET6_0_ANDROID
-using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
-#else
-using MediaColumns = Android.Provider.MediaStore.MediaColumns;
-#endif
 
 namespace NativeMedia
 {
@@ -40,7 +35,7 @@ namespace NativeMedia
 
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             var extension = Path.GetExtension(fileName).ToLower();
-            var newFileName = $"{fileNameWithoutExtension}_{dateTimeNow:yyyyMMdd_HHmmss}{extension}";
+            var newFileName = $"{GetNewImageName(dateTimeNow, fileNameWithoutExtension)}{extension}";
 
             using var values = new ContentValues();
 

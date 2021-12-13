@@ -8,8 +8,6 @@ namespace NativeMedia
 {
     public static partial class MediaGallery
     {
-        static readonly string cacheDir = "XamarinMediaGalleryCacheDir";
-
         static async Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
         {
             string filePath = null;
@@ -80,23 +78,6 @@ namespace NativeMedia
             var exception = await tcs.Task;
             if (exception != null)
                 throw exception;
-        }
-
-        static void DeleteFile(string filePath)
-        {
-            if (!string.IsNullOrWhiteSpace(filePath) && File.Exists(filePath))
-                File.Delete(filePath);
-        }
-
-        static string GetFilePath(string fileName)
-        {
-            fileName = fileName.Trim();
-            var dirPath = Path.Combine(FileSystem.CacheDirectory, cacheDir);
-            var filePath = Path.Combine(dirPath, fileName);
-
-            if (!Directory.Exists(dirPath))
-                Directory.CreateDirectory(dirPath);
-            return filePath;
         }
     }
 }

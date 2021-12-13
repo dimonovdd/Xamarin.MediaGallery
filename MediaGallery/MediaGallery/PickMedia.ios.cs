@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreGraphics;
 using Foundation;
 using MobileCoreServices;
 using Photos;
@@ -14,6 +15,7 @@ namespace NativeMedia
     public static partial class MediaGallery
     {
         static UIViewController pickerRef;
+        static UIViewController cameraRef;
 
         static async Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
         {
@@ -26,11 +28,11 @@ namespace NativeMedia
 
                 var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-                CancelTaskIfRequested();
+                CancelTaskIfRequested(token, tcs);
 
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    CancelTaskIfRequested();
+                    CancelTaskIfRequested(token, tcs);
 
                     if (Platform.HasOSVersion(14))
                     {
@@ -72,7 +74,7 @@ namespace NativeMedia
                         };
                     }
 
-                    CancelTaskIfRequested();
+                    CancelTaskIfRequested(token, tcs);
                     var vc = Platform.GetCurrentUIViewController();
 
                     if (DeviceInfo.Idiom == DeviceIdiom.Tablet)
@@ -89,41 +91,82 @@ namespace NativeMedia
                         }
                     }
 
-                    if (pickerRef.PresentationController != null)
-                        pickerRef.PresentationController.Delegate = new PresentatControllerDelegate(tcs);
+                    ConfigureController(pickerRef, tcs);
 
-                    CancelTaskIfRequested();
+                    CancelTaskIfRequested(token, tcs);
 
-                    vc.PresentViewController(pickerRef, true, () =>
-                    {
-                        if (!token.CanBeCanceled)
-                            return;
-
-                        token.Register(()
-                            => MainThread.BeginInvokeOnMainThread(()
-                                => pickerRef?.DismissViewController(true, ()
-                                    => tcs?.TrySetCanceled(token))));
-                    });
+                    vc.PresentViewController(pickerRef, true, () => PresentViewControllerHandler(pickerRef, token, tcs));
                 });
 
-                CancelTaskIfRequested(false);
+                CancelTaskIfRequested(token, tcs, false);
                 return await tcs.Task.ConfigureAwait(false);
-
-                void CancelTaskIfRequested(bool needThrow = true)
-                {
-                    if (token.IsCancellationRequested)
-                    {
-                        tcs?.TrySetCanceled(token);
-                        if (needThrow)
-                            token.ThrowIfCancellationRequested();
-                    }
-                }
             }
             finally
             {
                 pickerRef?.Dispose();
                 pickerRef = null;
             }
+        }
+
+        static bool PlatformCheckCapturePhotoSupport()
+            => UIImagePickerController.IsSourceTypeAvailable(UIImagePickerControllerSourceType.Camera);
+
+        static async Task<IMediaFile> PlatformCapturePhotoAsync(CancellationToken token)
+        {
+            var tcs = new TaskCompletionSource<IEnumerable<IMediaFile>>(TaskCreationOptions.RunContinuationsAsynchronously);
+            CancelTaskIfRequested(token, tcs, false);
+
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                CancelTaskIfRequested(token, tcs, false);
+
+                cameraRef = new UIImagePickerController
+                {
+                    SourceType = UIImagePickerControllerSourceType.Camera,
+                    AllowsEditing = false,
+                    AllowsImageEditing = false,
+                    Delegate = new PhotoPickerDelegate(tcs),
+                    CameraCaptureMode = UIImagePickerControllerCameraCaptureMode.Photo
+                };
+
+                CancelTaskIfRequested(token, tcs, false);
+                var vc = Platform.GetCurrentUIViewController();
+
+                ConfigureController(cameraRef, tcs);
+
+
+                CancelTaskIfRequested(token, tcs, false);
+                vc.PresentViewController(cameraRef, true, () => PresentViewControllerHandler(cameraRef, token, tcs));
+            });
+
+            var res = await tcs.Task.ConfigureAwait(false);
+            return res?.FirstOrDefault();
+        }
+
+        static void ConfigureController(UIViewController controller, TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
+        {
+            if (controller.PresentationController != null)
+                controller.PresentationController.Delegate = new PresentatControllerDelegate(tcs);
+        }
+
+        static void CancelTaskIfRequested(CancellationToken token, TaskCompletionSource<IEnumerable<IMediaFile>> tcs, bool needThrow = true)
+        {
+            if (!token.IsCancellationRequested)
+                return;
+            tcs?.TrySetCanceled(token);
+            if (needThrow)
+                token.ThrowIfCancellationRequested();
+        }
+
+        static void PresentViewControllerHandler(UIViewController controller, CancellationToken token, TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
+        {
+            if (!token.CanBeCanceled)
+                return;
+
+            token.Register(
+                ()=> MainThread.BeginInvokeOnMainThread(
+                    ()=> controller?.DismissViewController(true,
+                        ()=> tcs?.TrySetCanceled(token))));
         }
 
         class PHPickerDelegate : PHPickerViewControllerDelegate
@@ -142,7 +185,7 @@ namespace NativeMedia
             static IEnumerable<IMediaFile> ConvertPickerResults(PHPickerResult[] results)
                 => results
                 .Select(res => res.ItemProvider)
-                .Where(provider => provider != null)
+                .Where(provider => provider != null && provider.RegisteredTypeIdentifiers?.Length > 0)
                 .Select(provider => new PHPickerFile(provider))
                 .ToArray();
         }
@@ -172,15 +215,22 @@ namespace NativeMedia
                 if (info == null)
                     return null;
 
-                using var assetUrl = (info.ValueForKey(UIImagePickerController.ImageUrl)
+                var assetUrl = (info.ValueForKey(UIImagePickerController.ImageUrl)
                     ?? info.ValueForKey(UIImagePickerController.MediaURL)) as NSUrl;
 
                 var path = assetUrl?.Path;
 
-                if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
-                    return null;
+                if (!string.IsNullOrWhiteSpace(path) && File.Exists(path))
+                    return new UIDocumentFile(assetUrl, GetOriginalName(info));
 
-                return new UIDocumentFile(assetUrl, GetOriginalName(info));
+                assetUrl?.Dispose();
+                var img = info.ValueForKey(UIImagePickerController.OriginalImage) as UIImage;
+                var meta = info.ValueForKey(UIImagePickerController.MediaMetadata) as NSDictionary;
+
+                if (img != null && meta != null)
+                    return new PhotoFile(img, meta, GetNewImageName());
+
+                return null;
             }
 
             string GetOriginalName(NSDictionary info)

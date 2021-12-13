@@ -18,5 +18,11 @@ namespace NativeMedia
 
         static Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName)
             => Task.CompletedTask;
+
+        static bool PlatformCheckCapturePhotoSupport()
+            => false;
+
+        static Task<IMediaFile> PlatformCapturePhotoAsync(CancellationToken token)
+            => Task.FromResult<IMediaFile>(null);
     }
 }

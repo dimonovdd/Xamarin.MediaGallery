@@ -18,6 +18,7 @@ public class PickVM : BaseVM
         PickAnyCommand = new Command(() => Pick(null));
         PickImageCommand = new Command<View>(view => Pick(view, MediaFileType.Image));
         PickVideoCommand = new Command<View>(view => Pick(view, MediaFileType.Video));
+        CapturePhotoCommand = new Command(async () => await СapturePhotoAsync());
         OpenInfoCommand = new Command<IMediaFile>(async file => await NavigateAsync(new MediaFileInfoVM(file)));
     }
 
@@ -44,6 +45,8 @@ public class PickVM : BaseVM
 
     public ICommand PickVideoCommand { get; }
 
+    public ICommand CapturePhotoCommand { get; }
+
     public ICommand OpenInfoCommand { get; }
 
 
@@ -54,10 +57,7 @@ public class PickVM : BaseVM
             CancellationTokenSource cts = null;
             try
             {
-                if (SelectedItems?.Any() ?? false)
-                    foreach (var item in SelectedItems)
-                        item.Dispose();
-                SelectedItems = null;
+                DisposeItems();
 
                 cts = new CancellationTokenSource(
                     TimeSpan.FromMilliseconds(DelayMilliseconds));
@@ -73,9 +73,7 @@ public class PickVM : BaseVM
 
                 SelectedItems = result?.Files;
 
-                OperationInfo = SelectedItems?.Any() ?? false
-                    ? "Successfully"
-                    : "Media files not selected";
+                SetInfo(SelectedItems);
             }
             catch (Exception ex)
             {
@@ -87,4 +85,56 @@ public class PickVM : BaseVM
             }
         });
     }
+
+    async Task СapturePhotoAsync()
+    {
+        CancellationTokenSource cts = null;
+        try
+        {
+            DisposeItems();
+            if (!MediaGallery.CheckCapturePhotoSupport())
+            {
+                OperationInfo = "Capture Photo Not Supported";
+                return;
+            }
+
+            var status = await PermissionHelper.CheckAndRequest<Permissions.Camera>(
+                    "The application needs permission to camera");
+
+            if (!status)
+            {
+                await DisplayAlertAsync("The application did not get the necessary permission to camera");
+                return;
+            }
+
+            cts = new CancellationTokenSource(
+                    TimeSpan.FromMilliseconds(DelayMilliseconds));
+
+            var file = await MediaGallery.CapturePhotoAsync(cts.Token);
+
+            SelectedItems = file != null ?  new IMediaFile[] { file } : null;
+            SetInfo(SelectedItems);
+        }
+        catch (Exception ex)
+        {
+            OperationInfo = ex.Message;
+        }
+        finally
+        {
+            cts?.Dispose();
+        }
+    }
+
+    void DisposeItems()
+    {
+        if (SelectedItems?.Any() ?? false)
+            foreach (var item in SelectedItems)
+                item?.Dispose();
+        SelectedItems = null;
+    }
+
+    void SetInfo(IEnumerable<IMediaFile> files)
+        => OperationInfo = files?.Any() ?? false
+                    ? "Successfully"
+                    : "Media files not selected";
 }

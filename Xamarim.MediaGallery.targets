@@ -3,17 +3,18 @@
 	<PropertyGroup>
 		<_UseNuget>true</_UseNuget>
 		<_UseNuget Condition="'$(Configuration)'=='Release'">true</_UseNuget>
-		<_LibVersion>2.0.0</_LibVersion>
+		<_LibVersion>2.1.0-preview1</_LibVersion>
+		<_PermissionLibVersion>2.0.0</_PermissionLibVersion>
 		<_IsSample Condition="'$(_IsSample)'!='false'">true</_IsSample>
 		<_NET6 Condition=" $(TargetFramework.StartsWith('net6')) ">true</_NET6>
 		<_IsMobele Condition=" $(TargetFramework.Contains('droid')) OR $(TargetFramework.ToLowerInvariant().Contains('ios')) ">true</_IsMobele>
 	</PropertyGroup>
 	<ItemGroup Condition=" '$(_NET6)'=='true' AND ('$(_IsSample)'=='true' OR '$(_IsMobele)'=='true') ">
-		<PackageReference Condition="'$(_UseNuget)'=='true'" Include="Xamarin.MediaGallery.Permision.Maui" Version="$(_LibVersion)" />
+		<PackageReference Condition="'$(_UseNuget)'=='true'" Include="Xamarin.MediaGallery.Permision.Maui" Version="$(_PermissionLibVersion)" />
 		<ProjectReference Condition="'$(_UseNuget)'!='true'" Include="$(MSBuildThisFileDirectory)\Permission\Maui\Permission.Maui.csproj" />
   	</ItemGroup>
 	<ItemGroup Condition=" '$(_NET6)'!='true' AND ('$(_IsSample)'=='true' OR '$(_IsMobele)'=='true') ">
-		<PackageReference Condition="'$(_UseNuget)'=='true'" Include="Xamarin.MediaGallery.Permision" Version="$(_LibVersion)" />
+		<PackageReference Condition="'$(_UseNuget)'=='true'" Include="Xamarin.MediaGallery.Permision" Version="$(_PermissionLibVersion)" />
 		<ProjectReference Condition="'$(_UseNuget)'!='true'" Include="$(MSBuildThisFileDirectory)\Permission\Xamarin\Permission.csproj" />
   	</ItemGroup>
 	<ItemGroup Condition=" '$(_IsSample)'=='true' ">

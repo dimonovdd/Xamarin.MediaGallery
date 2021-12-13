@@ -9,3 +9,8 @@ global using Xamarin.Essentials;
 #if XAMARIN_IOS
 global using Rectangle = System.Drawing.Rectangle;
 #endif
+#if MONOANDROID11_0 || NET6_0_ANDROID
+global using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
+#elif MONOANDROID10_0
+global using MediaColumns = Android.Provider.MediaStore.MediaColumns;
+#endif

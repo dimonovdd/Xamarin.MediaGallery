@@ -1,7 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreGraphics;
+using CoreImage;
 using Foundation;
+using ImageIO;
 using MobileCoreServices;
 using UIKit;
 
@@ -30,17 +33,15 @@ namespace NativeMedia
         {
             this.provider = provider;
             NameWithoutExtension = provider?.SuggestedName;
-            var identifiers = provider?.RegisteredTypeIdentifiers;
 
-            identifier = (identifiers?.Any(i => i.StartsWith(UTType.LivePhoto)) ?? false) && (identifiers?.Contains(UTType.JPEG) ?? false)
-                ? identifiers?.FirstOrDefault(i => i == UTType.JPEG)
-                : identifiers?.FirstOrDefault();
+            identifier = GetIdentifier(provider?.RegisteredTypeIdentifiers);
 
             if (string.IsNullOrWhiteSpace(identifier))
                 return;
 
             Extension = GetExtension(identifier);
             ContentType = GetMIMEType(identifier);
+            Type = GetFileType(ContentType);
         }
 
         protected override async Task<Stream> PlatformOpenReadAsync()
@@ -52,20 +53,34 @@ namespace NativeMedia
             provider = null;
             base.PlatformDispose();
         }
+
+        private string GetIdentifier(string[] identifiers)
+        {
+            if (!(identifiers?.Length > 0))
+                return null;
+            if (identifiers.Any(i => i.StartsWith(UTType.LivePhoto)) && identifiers.Contains(UTType.JPEG))
+                return identifiers.FirstOrDefault(i => i == UTType.JPEG);
+            if (identifiers.Contains(UTType.QuickTimeMovie))
+                return identifiers.FirstOrDefault(i => i == UTType.QuickTimeMovie);
+            return identifiers.FirstOrDefault();
+        }
     }
 
     class UIDocumentFile : MediaFile
     {
         UIDocument document;
+        NSUrl assetUrl;
 
         internal UIDocumentFile(NSUrl assetUrl, string fileName)
         {
+            this.assetUrl = assetUrl;
             document = new UIDocument(assetUrl);
             Extension = document.FileUrl.PathExtension;
             ContentType = GetMIMEType(document.FileType);
             NameWithoutExtension = !string.IsNullOrWhiteSpace(fileName)
                 ? Path.GetFileNameWithoutExtension(fileName)
                 : null;
+            Type = GetFileType(ContentType);
         }
 
         protected override Task<Stream> PlatformOpenReadAsync()
@@ -75,7 +90,62 @@ namespace NativeMedia
         {
             document?.Dispose();
             document = null;
+            assetUrl?.Dispose();
+            assetUrl = null;
             base.PlatformDispose();
+        }
+    }
+
+    class PhotoFile : MediaFile
+    {
+        UIImage img;
+        NSDictionary metadata;
+        NSMutableData imgWithMetadata;
+
+        internal PhotoFile(UIImage img, NSDictionary metadata, string name)
+        {
+            this.img = img;
+            this.metadata = metadata;
+            NameWithoutExtension = name;
+            ContentType = GetMIMEType(UTType.JPEG);
+            Extension = GetExtension(UTType.JPEG);
+            Type = GetFileType(ContentType);
+        }
+
+        protected override Task<Stream> PlatformOpenReadAsync()
+        {
+            imgWithMetadata ??= GetImageWithMeta();
+            return Task.FromResult(imgWithMetadata?.AsStream());
+        }
+
+        public NSMutableData GetImageWithMeta()
+        {
+            if (img == null || metadata == null)
+                return null;
+
+            using var source = CGImageSource.FromData(img.AsJPEG());
+            var destData = new NSMutableData();
+            using var destination = CGImageDestination.Create(destData, source.TypeIdentifier, 1, null);
+            destination.AddImage(source, 0, metadata);
+            destination.Close();
+            DisposeSources();
+            return destData;
+        }
+
+        protected override void PlatformDispose()
+        {
+            imgWithMetadata?.Dispose();
+            imgWithMetadata = null;
+            DisposeSources();
+            base.PlatformDispose();
+        }
+
+        void DisposeSources()
+        {
+            img?.Dispose();
+            img = null;
+            metadata?.Dispose();
+            metadata = null;
         }
     }
 }
