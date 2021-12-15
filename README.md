@@ -181,12 +181,20 @@ var file = await MediaGallery.CapturePhotoAsync()
 
 Open the AndroidManifest.xml file under the Properties folder and add the following inside of the manifest node.
 
- ```xml
+```xml
 <uses-permission android:name="android.permission.CAMERA" />
 ```
 
 ```xml
 <uses-feature android:name="android.hardware.camera" android:required="true" />
+```
+
+```xml
+<queries>
+  <intent>
+    <action android:name="android.media.action.IMAGE_CAPTURE" />
+  </intent>
+</queries>
 ```
 
 If Camera is not required in your application, you can specify `false`.
