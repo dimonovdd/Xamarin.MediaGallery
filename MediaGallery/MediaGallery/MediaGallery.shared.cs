@@ -65,9 +65,14 @@ namespace NativeMedia
             await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
         }
 
+        /// <summary>Checks camera support on a device</summary>
+        /// <returns></returns>
         public static bool CheckCapturePhotoSupport()
             => PlatformCheckCapturePhotoSupport();
 
+
+        /// <summary>Opens camera apps and waits for result from an user</summary>
+        /// <returns>Photo with metadata or null</returns>
         public static async Task<IMediaFile> CapturePhotoAsync(CancellationToken token = default)
         {
             await CheckPossibilityCamera();

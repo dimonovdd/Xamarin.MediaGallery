@@ -160,6 +160,54 @@ When picking files on iPadOS you have the ability to present in a pop over contr
 - [Popover](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/iPadPopover.png)
 - [PageSheet](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/Screenshots/iPadPageSheet.png)
 
+## Сapture Photo with Metadata
+
+```csharp
+//...
+if (MediaGallery.CheckCapturePhotoSupport())
+    return;
+
+var status = await Permissions.RequestAsync<Permissions.Camera>();
+
+if (status != PermissionStatus.Granted)
+    return;
+
+var file = await MediaGallery.CapturePhotoAsync()
+ ```
+
+`NameWithoutExtension` will always return `$"IMG_{DateTime.Now:yyyyMMdd_HHmmss}"` value.
+
+### Android
+
+Open the AndroidManifest.xml file under the Properties folder and add the following inside of the manifest node.
+
+```xml
+<uses-permission android:name="android.permission.CAMERA" />
+```
+
+```xml
+<uses-feature android:name="android.hardware.camera" android:required="true" />
+```
+
+```xml
+<queries>
+  <intent>
+    <action android:name="android.media.action.IMAGE_CAPTURE" />
+  </intent>
+</queries>
+```
+
+If Camera is not required in your application, you can specify `false`.
+
+### iOS
+
+In your `Info.plist` add the following keys:
+
+ ```xml
+<key>NSCameraUsageDescription</key>
+<string>This app needs access to the camera to take photos.</string>
+ ```
+
 ## SaveAsync
 
 ```csharp
