@@ -1,6 +1,8 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using AndroidUri = Android.Net.Uri;
+using ContentFileProvider = AndroidX.Core.Content.FileProvider;
 
 namespace NativeMedia
 {
@@ -38,5 +40,15 @@ namespace NativeMedia
             return activity != null;
         }
             
+    }
+
+    [ContentProvider(new[] { "${applicationId}" + Authority },Name = "haraba.fileProvider", Exported = false, GrantUriPermissions = true)]
+    [MetaData("android.support.FILE_PROVIDER_PATHS", Resource = "@xml/file_provider_paths")]
+    public class MediaFileProvider : ContentFileProvider
+    {
+        internal const string Authority = ".mediaFileProvider";
+
+        internal static AndroidUri GetUriForFile(Context context, Java.IO.File file)
+            => GetUriForFile(context, context.PackageName + Authority, file);
     }
 }

@@ -69,6 +69,7 @@
   <ItemGroup Condition=" '$(_Droid)' == 'true' ">
     <Compile Include="**\*.android.*.cs" />
     <Compile Include="**\*.android.cs" />
+    <AndroidResource Include="Resources\xml\*.xml" />
   </ItemGroup>
   <ItemGroup Condition=" '$(_IOS)' == 'true' ">
     <Compile Include="**\*.ios.*.cs" />

@@ -82,7 +82,7 @@ namespace NativeMedia
                 using var file = new File(tempFilePath);
                 if (!file.Exists())
                     file.CreateNewFile();
-                outputUri = FileProvider.GetUriForFile(Platform.AppActivity, Platform.AppActivity.PackageName + ".fileProvider", file);
+                outputUri = MediaFileProvider.GetUriForFile(Platform.AppActivity, file);
                 intent.PutExtra(MediaStore.ExtraOutput, outputUri);
 
                 CancelTaskIfRequested(token, tcsCamera);
