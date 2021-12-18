@@ -5,16 +5,20 @@ using System.Threading.Tasks;
 using Sample.Common.Helpers;
 using MetadataExtractor;
 using NativeMedia;
+using System.Windows.Input;
 
 namespace Sample.Common.ViewModels;
 
 public class MediaFileInfoVM : BaseVM
 {
+    bool isFirstAppiring = true;
+
     public MediaFileInfoVM(IMediaFile file)
     {
         File = file;
         IsImage = file?.Type == MediaFileType.Image;
         IsVideo = file?.Type == MediaFileType.Video;
+        ShareCommand = new Command(async () => await ShareAsync());
     }
 
     public IMediaFile File { get; }
@@ -29,10 +33,16 @@ public class MediaFileInfoVM : BaseVM
 
     public bool IsBusy { get; private set; }
 
+    public ICommand ShareCommand { get; }
+
     public override void OnAppearing()
     {
         base.OnAppearing();
 
+        if (!isFirstAppiring)
+            return;
+
+        isFirstAppiring = false;
         Task.Run(async () =>
         {
             IsBusy = true;
@@ -55,6 +65,13 @@ public class MediaFileInfoVM : BaseVM
             }
             IsBusy = false;
         });      
+    }
+
+    Task ShareAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Path) || !System.IO.File.Exists(Path))
+            return Task.CompletedTask;
+        return Share.RequestAsync(new ShareFileRequest(new ShareFile(Path)));
     }
 
     async Task ReadMeta(Stream stream)
