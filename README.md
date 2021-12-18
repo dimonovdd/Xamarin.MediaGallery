@@ -4,12 +4,13 @@
 
 [![NuGet Badge](https://img.shields.io/nuget/vpre/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery)](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/main/LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery) [![YouTube Video Views](https://img.shields.io/youtube/views/8JvgnlHVyrI?style=social)](https://youtu.be/8JvgnlHVyrI)
 
-This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices.
+This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices and capture photo.
 
 *Unfortunately, at the time of the release of this plugin, [MediaPlugin](https://github.com/jamesmontemagno/MediaPlugin) by [@jamesmontemagno](https://github.com/jamesmontemagno) is no longer supported, and [Xamarin.Essentials](https://github.com/xamarin/Essentials) has not received updates for about 2 months.*
 *This plugin has fixed bugs and added some features that are missing in [Xamarin.Essentials](https://github.com/xamarin/Essentials). I hope that in the future it will be ported to [MAUI](https://github.com/dotnet/maui) so that developers have an easy way to add these features to their apps.*
 
  [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/dimonovdd)
+ 
 
 ## Available Platforms
 
@@ -140,7 +141,7 @@ protected override void OnActivityResult(int requestCode, Result resultCode, Int
 - When using the `PickAsync` method the `selectionLimit` parameter just sets multiple pick allowed
 - A request to cancel `PickAsync` method will cancel a task, but the picker UI can remain open until it is closed by the user
 - The use of `Title` property depends on each device
-- `UseCreateChooser` specifies whether to use `Intent.CreateChooser`
+- `UseCreateChooser` property has not been used since version 2.0.0
 
 ### iOS
 
@@ -172,7 +173,7 @@ var status = await Permissions.RequestAsync<Permissions.Camera>();
 if (status != PermissionStatus.Granted)
     return;
 
-var file = await MediaGallery.CapturePhotoAsync()
+using var file = await MediaGallery.CapturePhotoAsync()
  ```
 
 `NameWithoutExtension` will always return `$"IMG_{DateTime.Now:yyyyMMdd_HHmmss}"` value.
@@ -188,6 +189,7 @@ Open the AndroidManifest.xml file under the Properties folder and add the follow
 ```xml
 <uses-feature android:name="android.hardware.camera" android:required="true" />
 ```
+If Camera is not required in your application, you can specify `false`.
 
 ```xml
 <queries>
@@ -197,7 +199,6 @@ Open the AndroidManifest.xml file under the Properties folder and add the follow
 </queries>
 ```
 
-If Camera is not required in your application, you can specify `false`.
 
 ### iOS
 
