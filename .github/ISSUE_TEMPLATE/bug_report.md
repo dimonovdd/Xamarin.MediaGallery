@@ -26,3 +26,4 @@ assignees: ''
  - Device: 
  - OS Version: 
  - Plugin Version:
+ - Framework: Xamarin or MAUI
