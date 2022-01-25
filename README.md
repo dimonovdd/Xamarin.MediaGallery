@@ -165,7 +165,7 @@ When picking files on iPadOS you have the ability to present in a pop over contr
 
 ```csharp
 //...
-if (MediaGallery.CheckCapturePhotoSupport())
+if (!MediaGallery.CheckCapturePhotoSupport())
     return;
 
 var status = await Permissions.RequestAsync<Permissions.Camera>();
