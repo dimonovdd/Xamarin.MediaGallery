@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0-android;net6.0-ios;</TargetFrameworks>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>  
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems> 
     <LangVersion>10.0</LangVersion>
