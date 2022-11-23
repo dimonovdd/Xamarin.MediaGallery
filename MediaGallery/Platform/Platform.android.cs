@@ -42,7 +42,7 @@ namespace NativeMedia
             
     }
 
-    [ContentProvider(new[] { "${applicationId}" + Authority },Name = "haraba.fileProvider", Exported = false, GrantUriPermissions = true)]
+    [ContentProvider(new[] { "${applicationId}" + Authority },Name = "nativeMedia.fileProvider", Exported = false, GrantUriPermissions = true)]
     [MetaData("android.support.FILE_PROVIDER_PATHS", Resource = "@xml/file_provider_paths")]
     public class MediaFileProvider : ContentFileProvider
     {

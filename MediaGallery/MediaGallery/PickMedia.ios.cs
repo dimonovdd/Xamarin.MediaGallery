@@ -66,12 +66,15 @@ namespace NativeMedia
                         {
                             SourceType = sourceType,
                             AllowsEditing = false,
+#if !__NET6__
                             AllowsImageEditing = false,
+#endif
                             Delegate = new PhotoPickerDelegate(tcs),
                             MediaTypes = isVideo && isImage
                                 ? new string[] { UTType.Movie, UTType.Image }
                                 : new string[] { isVideo ? UTType.Movie : UTType.Image }
                         };
+
                     }
 
                     CancelTaskIfRequested(token, tcs);
@@ -124,7 +127,9 @@ namespace NativeMedia
                 {
                     SourceType = UIImagePickerControllerSourceType.Camera,
                     AllowsEditing = false,
-                    AllowsImageEditing = false,
+#if !__NET6__
+                     AllowsImageEditing = false,
+#endif
                     Delegate = new PhotoPickerDelegate(tcs),
                     CameraCaptureMode = UIImagePickerControllerCameraCaptureMode.Photo
                 };

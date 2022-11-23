@@ -1,13 +1,14 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-ios;net6.0-android;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;</TargetFrameworks>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>  
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems> 
     <LangVersion>10.0</LangVersion>
+    <DefineConstants Condition=" $(TargetFramework.Contains('net6')) ">$(DefineConstants);__NET6__;</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
@@ -17,7 +18,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,10 +35,5 @@
     <EmbeddedResource Include="..\..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Helpers\PermissionHelper.cs">
-      <SubType></SubType>
-    </Compile>
-  </ItemGroup>
   <Import Project="..\..\Xamarim.MediaGallery.targets" />
 </Project>
