@@ -15,6 +15,10 @@
 
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('net6'))  ">
     <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SupportedOSPlatformVersion Condition="'$(_IOS)' == 'true'">11.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(_Droid)' == 'true'">21.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
