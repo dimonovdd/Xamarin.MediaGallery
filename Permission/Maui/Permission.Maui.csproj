@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
   <PropertyGroup>
-    <TargetFrameworks>net6.0-ios;net6.0-android;</TargetFrameworks>
+    <TargetFrameworks>net6.0-ios;net6.0-android;Xamarin.iOS10;MonoAndroid10.0;MonoAndroid11.0;MonoAndroid12.0;</TargetFrameworks>
     <AssemblyName>NativeMedia.Permision.Maui</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <PackageId>Xamarin.MediaGallery.Permision.Maui</PackageId>
