@@ -35,9 +35,9 @@
 	  <BundleResource Include="Resources\appiconforeground.svg" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Common\Sample.Common.Maui.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Maui\Sample.Common.Maui.csproj" />
+  </ItemGroup>
 	
   <Import Project="..\..\Xamarim.MediaGallery.targets" />
 </Project>

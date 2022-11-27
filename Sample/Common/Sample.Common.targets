@@ -1,21 +1,18 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project>
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>  
-    <EnableDefaultCompileItems>true</EnableDefaultCompileItems> 
+    <AssemblyName>Sample.Common</AssemblyName>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
     <LangVersion>10.0</LangVersion>
+    <DefineConstants Condition=" $(TargetFramework.StartsWith('net6')) ">$(DefineConstants);__NET6__;</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MetadataExtractor" Version="2.7.1" />
@@ -28,8 +25,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\..\..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
+    <Compile Include="..\src\**\*.cs" />
+    <None Include="..\src\**\*.xml" />
+    <None Include="..\src\**\*.xsd" />
   </ItemGroup>
 
-  <Import Project="..\..\Xamarim.MediaGallery.targets" />
 </Project>
