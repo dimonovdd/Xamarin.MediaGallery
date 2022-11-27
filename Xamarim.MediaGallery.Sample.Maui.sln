@@ -8,11 +8,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Xamarim.MediaGallery.targets = Xamarim.MediaGallery.targets
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xamarin", "Xamarin", "{A71B42A2-3366-4ECF-9552-81D615A3147B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Common.Maui", "Sample\Common\Sample.Common.Maui.csproj", "{BAA60CEE-25E1-4645-BDC9-6C00D5E8DAE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Common.Maui", "Sample\Common\Sample.Common.Maui.csproj", "{BAA60CEE-25E1-4645-BDC9-6C00D5E8DAE2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Maui", "Sample\MAUI\Sample.Maui.csproj", "{32C691A8-7133-4D26-B4B7-B8C8792F238C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Maui", "Sample\MAUI\Sample.Maui.csproj", "{32C691A8-7133-4D26-B4B7-B8C8792F238C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +36,13 @@ Global
 		{BAA60CEE-25E1-4645-BDC9-6C00D5E8DAE2}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Debug|iPhone.ActiveCfg = Debug|Any CPU
 		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Debug|iPhone.Deploy.0 = Debug|Any CPU
 		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Debug|iPhoneSimulator.Deploy.0 = Debug|Any CPU
 		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{32C691A8-7133-4D26-B4B7-B8C8792F238C}.Release|iPhone.ActiveCfg = Release|Any CPU
@@ -51,8 +52,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E6708EF0-B64B-42D8-904E-42A8868BD884}
