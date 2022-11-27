@@ -18,9 +18,5 @@
   <ItemGroup>
     <Compile Update="**\*.xaml.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Common\Sample.Common.csproj" />
-  </ItemGroup>
-
   <Import Project="..\..\..\Xamarim.MediaGallery.targets" />
 </Project>
