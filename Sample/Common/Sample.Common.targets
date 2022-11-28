@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+
+  <PropertyGroup>
+    <AssemblyName>Sample.Common</AssemblyName>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+    <LangVersion>10.0</LangVersion>
+    <DefineConstants Condition=" $(TargetFramework.StartsWith('net6')) ">$(DefineConstants);__NET6__;</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MetadataExtractor" Version="2.7.1" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.4.0">
+        <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Fody" Version="6.6.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
+    <Compile Include="..\src\**\*.cs" />
+    <None Include="..\src\**\*.xml" />
+    <None Include="..\src\**\*.xsd" />
+  </ItemGroup>
+
+</Project>

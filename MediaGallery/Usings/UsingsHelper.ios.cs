@@ -4,15 +4,15 @@ using CoreGraphics;
 static class UsingsHelper
 {
     public static Rectangle EmptyRectangle =>
-#if NET6_0_IOS
+#if __NET6__
         Rectangle.Zero;
 #else
         Rectangle.Empty;
 #endif
 
     public static CGRect AsCGRect(this Rectangle rect) =>
-#if NET6_0_IOS
-        new CGRect((nfloat)rect.X, (nfloat)rect.Y, (nfloat)rect.Width, (nfloat)rect.Height);
+#if __NET6__
+        new CGRect((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height);
 #else
         rect.ToPlatformRectangle();
 #endif

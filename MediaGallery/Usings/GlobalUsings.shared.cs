@@ -1,15 +1,15 @@
-﻿#if NET6_0_ANDROID || NET6_0_IOS
-global using EssentialsEx = Microsoft.Maui.Essentials;
-global using Microsoft.Maui.Essentials;
-global using Rectangle = Microsoft.Maui.Graphics.Rectangle;
+﻿#if __NET6__
+global using EssentialsEx = Microsoft.Maui.ApplicationModel;
+global using Microsoft.Maui.ApplicationModel;
+global using Rectangle = Microsoft.Maui.Graphics.Rect;
 #elif __MOBILE__
 global using EssentialsEx = Xamarin.Essentials;
 global using Xamarin.Essentials;
 #endif
-#if XAMARIN_IOS
+#if __IOS__ && !__NET6__
 global using Rectangle = System.Drawing.Rectangle;
 #endif
-#if MONOANDROID11_0 || NET6_0_ANDROID
+#if MONOANDROID12_0 || MONOANDROID11_0 || (__NET6__ && __DROID__)
 global using MediaColumns = Android.Provider.MediaStore.IMediaColumns;
 #elif MONOANDROID10_0
 global using MediaColumns = Android.Provider.MediaStore.MediaColumns;

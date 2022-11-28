@@ -6,28 +6,38 @@
 		<RootNamespace>Sample.Maui</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+    <ImplicitUsings>enable</ImplicitUsings>
 
-		<ApplicationTitle>MediaGallery.Maui</ApplicationTitle>
+    <ApplicationTitle>MediaGallery.Maui</ApplicationTitle>
 		<ApplicationId>com.dimonovdd.sample</ApplicationId>
-		<ApplicationVersion>1</ApplicationVersion>
-		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+    <ApplicationIdGuid>94cc9d86-07a2-445b-98ca-2c1202f25c07</ApplicationIdGuid>
 
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
-		<NoWarn>CA1416</NoWarn>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+
 	</PropertyGroup>
 
 	<ItemGroup>
-		<MauiImage Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" IsAppIcon="true" Color="#512BD4" />
+		<MauiImage Include="Resources\appicon.svg" ForegroundFile="Resources\appiconforeground.svg" IsAppIcon="true" Color="#512BD4" />
 		<MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4" />
 		<MauiImage Include="Resources\Images\*" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Common\Sample.Common.csproj" />
+	  <None Remove="Resources\appiconforeground.svg" />
 	</ItemGroup>
-	
+
+	<ItemGroup>
+	  <BundleResource Include="Resources\appiconforeground.svg" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Maui\Sample.Common.Maui.csproj" />
+  </ItemGroup>
 	
   <Import Project="..\..\Xamarim.MediaGallery.targets" />
 </Project>

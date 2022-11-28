@@ -79,7 +79,7 @@ namespace NativeMedia
 
                 var fileName = $"{GetNewImageName()}.jpg";
                 var tempFilePath = GetFilePath(fileName);
-                using var file = new File(tempFilePath);
+                using var file = new Java.IO.File(tempFilePath);
                 if (!file.Exists())
                     file.CreateNewFile();
                 outputUri = MediaFileProvider.GetUriForFile(Platform.AppActivity, file);

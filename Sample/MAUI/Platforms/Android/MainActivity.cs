@@ -12,7 +12,7 @@ namespace Sample.Maui
 		protected override void OnCreate(Bundle savedInstanceState)
         {
 			base.OnCreate(savedInstanceState);
-			Microsoft.Maui.Essentials.Platform.Init(this, savedInstanceState);
+            NativeMedia.Platform.Init(this, savedInstanceState);
 		}
 
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Essentials;
+using Microsoft.Maui.ApplicationModel;
 using Sample.Common.ViewModels;
 
 namespace Sample.Maui
