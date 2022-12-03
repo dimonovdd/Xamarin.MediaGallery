@@ -1,4 +1,4 @@
-# Xamarin.MediaGallery
+# MediaGallery for Xamarin and MAUI
 
 ![header](https://raw.githubusercontent.com/dimonovdd/Xamarin.MediaGallery/main/header.svg)
 
@@ -6,11 +6,22 @@
 
 This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices and capture photo.
 
-*Unfortunately, at the time of the release of this plugin, [MediaPlugin](https://github.com/jamesmontemagno/MediaPlugin) by [@jamesmontemagno](https://github.com/jamesmontemagno) is no longer supported, and [Xamarin.Essentials](https://github.com/xamarin/Essentials) has not received updates for about 2 months.*
-*This plugin has fixed bugs and added some features that are missing in [Xamarin.Essentials](https://github.com/xamarin/Essentials). I hope that in the future it will be ported to [MAUI](https://github.com/dotnet/maui) so that developers have an easy way to add these features to their apps.*
-
  [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/dimonovdd)
- 
+
+
+ ## FAQ
+
+ Please read this file and see samples before creating an issue.
+
+### Q: [I can't build Xamarim.MediaGallery solution. Why?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/98#issuecomment-1103067533)
+**A:** Sorry, it became very difficult after adding support for MAUI, but you can build `Xamarim.MediaGallery.Sample.sln` or `Xamarim.MediaGallery.Sample.Maui.sln`
+
+### Q: [Why does a image have wrong orientation?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/105)
+**A:** This is correct behavior. The plugin returns images without any changes, See [metadata](https://www.nuget.org/packages/MetadataExtractor/)
+
+### Q: [How do I get `FilePath`?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/104)
+**A:** It is not possible. [But you can copy a file to a cache directory](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/368087eb569b0f98c708fee3f966aeabc109e061/Sample/Common/src/Helpers/FilesHelper.cs#L8)
+
 
 ## Available Platforms
 
@@ -21,9 +32,9 @@ This plugin is designed for picking and saving photos and video files from the n
 
 ### TargetFrameworks
 
-- `Xamarin.iOS10`, `net6.0-ios`
-- `MonoAndroid10.0`, `MonoAndroid11.0`, `net6.0-android`
-- `netstandard2.0`, `net6.0`
+- `net6.0-ios`, `Xamarin.iOS10`
+- `net6.0-android`, `MonoAndroid10.0`, `MonoAndroid11.0`, `MonoAndroid12.0`
+- `netstandard2.0`
 
 ## Getting started
 
@@ -154,7 +165,7 @@ protected override void OnActivityResult(int requestCode, Result resultCode, Int
 
 When picking files on iPadOS you have the ability to present in a pop over control. This specifies where the pop over will appear and point an arrow directly to. You can specify the location using the `PresentationSourceBounds` property. Setting this property has the same behavior as [Launcher or Share in Xamarin.Essentials](https://docs.microsoft.com/en-us/xamarin/essentials/share?tabs=android#presentation-location).
 
-`PresentationSourceBounds` property takes `System.Drawing.Rectangle` for `Xamarin` or `Microsoft.Maui.Graphics.Rectangle` for `.net6(MAUI)`
+`PresentationSourceBounds` property takes `System.Drawing.Rectangle` for `Xamarin` or `Microsoft.Maui.Graphics.Rect` for `.net6(MAUI)`
 
 **Screenshots:**
 
