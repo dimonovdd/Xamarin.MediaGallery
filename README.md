@@ -23,8 +23,10 @@ This plugin is designed for picking and saving photos and video files from the n
 **A:** It is not possible. [But you can copy a file to a cache directory](https://github.com/dimonovdd/Xamarin.MediaGallery/blob/368087eb569b0f98c708fee3f966aeabc109e061/Sample/Common/src/Helpers/FilesHelper.cs#L8)
 
 ### Q: [How does Xamarin.MediaGallery work on a PopupPage from Rg.Plugins.Popup?](https://stackoverflow.com/questions/70233374/how-does-xamarin-mediagallery-work-in-popuppage-in-xamarin)
-**A:** Fine! But you need to [initialize the plugin](https://github.com/dimonovdd/Xamarin.MediaGallery#ios-optional) on iOS. [See taht sample code.](https://github.com/xamarin/Essentials/pull/1846#issuecomment-975207765)
+**A:** Fine! But you need to [initialize the plugin](https://github.com/dimonovdd/Xamarin.MediaGallery#ios-optional) on iOS. [See taht sample code](https://github.com/xamarin/Essentials/pull/1846#issuecomment-975207765)
 
+### Q: [Why an error thrown when picking a image on a iOS simulator?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/92)
+**A:** This issue is on Apple side
 
 ## Available Platforms
 
