@@ -153,7 +153,7 @@ protected override void OnActivityResult(int requestCode, Result resultCode, Int
 }
  ```
 
- If an app has `android:targetSdkVersion` or greater [new Photo picker](https://developer.android.com/training/data-storage/shared/photopicker) will be used if possible.
+ If an app has `android:targetSdkVersion="33"` or greater [new Photo picker](https://developer.android.com/training/data-storage/shared/photopicker) will be used if possible.
 
  #### Default behavior
 
@@ -285,6 +285,6 @@ In your `Info.plist` add the following keys:
 
 ## Screenshots
 
-|   iOS   | Android - defult  | Android - Photo Picker |
+|   iOS   | Android - Defult  | Android - Photo Picker |
 |:-------:|:-------:|:-------:|
 |![iOS](./Screenshots/ios.jpg)|![Android](./Screenshots/droid.jpg)|![Android2](./Screenshots/droid-33.png)|

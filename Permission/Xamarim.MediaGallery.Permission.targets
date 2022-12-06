@@ -8,7 +8,7 @@
     <Owners>dimonovdd</Owners>
     <RepositoryUrl>https://github.com/dimonovdd/Xamarin.MediaGallery</RepositoryUrl>
     <PackageReleaseNotes>See: https://github.com/dimonovdd/Xamarin.MediaGallery/releases</PackageReleaseNotes>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile>README.nuget.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -36,7 +36,7 @@
   <ItemGroup>
     <None Include="..\..\LICENSE" PackagePath="" Pack="true" />
     <None Include="..\..\icon.png" PackagePath="" Pack="true" />
-    <None Include="..\..\README.md" PackagePath="" Pack="true" />
+    <None Include="..\..\docs\README.nuget.md" PackagePath="" Pack="true" />
     <Compile Include="..\src\**\*.shared.cs" />
     <Compile Include="..\src\**\*.shared.*.cs" />
   </ItemGroup>
