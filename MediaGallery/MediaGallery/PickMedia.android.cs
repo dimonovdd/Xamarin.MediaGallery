@@ -77,7 +77,7 @@ namespace NativeMedia
             if (Platform.HasSdkVersion(33))
                 return true;
             if (Platform.HasSdkVersion(30))
-                return Android.OS.Ext.SdkExtensions.GetExtensionVersion(30) > 2;
+                return Android.OS.Ext.SdkExtensions.GetExtensionVersion(30) >= 2;
             return false;
         }
 
