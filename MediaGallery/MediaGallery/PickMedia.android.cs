@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
@@ -8,7 +7,6 @@ using Uri = Android.Net.Uri;
 using Android.Provider;
 using System.Threading;
 using Android.Content.PM;
-using Java.IO;
 
 namespace NativeMedia
 {
@@ -23,7 +21,6 @@ namespace NativeMedia
         {
             token.ThrowIfCancellationRequested();
             Intent intent = null;
-            var mimeTypes = request.Types.Select(a => GetMimeType(a)).ToArray();
 
             try
             {
@@ -31,16 +28,7 @@ namespace NativeMedia
 
                 CancelTaskIfRequested(token, tcsPick, false);
 
-                intent = new Intent(Intent.ActionGetContent);
-
-                intent.SetType(string.Join(", ", mimeTypes));
-                intent.PutExtra(Intent.ExtraMimeTypes, mimeTypes);
-                intent.AddCategory(Intent.CategoryOpenable);
-                intent.PutExtra(Intent.ExtraLocalOnly, true);
-                intent.PutExtra(Intent.ExtraAllowMultiple, request.SelectionLimit > 1);
-
-                if (!string.IsNullOrWhiteSpace(request.Title))
-                    intent.PutExtra(Intent.ExtraTitle, request.Title);
+                intent = GetPickerIntent(request);
 
                 CancelTaskIfRequested(token, tcsPick);
 
@@ -58,9 +46,55 @@ namespace NativeMedia
             }
         }
 
+        static Intent GetPickerIntent(MediaPickRequest request)
+        {
+#if MONOANDROID13_0 || (__NET6__ && __DROID__)
+            if (ActionPickImagesIsSupported())
+                return GetPickerActionPickImagesIntent(request);
+#endif
+            return GetPickerActionGetContentIntent(request);
+        }
+
+        static Intent GetPickerActionGetContentIntent(MediaPickRequest request)
+        {
+            var mimeTypes = request.Types.Select(GetMimeType).ToArray();
+            var intent = new Intent(Intent.ActionGetContent);
+
+            intent.SetType(string.Join(", ", mimeTypes));
+            intent.PutExtra(Intent.ExtraMimeTypes, mimeTypes);
+            intent.AddCategory(Intent.CategoryOpenable);
+            intent.PutExtra(Intent.ExtraLocalOnly, true);
+            intent.PutExtra(Intent.ExtraAllowMultiple, request.SelectionLimit > 1);
+
+            if (!string.IsNullOrWhiteSpace(request.Title))
+                intent.PutExtra(Intent.ExtraTitle, request.Title);
+            return intent;
+        }
+
+#if MONOANDROID13_0 || (__NET6__ && __DROID__)
+        static bool ActionPickImagesIsSupported()
+        {
+            if (Platform.HasSdkVersion(33))
+                return true;
+            if (Platform.HasSdkVersion(30))
+                return Android.OS.Ext.SdkExtensions.GetExtensionVersion(30) > 2;
+            return false;
+        }
+
+        static Intent GetPickerActionPickImagesIntent(MediaPickRequest request)
+        {
+            var intent = new Intent(MediaStore.ActionPickImages);
+            if (request.SelectionLimit > 1)
+                intent.PutExtra(MediaStore.ExtraPickImagesMax, request.SelectionLimit);
+            if(request.Types.Length == 1)
+                intent.SetType(GetMimeType(request.Types[0]));
+            return intent;
+        }
+#endif
+
         static bool PlatformCheckCapturePhotoSupport()
         {
-            if (!Platform.AppActivity.PackageManager.HasSystemFeature(PackageManager.FeatureCameraAny))
+            if (!Platform.AppActivity?.PackageManager?.HasSystemFeature(PackageManager.FeatureCameraAny) ?? false)
                 return false;
             using var intent = GetCameraIntent();
             return Platform.IsIntentSupported(intent);
@@ -112,16 +146,16 @@ namespace NativeMedia
 
         internal static void OnActivityResult(int requestCode, Result resultCode, Intent intent)
         {
-            if (CheckCanProcessResult(requestCode, resultCode, intent))
-                (requestCode == Platform.cameraRequestCode  ? tcsCamera : tcsPick)?
-                    .TrySetResult(resultCode == Result.Ok ? (intent, resultCode) : (null, resultCode));
+            if (!CheckCanProcessResult(requestCode, resultCode, intent))
+                return;
+            (requestCode == Platform.cameraRequestCode ? tcsCamera : tcsPick)?
+               .TrySetResult(resultCode == Result.Ok ? (intent, resultCode) : (null, resultCode));
         }
 
         internal static bool CheckCanProcessResult(int requestCode, Result resultCode, Intent intent)
             => (tcsPick != null && requestCode == Platform.pickRequestCode) || (tcsCamera != null && requestCode == Platform.cameraRequestCode);
 
-        static Intent GetCameraIntent()
-            => new Intent(MediaStore.ActionImageCapture);
+        static Intent GetCameraIntent() => new(MediaStore.ActionImageCapture);
 
         static void CancelTaskIfRequested(CancellationToken token, TaskCompletionSource<(Intent, Result)> tcs, bool needThrow = true)
         {
@@ -135,11 +169,13 @@ namespace NativeMedia
         static void StartActivity(Intent intent, int requestCode, CancellationToken token, TaskCompletionSource<(Intent, Result)> tcs)
         {
             if (token.CanBeCanceled)
+            {
                 token.Register(() =>
                 {
                     Platform.AppActivity.FinishActivity(requestCode);
                     tcs?.TrySetCanceled(token);
                 });
+            }
 
             Platform.AppActivity.StartActivityForResult(intent, requestCode);
         }
@@ -156,13 +192,15 @@ namespace NativeMedia
                     yield return res;
             }
             else if (clipCount > 0)
+            {
                 for (var i = 0; i < clipCount; i++)
                 {
-                    var item = intent.ClipData.GetItemAt(i);
-                    var res = GetFileResult(item.Uri);
+                    var item = intent!.ClipData!.GetItemAt(i);
+                    var res = GetFileResult(item!.Uri);
                     if (res != null)
                         yield return res;
                 }
+            }
         }
 
         static IMediaFile GetFileResult(Uri uri)
@@ -177,7 +215,7 @@ namespace NativeMedia
         {
             try
             {
-                using var cursor = Platform.AppActivity.ContentResolver
+                using var cursor = Platform.AppActivity?.ContentResolver?
                     .Query(contentUri, new[] { columnName }, null, null, null);
 
                 if (cursor?.MoveToFirst() ?? false)
@@ -198,7 +236,8 @@ namespace NativeMedia
             => type switch
             {
                 MediaFileType.Image => imageType,
-                MediaFileType.Video => videoType
+                MediaFileType.Video => videoType,
+                _ => string.Empty,
             };
     }
 }
