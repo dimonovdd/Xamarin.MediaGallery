@@ -48,7 +48,7 @@ namespace NativeMedia
 
         static Intent GetPickerIntent(MediaPickRequest request)
         {
-#if MONOANDROID13_0 || (__NET6__ && __DROID__)
+#if MONOANDROID13_0 || ANDROID33_0_OR_GREATER
             if (ActionPickImagesIsSupported())
                 return GetPickerActionPickImagesIntent(request);
 #endif
@@ -71,7 +71,7 @@ namespace NativeMedia
             return intent;
         }
 
-#if MONOANDROID13_0 || (__NET6__ && __DROID__)
+#if MONOANDROID13_0 || ANDROID33_0_OR_GREATER
         static bool ActionPickImagesIsSupported()
         {
             if (Platform.HasSdkVersion(33))

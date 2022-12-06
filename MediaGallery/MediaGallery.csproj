@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;Xamarin.iOS10;MonoAndroid10.0;MonoAndroid11.0;MonoAndroid12.0;MonoAndroid13.0;</TargetFrameworks>
-    <TargetFrameworks>$(TargetFrameworks)net6.0-android;net6.0-ios</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworks)net6.0-ios;net6.0-android31.0;net6.0-android32.0;net6.0-android33.0;</TargetFrameworks>
     <AssemblyName>NativeMedia</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <PackageId>Xamarin.MediaGallery</PackageId>
@@ -79,6 +79,11 @@
     <Compile Include="**\*.ios.*.cs" />
     <Compile Include="**\*.ios.cs" />
   </ItemGroup>
+
+  <Target Name="DisplayMessages" BeforeTargets="Build">
+    <Message Text="$(AssemblyName) DefineConstants: $(DefineConstants)"/>
+    <Message Text="$(AssemblyName) Configuration: '$(Configuration)|$(Platform)'"/>
+  </Target>
   
   <Import Project="..\Xamarim.MediaGallery.targets" />
 </Project>
