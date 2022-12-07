@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-ios;net6.0-android</TargetFrameworks>
+		<TargetFrameworks>net6.0-ios;net6.0-android33.0</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Sample.Maui</RootNamespace>
 		<UseMaui>true</UseMaui>
