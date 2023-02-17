@@ -1,4 +1,5 @@
-﻿using Android;
+﻿using System;
+using Android;
 using Android.OS;
 
 namespace NativeMedia
