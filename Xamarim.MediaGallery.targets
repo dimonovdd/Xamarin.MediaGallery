@@ -3,8 +3,8 @@
 	<PropertyGroup>
 		<_UseNuget>true</_UseNuget>
 		<_UseNuget Condition="'$(Configuration)'=='Release'">true</_UseNuget>
-		<_LibVersion>2.2.0</_LibVersion>
-		<_PermissionLibVersion>2.2.0</_PermissionLibVersion>
+		<_LibVersion>2.2.1</_LibVersion>
+		<_PermissionLibVersion>2.2.1</_PermissionLibVersion>
 		<_IsSample Condition="'$(_IsSample)'!='false'">true</_IsSample>
 		<_NET6 Condition=" $(TargetFramework.StartsWith('net6')) ">true</_NET6>
 		<_IsMobele Condition=" $(TargetFramework.Contains('droid')) OR $(TargetFramework.ToLowerInvariant().Contains('ios')) ">true</_IsMobele>
