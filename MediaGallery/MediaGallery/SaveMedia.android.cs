@@ -14,21 +14,24 @@ namespace NativeMedia
 {
     public static partial class MediaGallery
     {
-        static async Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
+        static async Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName, string albumName = null)
         {
             using var ms = new MemoryStream(data);
-            await PlatformSaveAsync(type, ms, fileName).ConfigureAwait(false);
+            await PlatformSaveAsync(type, ms, fileName, albumName).ConfigureAwait(false);
         }
 
-        static async Task PlatformSaveAsync(MediaFileType type, string filePath)
+        static async Task PlatformSaveAsync(MediaFileType type, string filePath, string albumName = null)
         {
             using var fileStream = System.IO.File.OpenRead(filePath);
-            await PlatformSaveAsync(type, fileStream, Path.GetFileName(filePath)).ConfigureAwait(false);
+            await PlatformSaveAsync(type, fileStream, Path.GetFileName(filePath), albumName).ConfigureAwait(false);
         }
 
-        static async Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName)
+        static async Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName, string albumName = null)
         {
-            var albumName = AppInfo.Name;
+            if (albumName == null)
+            {
+                albumName = AppInfo.Name;
+            }
 
             var context = Platform.AppActivity;
             var dateTimeNow = DateTime.Now;

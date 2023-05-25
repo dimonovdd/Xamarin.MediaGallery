@@ -31,38 +31,40 @@ namespace NativeMedia
         /// <param name="type">Type of media file to save.</param>
         /// <param name="fileStream">The stream to output the file to.</param>
         /// <param name="fileName">The name of the saved file including the extension.</param>
+        /// <param name="albumName">The name of the album to save the file to. Null for default behaviour, empty string for no album, anything else to create/use an album.</param>
         /// <returns>A task representing the asynchronous save operation.</returns>
-        public static async Task SaveAsync(MediaFileType type, Stream fileStream, string fileName)
+        public static async Task SaveAsync(MediaFileType type, Stream fileStream, string fileName, string albumName = null)
         {
             await CheckPossibilitySave();
+
             if (fileStream == null)
                 throw new ArgumentNullException(nameof(fileStream));
             CheckFileName(fileName);
 
-           await PlatformSaveAsync(type, fileStream, fileName).ConfigureAwait(false);
+           await PlatformSaveAsync(type, fileStream, fileName, albumName).ConfigureAwait(false);
         }
 
         /// <param name="data">A byte array to save to the file.</param>
-        /// <inheritdoc cref = "SaveAsync(MediaFileType, Stream, string)" path=""/>
-        public static async Task SaveAsync(MediaFileType type, byte[] data, string fileName)
+        /// <inheritdoc cref = "SaveAsync(MediaFileType, Stream, string, string?)" path=""/>
+        public static async Task SaveAsync(MediaFileType type, byte[] data, string fileName, string albumName = null)
         {
             await CheckPossibilitySave();
             if (!(data?.Length > 0))
                 throw new ArgumentNullException(nameof(data));
             CheckFileName(fileName);
 
-            await PlatformSaveAsync(type, data, fileName).ConfigureAwait(false);
+            await PlatformSaveAsync(type, data, fileName, albumName).ConfigureAwait(false);
         }
 
         /// <param name="filePath">Full path to a local file.</param>
-        /// <inheritdoc cref = "SaveAsync(MediaFileType, Stream, string)" path=""/>
-        public static async Task SaveAsync(MediaFileType type, string filePath)
+        /// <inheritdoc cref = "SaveAsync(MediaFileType, Stream, string, string?)" path=""/>
+        public static async Task SaveAsync(MediaFileType type, string filePath, string albumName = null)
         {
             await CheckPossibilitySave();
             if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
                 throw new ArgumentException(nameof(filePath));
 
-            await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
+            await PlatformSaveAsync(type, filePath, albumName).ConfigureAwait(false);
         }
 
         /// <summary>Checks camera support on a device</summary>
