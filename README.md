@@ -249,6 +249,10 @@ await MediaGallery.SaveAsync(MediaFileType.Video, filePath);
 
 await MediaGallery.SaveAsync(MediaFileType.Image, stream, fileName);
 
+//OR You can also save to a specific album
+
+await MediaGallery.SaveAsync(MediaFileType.Image, stream, fileName, "MyAppsAlbum");
+
 //The name or the path to the saved file must contain the extension.
 
 //...
