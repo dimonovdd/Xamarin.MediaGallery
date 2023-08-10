@@ -53,14 +53,18 @@ namespace NativeMedia
             // If albumName is null we do what we always used to do and not create an album.
             // If albumName is an empty string we don't wish to create an album (which is the same as null for iOS)
             // Otherwise we wish to create an album.
-            if (String.IsNullOrEmpty(albumName) == false)
+            if (string.IsNullOrEmpty(albumName) == false)
             {
                 // Fetch album.
                 var fetchOptions = new PHFetchOptions()
                 {
                     Predicate = NSPredicate.FromFormat($"title=\"{albumName}\"")
                 };
+                #if __NET6__
+                collection = PHAssetCollection.FetchAssetCollections(PHAssetCollectionType.Album, PHAssetCollectionSubtype.AlbumRegular, fetchOptions).firstObject as PHAssetCollection;
+                #else
                 collection = PHAssetCollection.FetchAssetCollections(PHAssetCollectionType.Album, PHAssetCollectionSubtype.AlbumRegular, fetchOptions).FirstObject as PHAssetCollection;
+                #endif
 
                 // Album does not exist, create it.
                 if (collection == null)
@@ -99,7 +103,11 @@ namespace NativeMedia
                 if (success)
                 {
                     var collectionFetchResult = PHAssetCollection.FetchAssetCollections(new string[] { placeholderForCreatedAssetCollection.LocalIdentifier }, null);
+                    #if __NET6__
+                    var newCollection = collectionFetchResult.firstObject as PHAssetCollection;
+                    #else
                     var newCollection = collectionFetchResult.FirstObject as PHAssetCollection;
+                    #endif
                     tcs.TrySetResult(newCollection);
                 }
                 else
