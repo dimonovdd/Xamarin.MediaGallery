@@ -41,6 +41,8 @@ public class SaveVM : BaseVM
 
     public ICommand SaveVideoCommand { get; }
 
+    public string AlbumName { get; set; }
+
 
     async void Save(MediaFileType type, string name)
     {
@@ -57,22 +59,29 @@ public class SaveVM : BaseVM
         {
             using var stream = EmbeddedResourceProvider.Load(name);
 
+            // Note on the albumName parameter.
+            // If the albumName parameter is an empty string no album will be created but it will be just saved into photos/gallery.
+            // If the albumName parameter is a string then an album by that name will created and/or used.
+            // If the albumName parameter is null we use the behaviour from Xamarin.MediaGallery v2.2.1 (app name as album for Android, no album for iOS)
+            // In this sample we do not allow it to be null.
+            var albumName = AlbumName ?? String.Empty;
+
             if (FromStream)
             {
-                await MediaGallery.SaveAsync(type, stream, name);
+                await MediaGallery.SaveAsync(type, stream, name, albumName);
             }
             else if (FromByteArray)
             {
                 using var memoryStream = new MemoryStream();
                 stream.CopyTo(memoryStream);
 
-                await MediaGallery.SaveAsync(type, memoryStream.ToArray(), name);
+                await MediaGallery.SaveAsync(type, memoryStream.ToArray(), name, albumName);
             }
             else if (FromCacheDirectory)
             {
                 var filePath = await FilesHelper.SaveToCacheAsync(stream, name);
 
-                await MediaGallery.SaveAsync(type, filePath);
+                await MediaGallery.SaveAsync(type, filePath, albumName);
             }
 
             await DisplayAlertAsync("Save Completed Successfully");

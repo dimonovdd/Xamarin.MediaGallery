@@ -10,13 +10,13 @@ namespace NativeMedia
         static Task<IEnumerable<IMediaFile>> PlatformPickAsync(MediaPickRequest request, CancellationToken token)
             => Task.FromResult<IEnumerable<IMediaFile>>(null);
 
-        static Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
+        static Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName, string albumName = null)
              => Task.CompletedTask;
 
-        static Task PlatformSaveAsync(MediaFileType type, string filePath)
+        static Task PlatformSaveAsync(MediaFileType type, string filePath, string albumName = null)
             => Task.CompletedTask;
 
-        static Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName)
+        static Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName, string albumName = null)
             => Task.CompletedTask;
 
         static bool PlatformCheckCapturePhotoSupport()

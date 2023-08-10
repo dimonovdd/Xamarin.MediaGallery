@@ -20,6 +20,10 @@
                 <RadioButton Content="Stream" IsChecked="{Binding FromStream}" />
                 <RadioButton Content="ByteArray" IsChecked="{Binding FromByteArray}" />
                 <RadioButton Content="CacheDirectory" IsChecked="{Binding FromCacheDirectory}" />
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Save to album:" VerticalOptions="Center" />
+                    <Entry Text="{Binding AlbumName}" Placeholder="Leave blank for no album" VerticalOptions="Center" />
+                </StackLayout>
             </StackLayout>
 
             <Grid Grid.Row="1" Margin="0" >
