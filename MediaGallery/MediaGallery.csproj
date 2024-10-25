@@ -1,7 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;Xamarin.iOS10;MonoAndroid10.0;MonoAndroid11.0;MonoAndroid12.0;MonoAndroid13.0;</TargetFrameworks>
-    <TargetFrameworks>$(TargetFrameworks)net6.0-ios;net6.0-android31.0;net6.0-android32.0;net6.0-android33.0;</TargetFrameworks>
+    <TargetFrameworks>net8.0-ios;net8.0-android;</TargetFrameworks>
     <AssemblyName>NativeMedia</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <PackageId>Xamarin.MediaGallery</PackageId>
@@ -36,28 +35,19 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <PropertyGroup>
-    <_Net6 Condition=" $(TargetFramework.Contains('net6')) ">true</_Net6>
     <_Droid Condition=" $(TargetFramework.Contains('droid')) ">true</_Droid>
     <_IOS Condition=" $(TargetFramework.ToLowerInvariant().Contains('ios')) ">true</_IOS>
-    <_Mobile Condition=" '$(_Droid)' == 'true' OR '$(_IOS)' == 'true' ">true</_Mobile>
-    
-    <DefineConstants Condition=" '$(_Droid)' == 'true' ">$(DefineConstants);__DROID__;__MOBILE__;</DefineConstants>
-    <DefineConstants Condition=" '$(_IOS)' == 'true' ">$(DefineConstants);__IOS__;__MOBILE__;</DefineConstants>
-    <DefineConstants Condition=" '$(_Net6)' == 'true' ">$(DefineConstants);__NET6__;</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(_Net6)' == 'true' AND '$(_Mobile)' == 'true' ">
+  <PropertyGroup>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
-    <SupportedOSPlatformVersion Condition="'$(_IOS)' == 'true'">11.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(_IOS)' == 'true'">13.6</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="'$(_Droid)' == 'true'">21.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(_Net6)' != 'true' AND '$(_Mobile)' == 'true' ">
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
-  </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE" PackagePath="" Pack="true" />
     <None Include="..\icon.png" PackagePath="" Pack="true" />
@@ -66,12 +56,8 @@
     <Compile Include="**\*.shared.*.cs" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
-    <Compile Include="**\*.netstandard.cs" />
-    <Compile Include="**\*.netstandard.*.cs" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(_Droid)' == 'true' ">
-    <Compile Include="**\*.android.*.cs" />
+    <Compile Include="**\*.android.*.cs" Exclude="**\*.resource.*.cs"/>
     <Compile Include="**\*.android.cs" />
     <AndroidResource Include="Resources\xml\*.xml" />
   </ItemGroup>
@@ -85,5 +71,4 @@
     <Message Text="$(AssemblyName) Configuration: '$(Configuration)|$(Platform)'"/>
   </Target>
   
-  <Import Project="..\Xamarim.MediaGallery.targets" />
 </Project>

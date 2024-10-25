@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+    <TargetFrameworks>net8.0-android;net8.0-ios;</TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Sample.Maui</RootNamespace>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PublishTrimmed>true</PublishTrimmed>
+    <MtouchLink>None</MtouchLink>
+
+    <!-- Display name -->
+    <ApplicationTitle>MediaGallery.Maui</ApplicationTitle>
+
+    <!-- App Identifier -->
+    <ApplicationId>com.dimonovdd.sample</ApplicationId>
+
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">13.6</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+
+	</PropertyGroup>
+
+	<ItemGroup>
+    
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+    <MauiImage Include="Resources\Images\*" />
+    <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+    <MauiFont Include="Resources\Fonts\*" />
+    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    
+<!--		<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconforeground.svg" Color="#512BD4" />-->
+<!--		<MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4" />-->
+<!--		<MauiImage Include="Resources\Images\*" />-->
+    <EmbeddedResource Include="..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0"/>
+    <PackageReference Include="MetadataExtractor" Version="2.7.1" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.4.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Fody" Version="6.6.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MediaGallery\MediaGallery.csproj" />
+  </ItemGroup>
+	
+</Project>
