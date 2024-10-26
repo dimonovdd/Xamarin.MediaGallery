@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Android.Content;
+﻿using Android.Content;
 using Android.Provider;
 using Android.Webkit;
 using Environment = Android.OS.Environment;

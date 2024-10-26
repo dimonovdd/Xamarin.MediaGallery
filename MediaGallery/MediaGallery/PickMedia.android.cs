@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Uri = Android.Net.Uri;
 using Android.Provider;
-using System.Threading;
 using Android.Content.PM;
 
 namespace NativeMedia
@@ -48,10 +44,9 @@ namespace NativeMedia
 
         static Intent GetPickerIntent(MediaPickRequest request)
         {
-#if MONOANDROID13_0 || ANDROID33_0_OR_GREATER
             if (ActionPickImagesIsSupported())
                 return GetPickerActionPickImagesIntent(request);
-#endif
+
             return GetPickerActionGetContentIntent(request);
         }
 
@@ -71,7 +66,6 @@ namespace NativeMedia
             return intent;
         }
 
-#if MONOANDROID13_0 || ANDROID33_0_OR_GREATER
         static bool ActionPickImagesIsSupported()
         {
             if (Platform.HasSdkVersion(33))
@@ -90,7 +84,6 @@ namespace NativeMedia
                 intent.SetType(GetMimeType(request.Types[0]));
             return intent;
         }
-#endif
 
         static bool PlatformCheckCapturePhotoSupport()
         {

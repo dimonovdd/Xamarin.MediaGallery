@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace NativeMedia
+﻿namespace NativeMedia
 {
     /// <summary>Request for picking a media file.</summary>
     public class MediaPickRequest
@@ -26,8 +24,7 @@ namespace NativeMedia
         public string Title { get; set; }
 
         /// <summary>Gets or sets the source rectangle to display the Picker UI from. This is only used on iPad currently.</summary>
-        /// <remarks>Xamarin - System.Drawing.Rectangle; .net6(MAUI) - Microsoft.Maui.Graphics.Rect;</remarks>
-        public object PresentationSourceBounds { get; set; } = default;
+        public Rect? PresentationSourceBounds { get; set; } = default;
 
         /// <summary>Gets or sets whether to use Intent.CreateChooser. Currently used only for Android.</summary>
         public bool UseCreateChooser { get; set; } = true;

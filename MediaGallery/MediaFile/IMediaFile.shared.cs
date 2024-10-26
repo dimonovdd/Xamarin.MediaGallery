@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-
-namespace NativeMedia
+﻿namespace NativeMedia
 {
     /// <summary>Describes and allows to open a media file</summary>
     public interface IMediaFile : IDisposable

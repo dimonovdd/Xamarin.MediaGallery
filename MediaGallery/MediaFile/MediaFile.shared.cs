@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-
-namespace NativeMedia
+﻿namespace NativeMedia
 {
     partial class MediaFile : IMediaFile
     {

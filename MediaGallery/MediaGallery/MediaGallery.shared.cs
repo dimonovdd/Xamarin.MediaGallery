@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace NativeMedia
+﻿namespace NativeMedia
 {
     /// <summary>Performs operations with media files.</summary>
     public static partial class MediaGallery
@@ -88,20 +83,16 @@ namespace NativeMedia
         static async Task CheckPossibilitySave()
         {
             ExceptionHelper.CheckSupport();
-#if __MOBILE__
             var status = await Permissions.CheckStatusAsync<SaveMediaPermission>();
 
             if (status != PermissionStatus.Granted)
                 throw ExceptionHelper.PermissionException(status);
-#else
-            await Task.CompletedTask;
-#endif
         }
 
         static async Task CheckPossibilityCamera()
         {
             ExceptionHelper.CheckSupport();
-#if __MOBILE__
+
             if (!CheckCapturePhotoSupport())
                 throw new FeatureNotSupportedException();
 
@@ -110,12 +101,8 @@ namespace NativeMedia
 
             if (status != PermissionStatus.Granted)
                 throw ExceptionHelper.PermissionException(status);
-#else
-            await Task.CompletedTask;
-#endif
         }
 
-#if __MOBILE__
         static void DeleteFile(string filePath)
         {
             if (!string.IsNullOrWhiteSpace(filePath) && File.Exists(filePath))
@@ -132,7 +119,7 @@ namespace NativeMedia
                 Directory.CreateDirectory(dirPath);
             return filePath;
         }
-#endif
+
         static string GetNewImageName(string imgName = null)
             => GetNewImageName(DateTime.Now, imgName);
 
