@@ -1,31 +1,35 @@
-# MediaGallery for Xamarin and MAUI
+# MediaGallery for .NET Android and iOS
 
 ![header](./header.svg)
 
 [![NuGet Badge](https://img.shields.io/nuget/vpre/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery)](./LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery) [![YouTube Video Views](https://img.shields.io/youtube/views/8JvgnlHVyrI?style=social)](https://youtu.be/8JvgnlHVyrI)
 
-This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices and capture photo.
+This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices and capture photo. 
 
- [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/dimonovdd)
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/dimonovdd)
 
+## FAQ
 
- ## FAQ
+Please read this file and see samples before creating an issue.
 
- Please read this file and see samples before creating an issue.
+### Q: Why does the plugin not support Xamarin?
 
-### Q: [I can't build Xamarim.MediaGallery solution. Why?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/98#issuecomment-1103067533)
-**A:** Sorry, it became very difficult after adding support for MAUI, but you can build `Xamarim.MediaGallery.Sample.sln` or `Xamarim.MediaGallery.Sample.Maui.sln`
+**A:** Yes, it's funny. Initially, I made this plugin as a temporary solution to expand the functionality of Xamarin.Essentials. Xamarin is no longer supported by Microsoft and MAUI still has scant functionality for working with media files. For these reasons, this plugin will continue to exist and support .NET for iOS and Android.  
 
 ### Q: [Why does a image have wrong orientation?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/105)
+
 **A:** This is correct behavior. The plugin returns images without any changes, See [metadata](https://www.nuget.org/packages/MetadataExtractor/)
 
 ### Q: [How do I get `FilePath`?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/104)
+
 **A:** It is not possible. [But you can copy a file to a cache directory](./Sample/Common/src/Helpers/FilesHelper.cs#L8)
 
-### Q: [How does Xamarin.MediaGallery work on a PopupPage from Rg.Plugins.Popup?](https://stackoverflow.com/questions/70233374/how-does-xamarin-mediagallery-work-in-popuppage-in-xamarin)
+### Q: [How does Xamarin.MediaGallery work on a PopupPage?](https://stackoverflow.com/questions/70233374/how-does-xamarin-mediagallery-work-in-popuppage-in-xamarin)
+
 **A:** Fine! But you need to [initialize the plugin](#ios-optional) on iOS. [See taht sample code](https://github.com/xamarin/Essentials/pull/1846#issuecomment-975207765)
 
 ### Q: [Why an error thrown when picking a image on a iOS simulator?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/92)
+
 **A:** This issue is on Apple side
 
 ## Available Platforms
@@ -33,18 +37,20 @@ This plugin is designed for picking and saving photos and video files from the n
 | Platform | Minimum OS Version |
 | --- | --- |
 | Android | 5.0 |
-| iOS | 11.0 |
+| iOS | 13.6 |
 
 ### TargetFrameworks
 
-- `net6.0-ios`, `net6.0-android31.0`, `net6.0-android32.0`, `net6.0-android33.0`
-- `netstandard2.0`, `Xamarin.iOS10`, `MonoAndroid10.0`, `MonoAndroid11.0`, `MonoAndroid12.0`, `MonoAndroid13.0`
+- `net8.0-ios`
+- `net8.0-android`
 
 ## Getting started
 
 You can just watch the [Video](https://youtu.be/8JvgnlHVyrI) that [@jfversluis](https://github.com/jfversluis) published
 
-[**Migration to 2.X.X version**](./docs/migration2.x.x.md)
+[**Migration to 3.X.X version**](./docs/migration3.x.x.md)
+
+~~[**Migration to 2.X.X version**](./docs/migration2.x.x.md)~~
 
 ### Android
 
@@ -155,7 +161,7 @@ protected override void OnActivityResult(int requestCode, Result resultCode, Int
 
  If an app has `android:targetSdkVersion="33"` or greater [new Photo picker](https://developer.android.com/training/data-storage/shared/photopicker) will be used if possible.
 
- #### Default behavior
+#### Default behavior
 
 - When using `PickAsync` method `selectionLimit` parameter just sets multiple pick allowed
 - A request to cancel `PickAsync` method will cancel a task, but the picker UI can remain open until it is closed by the user
@@ -214,6 +220,7 @@ Open the AndroidManifest.xml file under the Properties folder and add the follow
 ```xml
 <uses-feature android:name="android.hardware.camera" android:required="true" />
 ```
+
 If Camera is not required in your application, you can specify `false`.
 
 ```xml
@@ -223,7 +230,6 @@ If Camera is not required in your application, you can specify `false`.
   </intent>
 </queries>
 ```
-
 
 ### iOS
 
