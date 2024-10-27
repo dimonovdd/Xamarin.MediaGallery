@@ -1,7 +1,7 @@
-﻿using Sample.Maui.ViewModels;
-using Sample.Maui.Views;
+﻿using Sample.ViewModels;
+using Sample.Views;
 
-namespace Sample.Maui;
+namespace Sample;
 
 public partial class App
 {

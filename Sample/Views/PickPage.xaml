@@ -3,9 +3,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:media="clr-namespace:NativeMedia;assembly=NativeMedia"
-    xmlns:views="clr-namespace:Sample.Maui.Views"
-    xmlns:viewModels="clr-namespace:Sample.Maui.ViewModels"
-    x:Class="Sample.Maui.Views.PickPage"
+    xmlns:views="clr-namespace:Sample.Views"
+    xmlns:viewModels="clr-namespace:Sample.ViewModels"
+    x:Class="Sample.Views.PickPage"
     x:DataType="viewModels:PickVM"
     Title="Pick"
     x:Name="ThisPage">
