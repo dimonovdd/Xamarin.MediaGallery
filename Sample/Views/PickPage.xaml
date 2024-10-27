@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:media="clr-namespace:NativeMedia;assembly=NativeMedia"
-    xmlns:xaml="clr-namespace:Microsoft.Maui.Controls.Xaml;assembly=Microsoft.Maui.Controls.Xaml"
     xmlns:views="clr-namespace:Sample.Maui.Views"
     xmlns:viewModels="clr-namespace:Sample.Maui.ViewModels"
     x:Class="Sample.Maui.Views.PickPage"
@@ -21,9 +20,9 @@
 
             <Button Text="Any" Command="{Binding PickAnyCommand, Mode=OneTime}"/>
             <Button Text="Image" Command="{Binding PickImageCommand, Mode=OneTime}"
-                    CommandParameter="{Binding Source={xaml:RelativeSource Self}}"/>
+                    CommandParameter="{Binding Source={RelativeSource Self}}"/>
             <Button Text="Video" Command="{Binding PickVideoCommand, Mode=OneTime}"
-                    CommandParameter="{Binding Source={xaml:RelativeSource Self}}"/>
+                    CommandParameter="{Binding Source={RelativeSource Self}}"/>
             <Button Text="Photo" Command="{Binding CapturePhotoCommand, Mode=OneTime}"/>
 
             <Label Text="Information about the completion of the operation:"/>
