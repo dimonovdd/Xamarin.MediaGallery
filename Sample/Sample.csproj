@@ -35,15 +35,12 @@
     <MauiFont Include="Resources\Fonts\*" />
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
     
-<!--		<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconforeground.svg" Color="#512BD4" />-->
-<!--		<MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4" />-->
-<!--		<MauiImage Include="Resources\Images\*" />-->
     <EmbeddedResource Include="..\TestResources\*" Link="TestResources\%(Filename)%(Extension)" />
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)"/>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.92"/>
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.92"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0"/>
     <PackageReference Include="MetadataExtractor" Version="2.7.1" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.4.0">
