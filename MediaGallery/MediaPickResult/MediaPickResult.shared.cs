@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace NativeMedia
+﻿namespace NativeMedia
 {
     /// <summary>Describes the result of the <see cref="MediaGallery.PickAsync"/> method</summary>
     public sealed class MediaPickResult

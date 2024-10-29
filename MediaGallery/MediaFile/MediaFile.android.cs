@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using Android.Webkit;
+﻿using Android.Webkit;
 using Uri = Android.Net.Uri;
 
 namespace NativeMedia

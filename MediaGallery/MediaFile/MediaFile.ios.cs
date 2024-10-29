@@ -1,9 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using CoreGraphics;
-using CoreImage;
-using Foundation;
+﻿using Foundation;
 using ImageIO;
 using MobileCoreServices;
 using UIKit;

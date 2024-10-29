@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Foundation;
+﻿using Foundation;
 using Photos;
 
 namespace NativeMedia

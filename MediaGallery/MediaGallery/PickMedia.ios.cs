@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using CoreGraphics;
+﻿using CoreGraphics;
 using Foundation;
 using MobileCoreServices;
 using Photos;
@@ -66,9 +61,6 @@ namespace NativeMedia
                         {
                             SourceType = sourceType,
                             AllowsEditing = false,
-#if !__NET6__
-                            AllowsImageEditing = false,
-#endif
                             Delegate = new PhotoPickerDelegate(tcs),
                             MediaTypes = isVideo && isImage
                                 ? new string[] { UTType.Movie, UTType.Image }
@@ -82,15 +74,16 @@ namespace NativeMedia
 
                     if (DeviceInfo.Idiom == DeviceIdiom.Tablet)
                     {
-                        var rect = request.PresentationSourceBounds.ToRect();
-                        pickerRef.ModalPresentationStyle = rect != UsingsHelper.EmptyRectangle
+                        var rect = request.PresentationSourceBounds ?? Rect.Zero;
+                        pickerRef.ModalPresentationStyle = rect != Rect.Zero
                             ? UIModalPresentationStyle.Popover
                             : UIModalPresentationStyle.PageSheet;
 
                         if (pickerRef.PopoverPresentationController != null)
                         {
                             pickerRef.PopoverPresentationController.SourceView = vc.View;
-                            pickerRef.PopoverPresentationController.SourceRect = rect.AsCGRect();
+                            pickerRef.PopoverPresentationController.SourceRect
+                                = new CGRect((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height);
                         }
                     }
 
@@ -127,9 +120,6 @@ namespace NativeMedia
                 {
                     SourceType = UIImagePickerControllerSourceType.Camera,
                     AllowsEditing = false,
-#if !__NET6__
-                     AllowsImageEditing = false,
-#endif
                     Delegate = new PhotoPickerDelegate(tcs),
                     CameraCaptureMode = UIImagePickerControllerCameraCaptureMode.Photo
                 };
