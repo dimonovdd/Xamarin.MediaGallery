@@ -1,80 +1,79 @@
 ﻿using Foundation;
 using Photos;
 
-namespace NativeMedia
+namespace NativeMedia;
+
+public static partial class MediaGallery
 {
-    public static partial class MediaGallery
+    static async Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
     {
-        static async Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
+        string filePath = null;
+
+        try
         {
-            string filePath = null;
+            filePath = GetFilePath(fileName);
+            await File.WriteAllBytesAsync(filePath, data);
 
-            try
-            {
-                filePath = GetFilePath(fileName);
-                await File.WriteAllBytesAsync(filePath, data);
-
-                await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
-            }
-            finally
-            {
-                DeleteFile(filePath);
-            }
+            await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
         }
-
-        static async Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName)
+        finally
         {
-            string filePath = null;
-
-            try
-            {
-                filePath = GetFilePath(fileName);
-                using var stream = File.Create(filePath);
-                await fileStream.CopyToAsync(stream);
-                stream.Close();
-
-                await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
-            }
-            finally
-            {
-                DeleteFile(filePath);
-            }
+            DeleteFile(filePath);
         }
+    }
 
-        static async Task PlatformSaveAsync(MediaFileType type, string filePath)
+    static async Task PlatformSaveAsync(MediaFileType type, Stream fileStream, string fileName)
+    {
+        string filePath = null;
+
+        try
         {
-            using var fileUri = new NSUrl(filePath);
+            filePath = GetFilePath(fileName);
+            using var stream = File.Create(filePath);
+            await fileStream.CopyToAsync(stream);
+            stream.Close();
 
-            await PhotoLibraryPerformChanges(() =>
-            {
-                using var request = type == MediaFileType.Video
+            await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
+        }
+        finally
+        {
+            DeleteFile(filePath);
+        }
+    }
+
+    static async Task PlatformSaveAsync(MediaFileType type, string filePath)
+    {
+        using var fileUri = new NSUrl(filePath);
+
+        await PhotoLibraryPerformChanges(() =>
+        {
+            using var request = type == MediaFileType.Video
                 ? PHAssetChangeRequest.FromVideo(fileUri)
                 : PHAssetChangeRequest.FromImage(fileUri);
-            }).ConfigureAwait(false);
-        }
+        }).ConfigureAwait(false);
+    }
 
-        static async Task PhotoLibraryPerformChanges(Action action)
-        {
-            var tcs = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
+    static async Task PhotoLibraryPerformChanges(Action action)
+    {
+        var tcs = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            PHPhotoLibrary.SharedPhotoLibrary.PerformChanges(
-                () =>
+        PHPhotoLibrary.SharedPhotoLibrary.PerformChanges(
+            () =>
+            {
+                try
                 {
-                    try
-                    {
-                        action.Invoke();
-                    }
-                    catch (Exception ex)
-                    {
-                        tcs.TrySetResult(ex);
-                    }
-                },
-                (success, error) =>
-                    tcs.TrySetResult(error != null ? new NSErrorException(error) : null));
+                    action.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    tcs.TrySetResult(ex);
+                }
+            },
+            (success, error) =>
+                tcs.TrySetResult(error != null ? new NSErrorException(error) : null));
 
-            var exception = await tcs.Task;
-            if (exception != null)
-                throw exception;
-        }
+        var exception = await tcs.Task;
+        if (exception != null)
+            throw exception;
     }
 }

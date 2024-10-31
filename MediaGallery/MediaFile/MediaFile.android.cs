@@ -1,15 +1,15 @@
 ﻿using Android.Webkit;
 using Uri = Android.Net.Uri;
 
-namespace NativeMedia
-{
-    partial class MediaFile
-    {
-        readonly Uri uri;
-        readonly string tempFilePath;
+namespace NativeMedia;
 
-        internal MediaFile(string fileName, Uri uri, string tempFilePath = null)
-        {
+partial class MediaFile
+{
+    readonly Uri uri;
+    readonly string tempFilePath;
+
+    internal MediaFile(string fileName, Uri uri, string tempFilePath = null)
+    {
             this.tempFilePath = tempFilePath;
             NameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             Extension = Path.GetExtension(fileName);
@@ -18,15 +18,14 @@ namespace NativeMedia
             Type = GetFileType(ContentType);
         }
 
-        Task<Stream> PlatformOpenReadAsync()
-            => Task.FromResult(Platform.AppActivity.ContentResolver.OpenInputStream(uri));
+    Task<Stream> PlatformOpenReadAsync()
+        => Task.FromResult(Platform.AppActivity.ContentResolver.OpenInputStream(uri));
 
-        void PlatformDispose()
-        {
+    void PlatformDispose()
+    {
             if(!string.IsNullOrWhiteSpace(tempFilePath) && File.Exists(tempFilePath))
                 File.Delete(tempFilePath);
 
             uri?.Dispose();
         }
-    }
 }

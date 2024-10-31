@@ -1,12 +1,11 @@
 ﻿
-namespace NativeMedia
+namespace NativeMedia;
+
+/// <summary>Enumeration media files</summary>
+public enum MediaFileType
 {
-    /// <summary>Enumeration media files</summary>
-    public enum MediaFileType
-    {
-        /// <summary>image/*</summary>
-        Image,
-        /// <summary>video/*</summary>
-        Video
-    }
+    /// <summary>image/*</summary>
+    Image,
+    /// <summary>video/*</summary>
+    Video
 }
