@@ -1,5 +1,5 @@
 ﻿
-namespace Sample.Maui.Views;
+namespace Sample.Views;
 
 public partial class PickPage
 {

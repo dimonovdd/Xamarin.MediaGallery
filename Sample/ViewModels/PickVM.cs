@@ -1,8 +1,8 @@
 ﻿using System.Windows.Input;
 using NativeMedia;
-using Sample.Maui.Helpers;
+using Sample.Helpers;
 
-namespace Sample.Maui.ViewModels;
+namespace Sample.ViewModels;
 
 public class PickVM : BaseVM
 {
@@ -13,7 +13,7 @@ public class PickVM : BaseVM
         PickAnyCommand = new Command(() => Pick(null));
         PickImageCommand = new Command<View>(view => Pick(view, MediaFileType.Image));
         PickVideoCommand = new Command<View>(view => Pick(view, MediaFileType.Video));
-        CapturePhotoCommand = new Command(async () => await СapturePhotoAsync());
+        CapturePhotoCommand = new Command(async () => await CapturePhotoAsync());
         OpenInfoCommand = new Command<IMediaFile>(async file => await NavigateAsync(new MediaFileInfoVM(file)));
     }
 
@@ -25,11 +25,9 @@ public class PickVM : BaseVM
         set => delayMilliseconds = value > 0 ? value : 1;
     }
 
-    public string OperationInfo { get; set; }
+    public string? OperationInfo { get; set; }
 
-    public bool UseCreateChooser { get; set; } = true;
-
-    public IEnumerable<IMediaFile> SelectedItems { get; set; }
+    public IEnumerable<IMediaFile>? SelectedItems { get; set; }
 
     public ICommand PickAnyCommand { get; }
 
@@ -42,10 +40,10 @@ public class PickVM : BaseVM
     public ICommand OpenInfoCommand { get; }
 
 
-    void Pick(View view, params MediaFileType[] types) =>
+    void Pick(View? view, params MediaFileType[] types) =>
         Task.Run(async () =>
         {
-            CancellationTokenSource cts = null;
+            CancellationTokenSource? cts = null;
             try
             {
                 DisposeItems();
@@ -58,7 +56,6 @@ public class PickVM : BaseVM
                     {
                         Title = $"Select {SelectionLimit} photos",
                         PresentationSourceBounds = view?.GetAbsoluteBounds(40),
-                        UseCreateChooser = UseCreateChooser
                     },
                     cts.Token);
 
@@ -76,9 +73,9 @@ public class PickVM : BaseVM
             }
         });
 
-    async Task СapturePhotoAsync()
+    async Task CapturePhotoAsync() 
     {
-        CancellationTokenSource cts = null;
+        CancellationTokenSource? cts = null;
         try
         {
             DisposeItems();
@@ -88,8 +85,9 @@ public class PickVM : BaseVM
                 return;
             }
 
-            var status = await PermissionHelper.CheckAndRequest<Permissions.Camera>(
-                    "The application needs permission to camera");
+            var status = await CheckAndRequestAsync<Permissions.Camera>(
+                    "The application needs permission to camera",
+                    "To grant access to camera, go to settings");
 
             if (!status)
             {
@@ -123,7 +121,7 @@ public class PickVM : BaseVM
         SelectedItems = null;
     }
 
-    void SetInfo(IEnumerable<IMediaFile> files)
+    void SetInfo(IEnumerable<IMediaFile>? files)
         => OperationInfo = files?.Any() ?? false
                     ? "Successfully"
                     : "Media files not selected";

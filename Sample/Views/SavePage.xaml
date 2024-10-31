@@ -2,9 +2,9 @@
 <views:BasePage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:views="clr-namespace:Sample.Maui.Views"
-    xmlns:viewModels="clr-namespace:Sample.Maui.ViewModels"
-    x:Class="Sample.Maui.Views.SavePage"
+    xmlns:views="clr-namespace:Sample.Views"
+    xmlns:viewModels="clr-namespace:Sample.ViewModels"
+    x:Class="Sample.Views.SavePage"
     x:DataType="viewModels:SaveVM"
     Title="Save To Gallery From:">
 
@@ -35,7 +35,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Row="0" Grid.Column="0" Source="{Binding PngSource, Mode=OneTime}"/>
-                <Button Grid.Row="1" Grid.Column="0" Text="Png" Command="{Binding SavevPngCommand, Mode=OneTime}"/>
+                <Button Grid.Row="1" Grid.Column="0" Text="Png" Command="{Binding SavePngCommand, Mode=OneTime}"/>
 
                 <Image Grid.Row="0" Grid.Column="1" Source="{Binding JpgSource, Mode=OneTime}"/>
                 <Button Grid.Row="1" Grid.Column="1" Text="Jpg" Command="{Binding SaveJpgCommand, Mode=OneTime}"/>

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Sample.Maui.Helpers;
+namespace Sample.Helpers;
 
 public static class EmbeddedMedia
 {
@@ -15,7 +15,7 @@ public static class EmbeddedResourceProvider
     static readonly Assembly assembly = typeof(EmbeddedResourceProvider).GetTypeInfo().Assembly;
     static readonly string[] resources = assembly.GetManifestResourceNames();
 
-    public static Stream Load(string name)
+    public static Stream? Load(string? name)
     {
         name = GetFullName(name);
 
@@ -25,7 +25,7 @@ public static class EmbeddedResourceProvider
         return assembly.GetManifestResourceStream(name);
     }
 
-    public static ImageSource GetImageSource(string name)
+    public static ImageSource? GetImageSource(string? name)
     {
         name = GetFullName(name);
 
@@ -35,6 +35,6 @@ public static class EmbeddedResourceProvider
         return ImageSource.FromResource(name, assembly);
     }
 
-    static string GetFullName(string name)
+    static string? GetFullName(string? name)
         => resources.FirstOrDefault(n => n.EndsWith($".TestResources.{name}"));
 }

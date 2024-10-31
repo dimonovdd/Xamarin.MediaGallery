@@ -1,14 +1,14 @@
 ﻿using System.Windows.Input;
 using NativeMedia;
-using Sample.Maui.Helpers;
+using Sample.Helpers;
 
-namespace Sample.Maui.ViewModels;
+namespace Sample.ViewModels;
 
 public class SaveVM : BaseVM
 {
     public SaveVM()
     {
-        SavevPngCommand = new Command(() => Save(MediaFileType.Image, EmbeddedMedia.BaboonPng));
+        SavePngCommand = new Command(() => Save(MediaFileType.Image, EmbeddedMedia.BaboonPng));
         SaveJpgCommand = new Command(() => Save(MediaFileType.Image, EmbeddedMedia.LomonosovJpg));
         SaveGifCommand = new Command(() => Save(MediaFileType.Image, EmbeddedMedia.NewtonsCradleGif));
         SaveVideoCommand = new Command(() => Save(MediaFileType.Video, EmbeddedMedia.EarthMp4));
@@ -24,13 +24,13 @@ public class SaveVM : BaseVM
 
     public bool FromCacheDirectory { get; set; }
 
-    public ImageSource PngSource { get; }
+    public ImageSource? PngSource { get; }
 
-    public ImageSource JpgSource { get; }
+    public ImageSource? JpgSource { get; }
 
-    public ImageSource GifSource { get; }
+    public ImageSource? GifSource { get; }
 
-    public ICommand SavevPngCommand { get; }
+    public ICommand SavePngCommand { get; }
 
     public ICommand SaveJpgCommand { get; }
 
@@ -41,8 +41,9 @@ public class SaveVM : BaseVM
 
     async void Save(MediaFileType type, string name)
     {
-        var status = await PermissionHelper.CheckAndRequest<SaveMediaPermission>(
-                "The application needs permission to save media files");
+        var status = await CheckAndRequestAsync<SaveMediaPermission>(
+                "The application needs permission to save media files",
+                "To grant access save media files, go to settings");
 
         if (!status)
         {
@@ -52,7 +53,10 @@ public class SaveVM : BaseVM
         
         try
         {
-            using var stream = EmbeddedResourceProvider.Load(name);
+            await using var stream = EmbeddedResourceProvider.Load(name);
+
+            if (stream is null)
+                throw new NullReferenceException("EmbeddedResource not found");
 
             if (FromStream)
             {
@@ -61,7 +65,7 @@ public class SaveVM : BaseVM
             else if (FromByteArray)
             {
                 using var memoryStream = new MemoryStream();
-                stream.CopyTo(memoryStream);
+                await stream.CopyToAsync(memoryStream);
 
                 await MediaGallery.SaveAsync(type, memoryStream.ToArray(), name);
             }

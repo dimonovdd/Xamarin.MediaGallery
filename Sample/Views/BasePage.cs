@@ -1,8 +1,8 @@
-﻿using Sample.Maui.ViewModels;
+﻿using Sample.ViewModels;
 
-namespace Sample.Maui.Views;
+namespace Sample.Views;
 
-[ContentProperty(nameof(ContentPage.Content))]
+[ContentProperty(nameof(Content))]
 public class BasePage : ContentPage
 {
     protected override void OnAppearing()
@@ -12,6 +12,7 @@ public class BasePage : ContentPage
         if (BindingContext is BaseVM vm)
         {
             vm.DoDisplayAlert += OnDisplayAlert;
+            vm.DoDisplayConfirm += OnDisplayConfirm;
             vm.DoNavigate += OnNavigate;
             vm.OnAppearing();
         }
@@ -25,6 +26,7 @@ public class BasePage : ContentPage
         {
             vm.OnDisappearing();
             vm.DoDisplayAlert -= OnDisplayAlert;
+            vm.DoDisplayConfirm -= OnDisplayConfirm;
             vm.DoNavigate -= OnNavigate;
         }
     }
@@ -32,6 +34,10 @@ public class BasePage : ContentPage
     async Task OnDisplayAlert(string message)
         => await MainThread.InvokeOnMainThreadAsync(
             ()=> DisplayAlert(null, message, "Ok"));
+    
+    async Task<bool> OnDisplayConfirm(string message, string accept)
+        => await MainThread.InvokeOnMainThreadAsync(
+            ()=> DisplayAlert(null, message, accept, "Cancel"));
 
     Task OnNavigate(BaseVM vm, bool showModal)
     {
@@ -39,7 +45,14 @@ public class BasePage : ContentPage
 
         var pageType = Type.GetType($"{GetType().Namespace}.{name}");
 
-        var page = (BasePage)Activator.CreateInstance(pageType);
+        if (pageType is null)
+            throw new NullReferenceException("Page type not found");
+
+        var page = (BasePage?)Activator.CreateInstance(pageType);
+        
+        if (page is null)
+            throw new NullReferenceException("Page not found");
+        
         page.BindingContext = vm;
 
         return showModal

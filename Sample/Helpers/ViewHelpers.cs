@@ -1,4 +1,4 @@
-﻿namespace Sample.Maui.Helpers;
+﻿namespace Sample.Helpers;
 
 public static class ViewHelpers
 {

@@ -2,9 +2,9 @@
 <views:BasePage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:views="clr-namespace:Sample.Maui.Views"
-    xmlns:viewModels="clr-namespace:Sample.Maui.ViewModels"
-    x:Class="Sample.Maui.Views.MediaFileInfoPage"
+    xmlns:views="clr-namespace:Sample.Views"
+    xmlns:viewModels="clr-namespace:Sample.ViewModels"
+    x:Class="Sample.Views.MediaFileInfoPage"
     x:DataType="viewModels:MediaFileInfoVM"
     Title="{Binding File.NameWithoutExtension}">
 

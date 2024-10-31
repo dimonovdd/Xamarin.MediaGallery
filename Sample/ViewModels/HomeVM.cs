@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace Sample.Maui.ViewModels;
+namespace Sample.ViewModels;
 
 public class HomeVm : BaseVM
 {
