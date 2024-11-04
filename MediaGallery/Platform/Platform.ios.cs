@@ -1,8 +1,6 @@
-﻿using UIKit;
+﻿namespace NativeMedia;
 
-namespace NativeMedia;
-
-public static partial class Platform
+public static class Platform
 {
     static Func<UIViewController> getCurrentController;
 
@@ -14,6 +12,6 @@ public static partial class Platform
 
     internal static UIViewController GetCurrentUIViewController()
         => getCurrentController?.Invoke()
-           ?? EssentialsEx.Platform.GetCurrentUIViewController()
+           ?? Microsoft.Maui.ApplicationModel.Platform.GetCurrentUIViewController()
            ?? throw ExceptionHelper.ControllerNotFound;
 }

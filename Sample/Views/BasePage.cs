@@ -33,11 +33,11 @@ public class BasePage : ContentPage
 
     async Task OnDisplayAlert(string message)
         => await MainThread.InvokeOnMainThreadAsync(
-            ()=> DisplayAlert(null, message, "Ok"));
-    
+            () => DisplayAlert(null, message, "Ok"));
+
     async Task<bool> OnDisplayConfirm(string message, string accept)
         => await MainThread.InvokeOnMainThreadAsync(
-            ()=> DisplayAlert(null, message, accept, "Cancel"));
+            () => DisplayAlert(null, message, accept, "Cancel"));
 
     Task OnNavigate(BaseVM vm, bool showModal)
     {
@@ -49,10 +49,10 @@ public class BasePage : ContentPage
             throw new NullReferenceException("Page type not found");
 
         var page = (BasePage?)Activator.CreateInstance(pageType);
-        
+
         if (page is null)
             throw new NullReferenceException("Page not found");
-        
+
         page.BindingContext = vm;
 
         return showModal

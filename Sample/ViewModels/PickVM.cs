@@ -6,7 +6,7 @@ namespace Sample.ViewModels;
 
 public class PickVM : BaseVM
 {
-    private int delayMilliseconds = 5000000;
+    int delayMilliseconds = 5000000;
 
     public PickVM()
     {
@@ -73,7 +73,7 @@ public class PickVM : BaseVM
             }
         });
 
-    async Task CapturePhotoAsync() 
+    async Task CapturePhotoAsync()
     {
         CancellationTokenSource? cts = null;
         try
@@ -86,8 +86,8 @@ public class PickVM : BaseVM
             }
 
             var status = await CheckAndRequestAsync<Permissions.Camera>(
-                    "The application needs permission to camera",
-                    "To grant access to camera, go to settings");
+                "The application needs permission to camera",
+                "To grant access to camera, go to settings");
 
             if (!status)
             {
@@ -95,12 +95,11 @@ public class PickVM : BaseVM
                 return;
             }
 
-            cts = new CancellationTokenSource(
-                    TimeSpan.FromMilliseconds(DelayMilliseconds));
+            cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(DelayMilliseconds));
 
             var file = await MediaGallery.CapturePhotoAsync(cts.Token);
 
-            SelectedItems = file != null ?  new IMediaFile[] { file } : null;
+            SelectedItems = file != null ? new[] { file } : null;
             SetInfo(SelectedItems);
         }
         catch (Exception ex)
@@ -123,6 +122,6 @@ public class PickVM : BaseVM
 
     void SetInfo(IEnumerable<IMediaFile>? files)
         => OperationInfo = files?.Any() ?? false
-                    ? "Successfully"
-                    : "Media files not selected";
+            ? "Successfully"
+            : "Media files not selected";
 }

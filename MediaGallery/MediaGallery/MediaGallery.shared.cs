@@ -3,16 +3,16 @@
 /// <summary>Performs operations with media files.</summary>
 public static partial class MediaGallery
 {
-    static readonly string cacheDir = "XamarinMediaGalleryCacheDir";
+    static readonly string CacheDir = "XamarinMediaGalleryCacheDir";
 
     /// <summary>Opens media files Picker</summary>
     /// <returns>Media files selected by a user.</returns>
-    /// <inheritdoc cref = "MediaPickRequest(int, MediaFileType[])" path="/param"/>
+    /// <inheritdoc cref="MediaPickRequest(int, MediaFileType[])" path="/param" />
     public static Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)
-        => PickAsync(new MediaPickRequest(selectionLimit, types), default);
+        => PickAsync(new MediaPickRequest(selectionLimit, types));
 
     /// <param name="request">Media file request to pick.</param>
-    /// <inheritdoc cref = "PickAsync(int, MediaFileType[])" path="//*[not(self::param)]"/>
+    /// <inheritdoc cref="PickAsync(int, MediaFileType[])" path="//*[not(self::param)]" />
     public static async Task<MediaPickResult> PickAsync(MediaPickRequest request, CancellationToken token = default)
     {
         ExceptionHelper.CheckSupport();
@@ -38,7 +38,7 @@ public static partial class MediaGallery
     }
 
     /// <param name="data">A byte array to save to the file.</param>
-    /// <inheritdoc cref = "SaveAsync(MediaFileType, Stream, string)" path=""/>
+    /// <inheritdoc cref="SaveAsync(MediaFileType, Stream, string)" path="" />
     public static async Task SaveAsync(MediaFileType type, byte[] data, string fileName)
     {
         await CheckPossibilitySave();
@@ -50,7 +50,7 @@ public static partial class MediaGallery
     }
 
     /// <param name="filePath">Full path to a local file.</param>
-    /// <inheritdoc cref = "SaveAsync(MediaFileType, Stream, string)" path=""/>
+    /// <inheritdoc cref="SaveAsync(MediaFileType, Stream, string)" path="" />
     public static async Task SaveAsync(MediaFileType type, string filePath)
     {
         await CheckPossibilitySave();
@@ -79,7 +79,7 @@ public static partial class MediaGallery
         if (string.IsNullOrWhiteSpace(fileName))
             throw new ArgumentException(nameof(fileName));
     }
-        
+
     static async Task CheckPossibilitySave()
     {
         ExceptionHelper.CheckSupport();
@@ -112,7 +112,7 @@ public static partial class MediaGallery
     static string GetFilePath(string fileName)
     {
         fileName = fileName.Trim();
-        var dirPath = Path.Combine(FileSystem.CacheDirectory, cacheDir);
+        var dirPath = Path.Combine(FileSystem.CacheDirectory, CacheDir);
         var filePath = Path.Combine(dirPath, fileName);
 
         if (!Directory.Exists(dirPath))

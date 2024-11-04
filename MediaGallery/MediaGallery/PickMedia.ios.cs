@@ -1,9 +1,6 @@
-﻿using CoreGraphics;
-using Foundation;
-using MobileCoreServices;
+﻿using MobileCoreServices;
 using Photos;
 using PhotosUI;
-using UIKit;
 
 namespace NativeMedia;
 
@@ -41,7 +38,7 @@ public static partial class MediaGallery
 
                     pickerRef = new PHPickerViewController(config)
                     {
-                        Delegate = new PHPickerDelegate(tcs)
+                        Delegate = new PhPickerDelegate(tcs),
                     };
                 }
                 else
@@ -63,8 +60,8 @@ public static partial class MediaGallery
                         AllowsEditing = false,
                         Delegate = new PhotoPickerDelegate(tcs),
                         MediaTypes = isVideo && isImage
-                            ? new string[] { UTType.Movie, UTType.Image }
-                            : new string[] { isVideo ? UTType.Movie : UTType.Image }
+                            ? [UTType.Movie, UTType.Image]
+                            : [isVideo ? UTType.Movie : UTType.Image],
                     };
 
                 }
@@ -121,7 +118,7 @@ public static partial class MediaGallery
                 SourceType = UIImagePickerControllerSourceType.Camera,
                 AllowsEditing = false,
                 Delegate = new PhotoPickerDelegate(tcs),
-                CameraCaptureMode = UIImagePickerControllerCameraCaptureMode.Photo
+                CameraCaptureMode = UIImagePickerControllerCameraCaptureMode.Photo,
             };
 
             CancelTaskIfRequested(token, tcs, false);
@@ -141,7 +138,7 @@ public static partial class MediaGallery
     static void ConfigureController(UIViewController controller, TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
     {
         if (controller.PresentationController != null)
-            controller.PresentationController.Delegate = new PresentatControllerDelegate(tcs);
+            controller.PresentationController.Delegate = new PresentationControllerDelegate(tcs);
     }
 
     static void CancelTaskIfRequested(CancellationToken token, TaskCompletionSource<IEnumerable<IMediaFile>> tcs, bool needThrow = true)
@@ -159,16 +156,16 @@ public static partial class MediaGallery
             return;
 
         token.Register(
-            ()=> MainThread.BeginInvokeOnMainThread(
-                ()=> controller?.DismissViewController(true,
-                    ()=> tcs?.TrySetCanceled(token))));
+            () => MainThread.BeginInvokeOnMainThread(
+                () => controller?.DismissViewController(true,
+                    () => tcs?.TrySetCanceled(token))));
     }
 
-    class PHPickerDelegate : PHPickerViewControllerDelegate
+    class PhPickerDelegate : PHPickerViewControllerDelegate
     {
         readonly TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
 
-        internal PHPickerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
+        internal PhPickerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
             => this.tcs = tcs;
 
         public override void DidFinishPicking(PHPickerViewController picker, PHPickerResult[] results)
@@ -181,7 +178,7 @@ public static partial class MediaGallery
             => results
                 .Select(res => res.ItemProvider)
                 .Where(provider => provider != null && provider.RegisteredTypeIdentifiers?.Length > 0)
-                .Select(provider => new PHPickerFile(provider))
+                .Select(provider => new PhPickerFile(provider))
                 .ToArray();
     }
 
@@ -196,7 +193,7 @@ public static partial class MediaGallery
         {
             picker.DismissViewController(true, null);
             var result = ConvertPickerResults(info);
-            tcs.TrySetResult(result == null ? null : new IMediaFile[] { result });
+            tcs.TrySetResult(result == null ? null : new[] { result });
         }
 
         public override void Canceled(UIImagePickerController picker)
@@ -210,6 +207,7 @@ public static partial class MediaGallery
             if (info == null)
                 return null;
 
+            // ReSharper disable once ConstantNullCoalescingCondition
             var assetUrl = (info.ValueForKey(UIImagePickerController.ImageUrl)
                             ?? info.ValueForKey(UIImagePickerController.MediaURL)) as NSUrl;
 
@@ -242,11 +240,11 @@ public static partial class MediaGallery
         }
     }
 
-    class PresentatControllerDelegate : UIAdaptivePresentationControllerDelegate
+    class PresentationControllerDelegate : UIAdaptivePresentationControllerDelegate
     {
         readonly TaskCompletionSource<IEnumerable<IMediaFile>> tcs;
 
-        internal PresentatControllerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
+        internal PresentationControllerDelegate(TaskCompletionSource<IEnumerable<IMediaFile>> tcs)
             => this.tcs = tcs;
 
         public override void DidDismiss(UIPresentationController presentationController)

@@ -1,4 +1,3 @@
-﻿global using EssentialsEx = Microsoft.Maui.ApplicationModel;
 global using Microsoft.Maui.ApplicationModel;
 global using Microsoft.Maui.Devices;
 global using Microsoft.Maui.Graphics;

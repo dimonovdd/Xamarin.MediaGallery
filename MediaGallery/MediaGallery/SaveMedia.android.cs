@@ -11,6 +11,8 @@ namespace NativeMedia;
 
 public static partial class MediaGallery
 {
+    static readonly DateTime Jan1St1970 = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
     static async Task PlatformSaveAsync(MediaFileType type, byte[] data, string fileName)
     {
         using var ms = new MemoryStream(data);
@@ -19,7 +21,7 @@ public static partial class MediaGallery
 
     static async Task PlatformSaveAsync(MediaFileType type, string filePath)
     {
-        using var fileStream = System.IO.File.OpenRead(filePath);
+        await using var fileStream = System.IO.File.OpenRead(filePath);
         await PlatformSaveAsync(type, fileStream, Path.GetFileName(filePath)).ConfigureAwait(false);
     }
 
@@ -58,7 +60,7 @@ public static partial class MediaGallery
             values.Put(MediaColumns.IsPending, true);
 
             using var uri = context.ContentResolver.Insert(externalContentUri, values);
-            using var stream = context.ContentResolver.OpenOutputStream(uri);
+            await using var stream = context.ContentResolver.OpenOutputStream(uri);
             await fileStream.CopyToAsync(stream);
             stream.Close();
 
@@ -73,7 +75,7 @@ public static partial class MediaGallery
             directory.Mkdirs();
             using var file = new File(directory, newFileName);
 
-            using var fileOutputStream = System.IO.File.Create(file.AbsolutePath);
+            await using var fileOutputStream = System.IO.File.Create(file.AbsolutePath);
             await fileStream.CopyToAsync(fileOutputStream);
             fileOutputStream.Close();
 
@@ -87,16 +89,9 @@ public static partial class MediaGallery
         }
     }
 
-    static readonly DateTime jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-    // JavaSystem.CurrentTimeMillis()
-
-    static long TimeMillis(DateTime current)
-        => (long)CalcTimeDifference(current).TotalMilliseconds;
-
     static long TimeSeconds(DateTime current)
         => (long)CalcTimeDifference(current).TotalSeconds;
 
     static TimeSpan CalcTimeDifference(DateTime current)
-        => current.ToUniversalTime() - jan1st1970;
+        => current.ToUniversalTime() - Jan1St1970;
 }

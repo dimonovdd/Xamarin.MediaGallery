@@ -1,6 +1,7 @@
 ﻿using Sample.Helpers;
 #if __ANDROID__
 using Application = Android.App.Application;
+using Uri = Android.Net.Uri;
 using Android.Content;
 using Android.Provider;
 #else
@@ -21,20 +22,20 @@ public class BaseVM : BaseNotifier
     }
 
     public event Func<string, Task>? DoDisplayAlert;
-    
+
     public event Func<string, string, Task<bool>>? DoDisplayConfirm;
 
     public event Func<BaseVM, bool, Task>? DoNavigate;
 
     protected Task DisplayAlertAsync(string message)
         => DoDisplayAlert?.Invoke(message) ?? Task.CompletedTask;
-    
+
     protected Task<bool> DisplayConfirmAsync(string message, string accept)
-        => DoDisplayConfirm?.Invoke(message,accept) ?? Task.FromResult(false);
+        => DoDisplayConfirm?.Invoke(message, accept) ?? Task.FromResult(false);
 
     protected Task NavigateAsync(BaseVM vm, bool showModal = false)
         => DoNavigate?.Invoke(vm, showModal) ?? Task.CompletedTask;
-    
+
     protected async Task<bool> CheckAndRequestAsync<T>(string message, string goSettingsMessage)
         where T : Permissions.BasePermission, new()
     {
@@ -75,7 +76,7 @@ public class BaseVM : BaseNotifier
             return;
 #if __ANDROID__
         var settingsIntent = new Intent(Settings.ActionApplicationDetailsSettings,
-            Android.Net.Uri.Parse("package:" + Application.Context.PackageName));
+            Uri.Parse("package:" + Application.Context.PackageName));
 
         settingsIntent.SetFlags(ActivityFlags.NewTask | ActivityFlags.NoHistory | ActivityFlags.ExcludeFromRecents);
         Platform.CurrentActivity?.StartActivity(settingsIntent);

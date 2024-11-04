@@ -8,7 +8,7 @@ namespace Sample.ViewModels;
 
 public class MediaFileInfoVM : BaseVM
 {
-    bool isFirstAppiring = true;
+    bool isFirstAppearing = true;
 
     public MediaFileInfoVM(IMediaFile file)
     {
@@ -23,17 +23,17 @@ public class MediaFileInfoVM : BaseVM
     public bool IsBusy { get; private set; }
 
     public ICommand ShareCommand { get; }
-    
+
     string? Path { get; set; }
 
     public override void OnAppearing()
     {
         base.OnAppearing();
 
-        if (!isFirstAppiring)
+        if (!isFirstAppearing)
             return;
 
-        isFirstAppiring = false;
+        isFirstAppearing = false;
         Task.Run(async () =>
         {
             IsBusy = true;
@@ -42,9 +42,9 @@ public class MediaFileInfoVM : BaseVM
                 await using var stream = await File.OpenReadAsync();
 
                 var name = (string.IsNullOrWhiteSpace(File.NameWithoutExtension)
-                    ? Guid.NewGuid().ToString()
-                    : File.NameWithoutExtension)
-                    + $".{File.Extension}";
+                               ? Guid.NewGuid().ToString()
+                               : File.NameWithoutExtension)
+                           + $".{File.Extension}";
 
                 Path = await FilesHelper.SaveToCacheAsync(stream, name);
                 stream.Position = 0;
@@ -55,7 +55,7 @@ public class MediaFileInfoVM : BaseVM
                 await DisplayAlertAsync(ex.Message);
             }
             IsBusy = false;
-        });      
+        });
     }
 
     Task ShareAsync()
