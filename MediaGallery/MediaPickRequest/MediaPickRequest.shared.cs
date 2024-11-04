@@ -11,7 +11,7 @@ public class MediaPickRequest
         SelectionLimit = selectionLimit > 0 ? selectionLimit : 1;
         Types = types?.Length > 0
             ? types.Distinct().ToArray()
-            : new MediaFileType[] { MediaFileType.Image, MediaFileType.Video };
+            : [ MediaFileType.Image, MediaFileType.Video];
     }
 
     /// <summary>Maximum count of files to pick. On Android the option just sets multiple pick allowed.</summary>
@@ -24,8 +24,5 @@ public class MediaPickRequest
     public string Title { get; set; }
 
     /// <summary>Gets or sets the source rectangle to display the Picker UI from. This is only used on iPad currently.</summary>
-    public Rect? PresentationSourceBounds { get; set; } = default;
-
-    /// <summary>Gets or sets whether to use Intent.CreateChooser. Currently used only for Android.</summary>
-    public bool UseCreateChooser { get; set; } = true;
+    public Rect? PresentationSourceBounds { get; set; }
 }
