@@ -9,5 +9,5 @@ public partial class SaveMediaPermission
     public override (string androidPermission, bool isRuntime)[] RequiredPermissions
         => (int)Build.VERSION.SdkInt >= 29
             ? Array.Empty<(string, bool)>()
-            : new (string, bool)[] { (Manifest.Permission.WriteExternalStorage, true) };
+            : [(Manifest.Permission.WriteExternalStorage, true)];
 }

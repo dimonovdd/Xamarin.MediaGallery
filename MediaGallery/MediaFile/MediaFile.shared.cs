@@ -2,7 +2,7 @@
 
 partial class MediaFile : IMediaFile
 {
-    private string extension;
+    string extension;
 
     public string NameWithoutExtension { get; protected internal set; }
 

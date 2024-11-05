@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <views:BasePage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -12,41 +13,41 @@
 
     <ScrollView>
         <StackLayout>
-            <Label Text="SelectionLimit:"/>
-            <Entry Text="{Binding SelectionLimit}" Keyboard="Numeric"/>
+            <Label Text="SelectionLimit:" />
+            <Entry Text="{Binding SelectionLimit}" Keyboard="Numeric" />
 
-            <Label Text="Cancel after:"/>
-            <Entry Text="{Binding DelayMilliseconds}" Placeholder="Milliseconds" Keyboard="Numeric"/>
+            <Label Text="Cancel after:" />
+            <Entry Text="{Binding DelayMilliseconds}" Placeholder="Milliseconds" Keyboard="Numeric" />
 
-            <Button Text="Any" Command="{Binding PickAnyCommand, Mode=OneTime}"/>
+            <Button Text="Any" Command="{Binding PickAnyCommand, Mode=OneTime}" />
             <Button Text="Image" Command="{Binding PickImageCommand, Mode=OneTime}"
-                    CommandParameter="{Binding Source={RelativeSource Self}}"/>
+                    CommandParameter="{Binding Source={RelativeSource Self}}" />
             <Button Text="Video" Command="{Binding PickVideoCommand, Mode=OneTime}"
-                    CommandParameter="{Binding Source={RelativeSource Self}}"/>
-            <Button Text="Photo" Command="{Binding CapturePhotoCommand, Mode=OneTime}"/>
+                    CommandParameter="{Binding Source={RelativeSource Self}}" />
+            <Button Text="Photo" Command="{Binding CapturePhotoCommand, Mode=OneTime}" />
 
-            <Label Text="Information about the completion of the operation:"/>
-            <Label Text="{Binding OperationInfo}" MaxLines="4"/>
+            <Label Text="Information about the completion of the operation:" />
+            <Label Text="{Binding OperationInfo}" MaxLines="4" />
 
             <StackLayout Margin="0" Spacing="0"
                          BindableLayout.ItemsSource="{Binding SelectedItems}">
-            
+
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="media:IMediaFile">
                         <ContentView Padding="0,8">
                             <Label TextColor="DarkBlue" FontAttributes="Bold">
                                 <Label.Text>
                                     <MultiBinding StringFormat="{}{0}.{1}">
-                                        <Binding Path="NameWithoutExtension" TargetNullValue="FileEmptyName" Mode="OneTime"/>
-                                        <Binding Path="Extension" Mode="OneTime"/>
+                                        <Binding Path="NameWithoutExtension" TargetNullValue="FileEmptyName" Mode="OneTime" />
+                                        <Binding Path="Extension" Mode="OneTime" />
                                     </MultiBinding>
                                 </Label.Text>
                             </Label>
-            
+
                             <ContentView.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding BindingContext.OpenInfoCommand, Source={x:Reference ThisPage}, Mode=OneTime}"
-                                    CommandParameter="{Binding ., Mode=OneTime}"/>
+                                    CommandParameter="{Binding ., Mode=OneTime}" />
                             </ContentView.GestureRecognizers>
                         </ContentView>
                     </DataTemplate>

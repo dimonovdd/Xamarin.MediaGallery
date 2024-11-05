@@ -1,7 +1,5 @@
-﻿using Foundation;
-using ImageIO;
+﻿using ImageIO;
 using MobileCoreServices;
-using UIKit;
 
 namespace NativeMedia;
 
@@ -15,16 +13,16 @@ partial class MediaFile
     protected string GetExtension(string identifier)
         => UTType.CopyAllTags(identifier, UTType.TagClassFilenameExtension)?.FirstOrDefault();
 
-    protected string GetMIMEType(string identifier)
+    protected string GetMimeType(string identifier)
         => UTType.CopyAllTags(identifier, UTType.TagClassMIMEType)?.FirstOrDefault();
 }
 
-class PHPickerFile : MediaFile
+class PhPickerFile : MediaFile
 {
     readonly string identifier;
     NSItemProvider provider;
 
-    internal PHPickerFile(NSItemProvider provider)
+    internal PhPickerFile(NSItemProvider provider)
     {
         this.provider = provider;
         NameWithoutExtension = provider?.SuggestedName;
@@ -35,7 +33,7 @@ class PHPickerFile : MediaFile
             return;
 
         Extension = GetExtension(identifier);
-        ContentType = GetMIMEType(identifier);
+        ContentType = GetMimeType(identifier);
         Type = GetFileType(ContentType);
     }
 
@@ -49,7 +47,7 @@ class PHPickerFile : MediaFile
         base.PlatformDispose();
     }
 
-    private string GetIdentifier(string[] identifiers)
+    string GetIdentifier(string[] identifiers)
     {
         if (!(identifiers?.Length > 0))
             return null;
@@ -63,15 +61,15 @@ class PHPickerFile : MediaFile
 
 class UIDocumentFile : MediaFile
 {
-    UIDocument document;
     NSUrl assetUrl;
+    UIDocument document;
 
     internal UIDocumentFile(NSUrl assetUrl, string fileName)
     {
         this.assetUrl = assetUrl;
         document = new UIDocument(assetUrl);
         Extension = document.FileUrl.PathExtension;
-        ContentType = GetMIMEType(document.FileType);
+        ContentType = GetMimeType(document.FileType);
         NameWithoutExtension = !string.IsNullOrWhiteSpace(fileName)
             ? Path.GetFileNameWithoutExtension(fileName)
             : null;
@@ -94,15 +92,15 @@ class UIDocumentFile : MediaFile
 class PhotoFile : MediaFile
 {
     UIImage img;
-    NSDictionary metadata;
     NSMutableData imgWithMetadata;
+    NSDictionary metadata;
 
     internal PhotoFile(UIImage img, NSDictionary metadata, string name)
     {
         this.img = img;
         this.metadata = metadata;
         NameWithoutExtension = name;
-        ContentType = GetMIMEType(UTType.JPEG);
+        ContentType = GetMimeType(UTType.JPEG);
         Extension = GetExtension(UTType.JPEG);
         Type = GetFileType(ContentType);
     }
@@ -120,7 +118,7 @@ class PhotoFile : MediaFile
 
         using var source = CGImageSource.FromData(img.AsJPEG());
         var destData = new NSMutableData();
-        using var destination = CGImageDestination.Create(destData, source.TypeIdentifier, 1, null);
+        using var destination = CGImageDestination.Create(destData, source.TypeIdentifier, 1);
         destination.AddImage(source, 0, metadata);
         destination.Close();
         DisposeSources();

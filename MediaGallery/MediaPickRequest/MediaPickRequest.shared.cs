@@ -11,7 +11,7 @@ public class MediaPickRequest
         SelectionLimit = selectionLimit > 0 ? selectionLimit : 1;
         Types = types?.Length > 0
             ? types.Distinct().ToArray()
-            : [ MediaFileType.Image, MediaFileType.Video];
+            : [MediaFileType.Image, MediaFileType.Video];
     }
 
     /// <summary>Maximum count of files to pick. On Android the option just sets multiple pick allowed.</summary>

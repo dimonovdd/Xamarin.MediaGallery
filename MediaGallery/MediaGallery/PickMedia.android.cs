@@ -1,15 +1,16 @@
-﻿using Android.App;
-using Android.Content;
-using Uri = Android.Net.Uri;
-using Android.Provider;
+﻿using Android.Content;
 using Android.Content.PM;
+using Android.OS.Ext;
+using Android.Provider;
+using File = Java.IO.File;
+using Uri = Android.Net.Uri;
 
 namespace NativeMedia;
 
 public static partial class MediaGallery
 {
-    const string imageType = "image/*";
-    const string videoType = "video/*";
+    const string ImageType = "image/*";
+    const string VideoType = "video/*";
     static TaskCompletionSource<(Intent, Result)> tcsPick;
     static TaskCompletionSource<(Intent, Result)> tcsCamera;
 
@@ -37,6 +38,7 @@ public static partial class MediaGallery
         finally
         {
             intent?.Dispose();
+            // ReSharper disable once RedundantAssignment
             intent = null;
             tcsPick = null;
         }
@@ -71,7 +73,7 @@ public static partial class MediaGallery
         if (Platform.HasSdkVersion(33))
             return true;
         if (Platform.HasSdkVersion(30))
-            return Android.OS.Ext.SdkExtensions.GetExtensionVersion(30) >= 2;
+            return SdkExtensions.GetExtensionVersion(30) >= 2;
         return false;
     }
 
@@ -80,7 +82,7 @@ public static partial class MediaGallery
         var intent = new Intent(MediaStore.ActionPickImages);
         if (request.SelectionLimit > 1)
             intent.PutExtra(MediaStore.ExtraPickImagesMax, request.SelectionLimit);
-        if(request.Types.Length == 1)
+        if (request.Types.Length == 1)
             intent.SetType(GetMimeType(request.Types[0]));
         return intent;
     }
@@ -106,7 +108,7 @@ public static partial class MediaGallery
 
             var fileName = $"{GetNewImageName()}.jpg";
             var tempFilePath = GetFilePath(fileName);
-            using var file = new Java.IO.File(tempFilePath);
+            using var file = new File(tempFilePath);
             if (!file.Exists())
                 file.CreateNewFile();
             outputUri = MediaFileProvider.GetUriForFile(Platform.AppActivity, file);
@@ -132,6 +134,7 @@ public static partial class MediaGallery
         finally
         {
             intent?.Dispose();
+            // ReSharper disable once RedundantAssignment
             intent = null;
             tcsCamera = null;
         }
@@ -146,7 +149,7 @@ public static partial class MediaGallery
     }
 
     internal static bool CheckCanProcessResult(int requestCode, Result resultCode, Intent intent)
-        => (tcsPick != null && requestCode == Platform.pickRequestCode) || (tcsCamera != null && requestCode == Platform.cameraRequestCode);
+        => tcsPick != null && requestCode == Platform.pickRequestCode || tcsCamera != null && requestCode == Platform.cameraRequestCode;
 
     static Intent GetCameraIntent() => new(MediaStore.ActionImageCapture);
 
@@ -209,7 +212,7 @@ public static partial class MediaGallery
         try
         {
             using var cursor = Platform.AppActivity?.ContentResolver?
-                .Query(contentUri, new[] { columnName }, null, null, null);
+                .Query(contentUri, [columnName], null, null, null);
 
             if (cursor?.MoveToFirst() ?? false)
             {
@@ -228,8 +231,8 @@ public static partial class MediaGallery
     static string GetMimeType(MediaFileType type)
         => type switch
         {
-            MediaFileType.Image => imageType,
-            MediaFileType.Video => videoType,
+            MediaFileType.Image => ImageType,
+            MediaFileType.Video => VideoType,
             _ => string.Empty,
         };
 }

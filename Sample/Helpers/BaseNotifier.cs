@@ -13,11 +13,11 @@ public class BaseNotifier : INotifyPropertyChanged
     protected virtual void OnPropertiesChanged(params string?[] propertiesNames)
     {
         if (propertiesNames?.Length > 0)
-            foreach(var name in propertiesNames)
+            foreach (var name in propertiesNames)
                 OnPropertyChanged(new PropertyChangedEventArgs(name));
     }
 
     protected virtual void OnPropertyChanged(PropertyChangedEventArgs eventArgs)
         => MainThread.BeginInvokeOnMainThread(
-                () => PropertyChanged?.Invoke(this, eventArgs));
+            () => PropertyChanged?.Invoke(this, eventArgs));
 }

@@ -1,5 +1,4 @@
-﻿
-namespace Sample.Views;
+﻿namespace Sample.Views;
 
 public partial class HomePage
 {

@@ -12,8 +12,8 @@ public static class EmbeddedMedia
 
 public static class EmbeddedResourceProvider
 {
-    static readonly Assembly assembly = typeof(EmbeddedResourceProvider).GetTypeInfo().Assembly;
-    static readonly string[] resources = assembly.GetManifestResourceNames();
+    static readonly Assembly Assembly = typeof(EmbeddedResourceProvider).GetTypeInfo().Assembly;
+    static readonly string[] Resources = Assembly.GetManifestResourceNames();
 
     public static Stream? Load(string? name)
     {
@@ -22,7 +22,7 @@ public static class EmbeddedResourceProvider
         if (string.IsNullOrWhiteSpace(name))
             return null;
 
-        return assembly.GetManifestResourceStream(name);
+        return Assembly.GetManifestResourceStream(name);
     }
 
     public static ImageSource? GetImageSource(string? name)
@@ -32,9 +32,9 @@ public static class EmbeddedResourceProvider
         if (string.IsNullOrWhiteSpace(name))
             return null;
 
-        return ImageSource.FromResource(name, assembly);
+        return ImageSource.FromResource(name, Assembly);
     }
 
     static string? GetFullName(string? name)
-        => resources.FirstOrDefault(n => n.EndsWith($".TestResources.{name}"));
+        => Resources.FirstOrDefault(n => n.EndsWith($".TestResources.{name}"));
 }

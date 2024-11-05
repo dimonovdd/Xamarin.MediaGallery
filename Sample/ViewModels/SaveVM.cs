@@ -42,15 +42,15 @@ public class SaveVM : BaseVM
     async void Save(MediaFileType type, string name)
     {
         var status = await CheckAndRequestAsync<SaveMediaPermission>(
-                "The application needs permission to save media files",
-                "To grant access save media files, go to settings");
+            "The application needs permission to save media files",
+            "To grant access save media files, go to settings");
 
         if (!status)
         {
             await DisplayAlertAsync("The application did not get the necessary permission to save media files");
             return;
         }
-        
+
         try
         {
             await using var stream = EmbeddedResourceProvider.Load(name);

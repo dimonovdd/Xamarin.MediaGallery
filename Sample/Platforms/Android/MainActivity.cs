@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Platform = NativeMedia.Platform;
 
 namespace Sample;
 
@@ -15,13 +16,13 @@ public class MainActivity : MauiAppCompatActivity
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        NativeMedia.Platform.Init(this, savedInstanceState);
+        Platform.Init(this, savedInstanceState);
     }
 
     protected override void OnActivityResult(int requestCode, Result resultCode, Intent? intent)
     {
-        if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
-            NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
+        if (Platform.CheckCanProcessResult(requestCode, resultCode, intent))
+            Platform.OnActivityResult(requestCode, resultCode, intent);
 
         base.OnActivityResult(requestCode, resultCode, intent);
     }
