@@ -1,12 +1,10 @@
-# MediaGallery for .NET Android and iOS
+# MediaGallery for .NET Android and iOS (MAUI)
 
 ![header](./header.svg)
 
 [![NuGet Badge](https://img.shields.io/nuget/vpre/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery)](./LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery) [![YouTube Video Views](https://img.shields.io/youtube/views/8JvgnlHVyrI?style=social)](https://youtu.be/8JvgnlHVyrI)
 
-This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices and capture photo. 
-
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/dimonovdd)
+This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices and capture photo.
 
 ## FAQ
 
@@ -54,7 +52,7 @@ You can just watch the [Video](https://youtu.be/8JvgnlHVyrI) that [@jfversluis](
 
 ### Android
 
-In the Android project's MainLauncher or any Activity that is launched, this plugin must be initialized in the OnCreate method:
+In the Android project's `MainLauncher` or any `Activity` that is launched, this plugin must be initialized in the `OnCreate` method:
 
 ```csharp
 protected override void OnCreate(Bundle savedInstanceState)
@@ -68,17 +66,16 @@ protected override void OnCreate(Bundle savedInstanceState)
 
 ### iOS (Optional)
 
-In the iOS project's AppDelegate that is launched, this plugin can be initialized in the FinishedLaunching method:
+In the iOS project's `AppDelegate` that is launched, this plugin can be initialized in the `FinishedLaunching` method:
 
 ```csharp
 public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 {
     NativeMedia.Platform.Init(GetTopViewController);
-    global::Xamarin.Forms.Forms.Init();
-    LoadApplication(new App());
     return base.FinishedLaunching(app, options);
 }
 
+//This is a sample method, replace it with what you need
 public UIViewController GetTopViewController()
 {
     var vc = UIApplication.SharedApplication.KeyWindow.RootViewController;
@@ -144,7 +141,7 @@ foreach (var file in files)
 - `Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)`
 - `Task<MediaPickResult> PickAsync(MediaPickRequest request, CancellationToken token = default)`
 
-### Android
+### PickAsync Android Specification
 
  To handle runtime results on Android, this plugin must receive any `OnActivityResult`.
 
@@ -152,7 +149,7 @@ foreach (var file in files)
 protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
 {
     if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
-    NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
+        NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
     
     base.OnActivityResult(requestCode, resultCode, intent);
 }
@@ -160,33 +157,26 @@ protected override void OnActivityResult(int requestCode, Result resultCode, Int
 
  If an app has `android:targetSdkVersion="33"` or greater [new Photo picker](https://developer.android.com/training/data-storage/shared/photopicker) will be used if possible.
 
-#### Default behavior
+#### PickAsync Android Default behavior
 
 - When using `PickAsync` method `selectionLimit` parameter just sets multiple pick allowed
 - A request to cancel `PickAsync` method will cancel a task, but the picker UI can remain open until it is closed by the user
 - The use of `Title` property depends on each device
 
-#### Photo Picker behavior
+#### PickAsync Android Photo Picker behavior
 
 - `selectionLimit` parameter limits the number of selected media files
 - `Title` property not used
 
-### iOS
+### PickAsync iOS Specification
 
 - Multi picking is supported since iOS version 14.0+ On older versions, the plugin will prompt the user to select a single file
 - The `NameWithoutExtension` property on iOS versions before 14 returns a null value if the permission to access photos was not granted
 - `Title` property not used
 
-#### Presentation Location
+#### PickAsync iOS - Presentation Location
 
-When picking files on iPadOS you have the ability to present in a pop over control. This specifies where the pop over will appear and point an arrow directly to. You can specify the location using the `PresentationSourceBounds` property. Setting this property has the same behavior as [Launcher or Share in Xamarin.Essentials](https://docs.microsoft.com/en-us/xamarin/essentials/share?tabs=android#presentation-location).
-
-`PresentationSourceBounds` property takes `System.Drawing.Rectangle` for `Xamarin` or `Microsoft.Maui.Graphics.Rect` for `.net6(MAUI)`
-
-**Screenshots:**
-
-- [Popover](./Screenshots/iPadPopover.png)
-- [PageSheet](./Screenshots/iPadPageSheet.png)
+When picking files on iPadOS you have the ability to present in a pop over control. This specifies where the pop over will appear and point an arrow directly to. You can specify the location using the `PresentationSourceBounds` property. Setting this property has the same behavior as [Launcher or Share in MAUI](https://learn.microsoft.com/en-us/dotnet/maui/platform-integration/data/share?view=net-maui-8.0&tabs=android#presentation-location). See [Screenshots](#screenshots)
 
 ## Сapture Photo with Metadata
 
@@ -205,7 +195,7 @@ using var file = await MediaGallery.CapturePhotoAsync()
 
 `NameWithoutExtension` will always return `$"IMG_{DateTime.Now:yyyyMMdd_HHmmss}"` value.
 
-### Android
+### Сapture Photo Android Specification
 
 Open the AndroidManifest.xml file under the Properties folder and add the following inside of the manifest node.
 
@@ -227,7 +217,7 @@ If Camera is not required in your application, you can specify `false`.
 </queries>
 ```
 
-### iOS
+### Сapture Photo iOS Specification
 
 In your `Info.plist` add the following keys:
 
@@ -236,7 +226,7 @@ In your `Info.plist` add the following keys:
 <string>This app needs access to the camera to take photos.</string>
  ```
 
-## SaveAsync
+## Save Media File
 
 ```csharp
 //...
@@ -256,11 +246,7 @@ await MediaGallery.SaveAsync(MediaFileType.Image, stream, fileName);
 //...
  ```
 
-### Permission
-
-Add [`Xamarin.MediaGallery.Permision`](https://www.nuget.org/packages/Xamarin.MediaGallery.Permision) or [`Xamarin.MediaGallery.Permision.Maui`](https://www.nuget.org/packages/Xamarin.MediaGallery.Permision.Maui) nuget package to use the `SaveMediaPermission`
-
-### Android
+### Save Media File Android Specification
 
 Open the AndroidManifest.xml file under the Properties folder and add the following inside of the manifest node.
 
@@ -271,7 +257,7 @@ Open the AndroidManifest.xml file under the Properties folder and add the follow
 
 - When saving media files, the date and time are appended to the file name
 
-### iOS
+### Save Media File iOS Specification
 
 In your `Info.plist` add the following keys:
 
@@ -290,3 +276,7 @@ In your `Info.plist` add the following keys:
 |   iOS   | Android - Defult  | Android - Photo Picker |
 |:-------:|:-------:|:-------:|
 |![iOS](./Screenshots/ios.jpg)|![Android](./Screenshots/droid.jpg)|![Android2](./Screenshots/droid-33.png)|
+
+|   iPad - Popover   | iPad - PageSheet  |
+|:-------:|:-------:|
+|![Popover](./Screenshots/iPadPopover.png)|![PageSheet](./Screenshots/iPadPageSheet.png)|
