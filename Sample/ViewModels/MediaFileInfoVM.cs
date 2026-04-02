@@ -20,6 +20,14 @@ public class MediaFileInfoVM : BaseVM
 
     public string? Metadata { get; private set; }
 
+    public ImageSource? PreviewSource { get; private set; }
+
+    public string? VideoPath { get; private set; }
+
+    public bool IsImage => File.Type == MediaFileType.Image;
+
+    public bool IsVideo => File.Type == MediaFileType.Video;
+
     public bool IsBusy { get; private set; }
 
     public ICommand ShareCommand { get; }
@@ -47,6 +55,12 @@ public class MediaFileInfoVM : BaseVM
                            + $".{File.Extension}";
 
                 Path = await FilesHelper.SaveToCacheAsync(stream, name);
+
+                if (IsImage)
+                    PreviewSource = ImageSource.FromFile(Path);
+                else if (IsVideo)
+                    VideoPath = Path;
+
                 stream.Position = 0;
                 await ReadMeta(stream);
             }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <views:BasePage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -7,10 +7,24 @@
     xmlns:viewModels="clr-namespace:Sample.ViewModels"
     x:Class="Sample.Views.HomePage"
     x:DataType="viewModels:HomeVm"
-    Title="Samples">
+    BackgroundColor="{StaticResource Surface}"
+    Title="MediaGallery">
 
-    <StackLayout>
-        <Button Text="Pick" Command="{Binding NavigateToPickCommand, Mode=OneTime}" />
-        <Button Text="Save" Command="{Binding NavigateToSaveCommand, Mode=OneTime}" />
-    </StackLayout>
+    <VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="Center">
+
+        <Label Text="MediaGallery Sample"
+               FontSize="24" FontAttributes="Bold"
+               HorizontalTextAlignment="Center"
+               TextColor="{StaticResource TextPrimary}" />
+
+        <Label Text="Pick, capture and save media files"
+               FontSize="14"
+               HorizontalTextAlignment="Center"
+               TextColor="{StaticResource TextSecondary}"
+               Margin="0,0,0,16" />
+
+        <Button Text="Pick Media" Command="{Binding NavigateToPickCommand, Mode=OneTime}" />
+        <Button Text="Save Media" Command="{Binding NavigateToSaveCommand, Mode=OneTime}" />
+
+    </VerticalStackLayout>
 </views:BasePage>

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using PropertyChanged;
 
 namespace Sample.Helpers;
 
@@ -8,9 +9,10 @@ public class BaseNotifier : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        => OnPropertiesChanged(propertyName);
+        => RaisePropertiesChanged(propertyName);
 
-    protected virtual void OnPropertiesChanged(params string?[] propertiesNames)
+    [SuppressPropertyChangedWarnings]
+    protected virtual void RaisePropertiesChanged(params string?[] propertiesNames)
     {
         if (propertiesNames?.Length > 0)
             foreach (var name in propertiesNames)
