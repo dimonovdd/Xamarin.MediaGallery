@@ -2,7 +2,7 @@
 
 ![header](./header.svg)
 
-[![NuGet Badge](https://img.shields.io/nuget/vpre/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery)](./LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery) [![YouTube Video Views](https://img.shields.io/youtube/views/8JvgnlHVyrI?style=social)](https://youtu.be/8JvgnlHVyrI)
+[![NuGet Badge](https://img.shields.io/nuget/v/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![NuGet downloads](https://img.shields.io/nuget/dt/Xamarin.MediaGallery)](https://www.nuget.org/packages/Xamarin.MediaGallery/) [![license](https://img.shields.io/github/license/dimonovdd/Xamarin.MediaGallery)](./LICENSE) [![Xamarin.MediaGallery on fuget.org](https://www.fuget.org/packages/Xamarin.MediaGallery/badge.svg)](https://www.fuget.org/packages/Xamarin.MediaGallery) [![YouTube Video Views](https://img.shields.io/youtube/views/8JvgnlHVyrI?style=social)](https://youtu.be/8JvgnlHVyrI)
 
 This plugin is designed for picking and saving photos and video files from the native gallery of Android and iOS devices and capture photo.
 
@@ -12,7 +12,7 @@ Please read this file and see samples before creating an issue.
 
 ### Q: Why does the plugin not support Xamarin?
 
-**A:** Yes, it's funny. Initially, I made this plugin as a temporary solution to expand the functionality of Xamarin.Essentials. Xamarin is no longer supported by Microsoft and MAUI still has scant functionality for working with media files. For these reasons, this plugin will continue to exist and support .NET for iOS and Android.  
+**A:** Initially, this plugin was made as a temporary solution to expand the functionality of Xamarin.Essentials. Xamarin is no longer supported by Microsoft and MAUI still has scant functionality for working with media files. For these reasons, this plugin will continue to exist and support .NET for iOS and Android.
 
 ### Q: [Why does a image have wrong orientation?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/105)
 
@@ -20,11 +20,7 @@ Please read this file and see samples before creating an issue.
 
 ### Q: [How do I get `FilePath`?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/104)
 
-**A:** It is not possible. [But you can copy a file to a cache directory](./Sample/Common/src/Helpers/FilesHelper.cs#L8)
-
-### Q: [How does Xamarin.MediaGallery work on a PopupPage?](https://stackoverflow.com/questions/70233374/how-does-xamarin-mediagallery-work-in-popuppage-in-xamarin)
-
-**A:** Fine! But you need to [initialize the plugin](#ios-optional) on iOS. [See taht sample code](https://github.com/xamarin/Essentials/pull/1846#issuecomment-975207765)
+**A:** It is not possible. [But you can copy a file to a cache directory](./Sample/Helpers/FilesHelper.cs#L8)
 
 ### Q: [Why an error thrown when picking a image on a iOS simulator?](https://github.com/dimonovdd/Xamarin.MediaGallery/issues/92)
 
@@ -99,7 +95,7 @@ try
 {
     var request = new MediaPickRequest(1, MediaFileType.Image, MediaFileType.Video)
     {
-        PresentationSourceBounds = System.Drawing.Rectangle.Empty,
+        PresentationSourceBounds = null,
         Title = "Select"
     };
 
