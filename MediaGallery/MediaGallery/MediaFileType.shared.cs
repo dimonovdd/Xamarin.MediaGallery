@@ -1,10 +1,10 @@
 ﻿namespace NativeMedia;
 
-/// <summary>Enumeration media files</summary>
+/// <summary>Specifies the type of a media file.</summary>
 public enum MediaFileType
 {
-    /// <summary>image/*</summary>
+    /// <summary>An image file (MIME: image/*).</summary>
     Image,
-    /// <summary>video/*</summary>
+    /// <summary>A video file (MIME: video/*).</summary>
     Video,
 }

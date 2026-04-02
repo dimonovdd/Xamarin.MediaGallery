@@ -4,14 +4,14 @@ namespace NativeMedia;
 
 public partial class SaveMediaPermission
 {
-    /// <summary>List of required keys in Info.plis.</summary>
+    /// <summary>Returns the required Info.plist keys: "NSPhotoLibraryAddUsageDescription" on iOS 14+, "NSPhotoLibraryUsageDescription" on older versions.</summary>
     protected override Func<IEnumerable<string>> RequiredInfoPlistKeys =>
         () => HasOSVersion(14)
             ? ["NSPhotoLibraryAddUsageDescription"]
             : ["NSPhotoLibraryUsageDescription"];
 
-    /// <summary>Checks the status of <see cref="SaveMediaPermission" />.</summary>
-    /// <returns>The current status of the permission.</returns>
+    /// <summary>Checks the current authorization status for saving media to the photo library without prompting the user.</summary>
+    /// <returns>The current <see cref="PermissionStatus"/>. Uses PHAccessLevel.AddOnly on iOS 14+.</returns>
     public override Task<PermissionStatus> CheckStatusAsync()
     {
         EnsureDeclared();
@@ -22,8 +22,8 @@ public partial class SaveMediaPermission
         return Task.FromResult(Convert(auth));
     }
 
-    /// <summary>Request <see cref="SaveMediaPermission" /> from the user.</summary>
-    /// <returns>The status of the permission that was requested.</returns>
+    /// <summary>Requests photo library save permission from the user. Shows the system permission dialog if not yet determined.</summary>
+    /// <returns>The resulting <see cref="PermissionStatus"/> after the user responds.</returns>
     public override async Task<PermissionStatus> RequestAsync()
     {
         var status = await CheckStatusAsync();

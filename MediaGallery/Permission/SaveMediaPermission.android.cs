@@ -5,7 +5,7 @@ namespace NativeMedia;
 
 public partial class SaveMediaPermission
 {
-    /// <summary>List of required declarations.</summary>
+    /// <summary>Returns the required Android permissions: WRITE_EXTERNAL_STORAGE on API &lt; 29, none on API 29+.</summary>
     public override (string androidPermission, bool isRuntime)[] RequiredPermissions
         => (int)Build.VERSION.SdkInt >= 29
             ? Array.Empty<(string, bool)>()

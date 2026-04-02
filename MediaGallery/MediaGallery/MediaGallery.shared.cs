@@ -1,12 +1,12 @@
 ﻿namespace NativeMedia;
 
-/// <summary>Performs operations with media files.</summary>
+/// <summary>Provides methods to pick, save, and capture media files (photos and videos) using native platform APIs.</summary>
 public static partial class MediaGallery
 {
     static readonly string CacheDir = "XamarinMediaGalleryCacheDir";
 
-    /// <summary>Opens media files Picker</summary>
-    /// <returns>Media files selected by a user.</returns>
+    /// <summary>Opens the native media picker to select files from the gallery. Does not require any permissions.</summary>
+    /// <returns>A <see cref="MediaPickResult"/> containing the user-selected files, or <c>null</c> if cancelled.</returns>
     /// <inheritdoc cref="MediaPickRequest(int, MediaFileType[])" path="/param" />
     public static Task<MediaPickResult> PickAsync(int selectionLimit = 1, params MediaFileType[] types)
         => PickAsync(new MediaPickRequest(selectionLimit, types));
@@ -22,10 +22,10 @@ public static partial class MediaGallery
         return new MediaPickResult(await PlatformPickAsync(request, token).ConfigureAwait(false));
     }
 
-    /// <summary>Saves a media file with metadata </summary>
-    /// <param name="type">Type of media file to save.</param>
-    /// <param name="fileStream">The stream to output the file to.</param>
-    /// <param name="fileName">The name of the saved file including the extension.</param>
+    /// <summary>Saves a media file to the device gallery. Requires <see cref="SaveMediaPermission"/> to be granted before calling.</summary>
+    /// <param name="type">The type of media file being saved (image or video).</param>
+    /// <param name="fileStream">A readable stream containing the file data.</param>
+    /// <param name="fileName">The name of the file including extension (e.g. "photo.jpg"). On Android, the date/time will be appended to the name.</param>
     /// <returns>A task representing the asynchronous save operation.</returns>
     public static async Task SaveAsync(MediaFileType type, Stream fileStream, string fileName)
     {
@@ -60,14 +60,14 @@ public static partial class MediaGallery
         await PlatformSaveAsync(type, filePath).ConfigureAwait(false);
     }
 
-    /// <summary>Checks camera support on a device</summary>
-    /// <returns></returns>
+    /// <summary>Checks whether the device has a camera and supports photo capture.</summary>
+    /// <returns><c>true</c> if the device can capture photos; otherwise, <c>false</c>.</returns>
     public static bool CheckCapturePhotoSupport()
         => PlatformCheckCapturePhotoSupport();
 
 
-    /// <summary>Opens camera apps and waits for result from an user</summary>
-    /// <returns>Photo with metadata or null</returns>
+    /// <summary>Opens the native camera app to capture a photo with EXIF metadata. Requires <see cref="Permissions.Camera"/> to be granted before calling.</summary>
+    /// <returns>An <see cref="IMediaFile"/> containing the captured photo, or <c>null</c> if the user cancelled. The file name follows the format "IMG_yyyyMMdd_HHmmss".</returns>
     public static async Task<IMediaFile> CapturePhotoAsync(CancellationToken token = default)
     {
         await CheckPossibilityCamera();
