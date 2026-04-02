@@ -16,6 +16,8 @@ public class SaveVM : BaseVM
         PngSource = EmbeddedResourceProvider.GetImageSource(EmbeddedMedia.BaboonPng);
         JpgSource = EmbeddedResourceProvider.GetImageSource(EmbeddedMedia.LomonosovJpg);
         GifSource = EmbeddedResourceProvider.GetImageSource(EmbeddedMedia.NewtonsCradleGif);
+
+        Task.Run(PrepareVideoAsync);
     }
 
     public bool FromStream { get; set; } = true;
@@ -30,6 +32,8 @@ public class SaveVM : BaseVM
 
     public ImageSource? GifSource { get; }
 
+    public string? VideoPath { get; private set; }
+
     public ICommand SavePngCommand { get; }
 
     public ICommand SaveJpgCommand { get; }
@@ -37,6 +41,13 @@ public class SaveVM : BaseVM
     public ICommand SaveGifCommand { get; }
 
     public ICommand SaveVideoCommand { get; }
+
+    async Task PrepareVideoAsync()
+    {
+        await using var stream = EmbeddedResourceProvider.Load(EmbeddedMedia.EarthMp4);
+        if (stream is null) return;
+        VideoPath = await FilesHelper.SaveToCacheAsync(stream, EmbeddedMedia.EarthMp4);
+    }
 
 
     async void Save(MediaFileType type, string name)

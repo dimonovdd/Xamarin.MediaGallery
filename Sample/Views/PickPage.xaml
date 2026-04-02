@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <views:BasePage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -8,51 +8,80 @@
     xmlns:viewModels="clr-namespace:Sample.ViewModels"
     x:Class="Sample.Views.PickPage"
     x:DataType="viewModels:PickVM"
+    BackgroundColor="{StaticResource Surface}"
     Title="Pick"
     x:Name="ThisPage">
 
     <ScrollView>
-        <StackLayout>
-            <Label Text="SelectionLimit:" />
-            <Entry Text="{Binding SelectionLimit}" Keyboard="Numeric" />
+        <VerticalStackLayout Padding="24" Spacing="12">
 
-            <Label Text="Cancel after:" />
-            <Entry Text="{Binding DelayMilliseconds}" Placeholder="Milliseconds" Keyboard="Numeric" />
+            <!-- Settings Card -->
+            <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="16"
+                   Padding="16" BorderColor="Transparent" HasShadow="False">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Settings" FontSize="16" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" />
 
-            <Button Text="Any" Command="{Binding PickAnyCommand, Mode=OneTime}" />
-            <Button Text="Image" Command="{Binding PickImageCommand, Mode=OneTime}"
-                    CommandParameter="{Binding Source={RelativeSource Self}}" />
-            <Button Text="Video" Command="{Binding PickVideoCommand, Mode=OneTime}"
-                    CommandParameter="{Binding Source={RelativeSource Self}}" />
-            <Button Text="Photo" Command="{Binding CapturePhotoCommand, Mode=OneTime}" />
+                    <Label Text="Selection Limit" FontSize="12"
+                           TextColor="{StaticResource TextSecondary}" />
+                    <Entry Text="{Binding SelectionLimit}" Keyboard="Numeric" />
 
-            <Label Text="Information about the completion of the operation:" />
-            <Label Text="{Binding OperationInfo}" MaxLines="4" />
+                    <Label Text="Cancel after (ms)" FontSize="12"
+                           TextColor="{StaticResource TextSecondary}" />
+                    <Entry Text="{Binding DelayMilliseconds}" Placeholder="Milliseconds" Keyboard="Numeric" />
+                </VerticalStackLayout>
+            </Frame>
 
-            <StackLayout Margin="0" Spacing="0"
-                         BindableLayout.ItemsSource="{Binding SelectedItems}">
+            <!-- Actions -->
+            <Label Text="Pick" FontSize="16" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" Margin="0,8,0,0" />
 
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="media:IMediaFile">
-                        <ContentView Padding="0,8">
-                            <Label TextColor="DarkBlue" FontAttributes="Bold">
-                                <Label.Text>
-                                    <MultiBinding StringFormat="{}{0}.{1}">
-                                        <Binding Path="NameWithoutExtension" TargetNullValue="FileEmptyName" Mode="OneTime" />
-                                        <Binding Path="Extension" Mode="OneTime" />
-                                    </MultiBinding>
-                                </Label.Text>
-                            </Label>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowSpacing="12" Margin="0">
+                <Button Grid.Column="0" Text="Any" Command="{Binding PickAnyCommand, Mode=OneTime}" />
+                <Button Grid.Column="1" Text="Image" Command="{Binding PickImageCommand, Mode=OneTime}"
+                        CommandParameter="{Binding Source={RelativeSource Self}}" />
+            </Grid>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0">
+                <Button Grid.Column="0" Text="Video" Command="{Binding PickVideoCommand, Mode=OneTime}"
+                        CommandParameter="{Binding Source={RelativeSource Self}}" />
+                <Button Grid.Column="1" Text="Capture Photo" Command="{Binding CapturePhotoCommand, Mode=OneTime}" />
+            </Grid>
 
-                            <ContentView.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding BindingContext.OpenInfoCommand, Source={x:Reference ThisPage}, Mode=OneTime}"
-                                    CommandParameter="{Binding ., Mode=OneTime}" />
-                            </ContentView.GestureRecognizers>
-                        </ContentView>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </StackLayout>
-        </StackLayout>
+            <!-- Result -->
+            <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="16"
+                   Padding="16" BorderColor="Transparent" HasShadow="False"
+                   Margin="0,8,0,0">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Result" FontSize="16" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" />
+                    <Label Text="{Binding OperationInfo}" FontSize="13"
+                           TextColor="{StaticResource TextSecondary}" MaxLines="4" />
+
+                    <VerticalStackLayout Spacing="0"
+                                         BindableLayout.ItemsSource="{Binding SelectedItems}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="media:IMediaFile">
+                                <ContentView Padding="0,8">
+                                    <Label TextColor="{StaticResource Primary}" FontAttributes="Bold" FontSize="14">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0}.{1}">
+                                                <Binding Path="NameWithoutExtension" TargetNullValue="FileEmptyName" Mode="OneTime" />
+                                                <Binding Path="Extension" Mode="OneTime" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                    <ContentView.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding BindingContext.OpenInfoCommand, Source={x:Reference ThisPage}, Mode=OneTime}"
+                                            CommandParameter="{Binding ., Mode=OneTime}" />
+                                    </ContentView.GestureRecognizers>
+                                </ContentView>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
     </ScrollView>
 </views:BasePage>

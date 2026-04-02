@@ -1,53 +1,85 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <views:BasePage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:Sample.Views"
     xmlns:viewModels="clr-namespace:Sample.ViewModels"
     x:Class="Sample.Views.SavePage"
     x:DataType="viewModels:SaveVM"
-    Title="Save To Gallery From:">
+    BackgroundColor="{StaticResource Surface}"
+    Title="Save">
 
     <ScrollView>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="400" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <VerticalStackLayout Padding="24" Spacing="12">
 
-            <StackLayout Grid.Row="0" Orientation="Vertical" Margin="0" Spacing="0">
-                <RadioButton Content="Stream" IsChecked="{Binding FromStream}" />
-                <RadioButton Content="ByteArray" IsChecked="{Binding FromByteArray}" />
-                <RadioButton Content="CacheDirectory" IsChecked="{Binding FromCacheDirectory}" />
-            </StackLayout>
+            <!-- Source Selection -->
+            <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="16"
+                   Padding="16" BorderColor="Transparent" HasShadow="False">
+                <VerticalStackLayout Spacing="0">
+                    <Label Text="Save to gallery from" FontSize="16" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" Margin="0,0,0,8" />
+                    <RadioButton Content="Stream" IsChecked="{Binding FromStream}" />
+                    <RadioButton Content="Byte Array" IsChecked="{Binding FromByteArray}" />
+                    <RadioButton Content="Cache Directory" IsChecked="{Binding FromCacheDirectory}" />
+                </VerticalStackLayout>
+            </Frame>
 
-            <Grid Grid.Row="1" Margin="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="40" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="40" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <!-- Media Grid -->
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12" Margin="0">
 
-                <Image Grid.Row="0" Grid.Column="0" Source="{Binding PngSource, Mode=OneTime}" />
-                <Button Grid.Row="1" Grid.Column="0" Text="Png" Command="{Binding SavePngCommand, Mode=OneTime}" />
+                <!-- PNG -->
+                <Frame Grid.Row="0" Grid.Column="0" CornerRadius="16" Padding="0"
+                       BorderColor="Transparent" HasShadow="False" BackgroundColor="{StaticResource CardBackground}"
+                       IsClippedToBounds="True">
+                    <VerticalStackLayout Spacing="0">
+                        <Image Source="{Binding PngSource, Mode=OneTime}" HeightRequest="150"
+                               Aspect="AspectFill" BackgroundColor="Transparent" />
+                        <Button Text="Save PNG" Margin="8" Command="{Binding SavePngCommand, Mode=OneTime}" />
+                    </VerticalStackLayout>
+                </Frame>
 
-                <Image Grid.Row="0" Grid.Column="1" Source="{Binding JpgSource, Mode=OneTime}" />
-                <Button Grid.Row="1" Grid.Column="1" Text="Jpg" Command="{Binding SaveJpgCommand, Mode=OneTime}" />
+                <!-- JPG -->
+                <Frame Grid.Row="0" Grid.Column="1" CornerRadius="16" Padding="0"
+                       BorderColor="Transparent" HasShadow="False" BackgroundColor="{StaticResource CardBackground}"
+                       IsClippedToBounds="True">
+                    <VerticalStackLayout Spacing="0">
+                        <Image Source="{Binding JpgSource, Mode=OneTime}" HeightRequest="150"
+                               Aspect="AspectFill" BackgroundColor="Transparent" />
+                        <Button Text="Save JPG" Margin="8" Command="{Binding SaveJpgCommand, Mode=OneTime}" />
+                    </VerticalStackLayout>
+                </Frame>
 
-                <Image Grid.Row="2" Grid.Column="0" Source="{Binding GifSource, Mode=OneTime}" />
-                <Button Grid.Row="3" Grid.Column="0" Text="Gif" Command="{Binding SaveGifCommand, Mode=OneTime}" />
+                <!-- GIF -->
+                <Frame Grid.Row="1" Grid.Column="0" CornerRadius="16" Padding="0"
+                       BorderColor="Transparent" HasShadow="False" BackgroundColor="{StaticResource CardBackground}"
+                       IsClippedToBounds="True">
+                    <VerticalStackLayout Spacing="0">
+                        <Image Source="{Binding GifSource, Mode=OneTime}" HeightRequest="150"
+                               Aspect="AspectFill" BackgroundColor="Transparent"
+                               IsAnimationPlaying="True" />
+                        <Button Text="Save GIF" Margin="8" Command="{Binding SaveGifCommand, Mode=OneTime}" />
+                    </VerticalStackLayout>
+                </Frame>
 
-                <Label Grid.Row="2" Grid.Column="1" Text="Imagine a video of Earth"
-                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
-                <Button Grid.Row="3" Grid.Column="1" Text="Video" Command="{Binding SaveVideoCommand, Mode=OneTime}" />
+                <!-- Video -->
+                <Frame Grid.Row="1" Grid.Column="1" CornerRadius="16" Padding="0"
+                       BorderColor="Transparent" HasShadow="False" BackgroundColor="{StaticResource CardBackground}"
+                       IsClippedToBounds="True">
+                    <VerticalStackLayout Spacing="0">
+                        <toolkit:MediaElement HeightRequest="150"
+                                              Source="{Binding VideoPath}"
+                                              ShouldAutoPlay="True"
+                                              ShouldLoopPlayback="True"
+                                              ShouldShowPlaybackControls="False"
+                                              Aspect="AspectFill" />
+                        <Button Text="Save Video" Margin="8" Command="{Binding SaveVideoCommand, Mode=OneTime}" />
+                    </VerticalStackLayout>
+                </Frame>
+
             </Grid>
-        </Grid>
+
+        </VerticalStackLayout>
     </ScrollView>
 </views:BasePage>

@@ -1,36 +1,82 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <views:BasePage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:Sample.Views"
     xmlns:viewModels="clr-namespace:Sample.ViewModels"
     x:Class="Sample.Views.MediaFileInfoPage"
     x:DataType="viewModels:MediaFileInfoVM"
+    BackgroundColor="{StaticResource Surface}"
     Title="{Binding File.NameWithoutExtension}">
 
     <Grid RowDefinitions="*" ColumnDefinitions="*">
         <ScrollView x:Name="Scroll">
-            <StackLayout>
+            <VerticalStackLayout Padding="24" Spacing="12">
+
+                <!-- Image Preview -->
+                <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="16"
+                       Padding="0" BorderColor="Transparent" HasShadow="False"
+                       IsVisible="{Binding IsImage}" IsClippedToBounds="True">
+                    <Image Source="{Binding PreviewSource}"
+                           HeightRequest="280"
+                           Aspect="AspectFill"
+                           BackgroundColor="Transparent"
+                           IsAnimationPlaying="True" />
+                </Frame>
+
+                <!-- Video Preview -->
+                <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="16"
+                       Padding="0" BorderColor="Transparent" HasShadow="False"
+                       IsVisible="{Binding IsVideo}" IsClippedToBounds="True">
+                    <toolkit:MediaElement HeightRequest="280"
+                                          Source="{Binding VideoPath}"
+                                          ShouldAutoPlay="True"
+                                          ShouldShowPlaybackControls="True"
+                                          Aspect="AspectFit" />
+                </Frame>
+
                 <Button Text="Share" Command="{Binding ShareCommand}" />
 
-                <Label Margin="0,8,0,0" FontAttributes="Bold" Text="Extension:" />
-                <Label Text="{Binding File.Extension}" />
+                <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="16"
+                       Padding="16" BorderColor="Transparent" HasShadow="False">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="File Info" FontSize="16" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}" />
 
-                <Label Margin="0,8,0,0" FontAttributes="Bold" Text="Type:" />
-                <Label Text="{Binding File.Type}" />
+                        <Label Text="Extension" FontSize="12"
+                               TextColor="{StaticResource TextSecondary}" />
+                        <Label Text="{Binding File.Extension}" FontSize="14"
+                               TextColor="{StaticResource TextPrimary}" />
 
-                <Label Margin="0,8,0,0" FontAttributes="Bold" Text="ContentType:" />
-                <Label Text="{Binding File.ContentType}" />
+                        <Label Text="Type" FontSize="12"
+                               TextColor="{StaticResource TextSecondary}" Margin="0,4,0,0" />
+                        <Label Text="{Binding File.Type}" FontSize="14"
+                               TextColor="{StaticResource TextPrimary}" />
 
-                <Label Margin="0,8,0,0" FontAttributes="Bold" Text="Metadata:" />
-                <Label x:Name="MetaLabel"
-                       Text="{Binding Metadata}" VerticalOptions="FillAndExpand" />
-            </StackLayout>
+                        <Label Text="Content Type" FontSize="12"
+                               TextColor="{StaticResource TextSecondary}" Margin="0,4,0,0" />
+                        <Label Text="{Binding File.ContentType}" FontSize="14"
+                               TextColor="{StaticResource TextPrimary}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="16"
+                       Padding="16" BorderColor="Transparent" HasShadow="False">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Metadata" FontSize="16" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}" />
+                        <Label x:Name="MetaLabel" Text="{Binding Metadata}"
+                               FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
         </ScrollView>
 
         <ContentView BackgroundColor="#99000000" IsVisible="{Binding IsBusy}">
-            <ActivityIndicator IsRunning="{Binding IsBusy}" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" Color="White" />
         </ContentView>
     </Grid>
 </views:BasePage>

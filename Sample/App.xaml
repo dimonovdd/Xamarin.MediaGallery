@@ -1,48 +1,46 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Application
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:windows="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.WindowsSpecific;assembly=Microsoft.Maui.Controls"
-    x:Class="Sample.App"
-    windows:Application.ImageDirectory="Assets">
+    x:Class="Sample.App">
     <Application.Resources>
         <ResourceDictionary>
+            <Color x:Key="Primary">#512BD4</Color>
+            <Color x:Key="PrimaryDark">#3B1CA4</Color>
+            <Color x:Key="Surface">#F4F2F7</Color>
+            <Color x:Key="CardBackground">White</Color>
+            <Color x:Key="TextPrimary">#1C1B1F</Color>
+            <Color x:Key="TextSecondary">#49454F</Color>
+
+            <Style TargetType="NavigationPage">
+                <Setter Property="BarBackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="BarTextColor" Value="White" />
+            </Style>
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="BackgroundColor" Value="#512bdf" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="MinimumHeightRequest" Value="48" />
+            </Style>
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="{StaticResource CardBackground}" />
             </Style>
             <Style TargetType="Image">
                 <Setter Property="Aspect" Value="AspectFit" />
                 <Setter Property="VerticalOptions" Value="FillAndExpand" />
                 <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-                <Setter Property="BackgroundColor" Value="LightGray" />
-            </Style>
-            <Style TargetType="Grid">
-                <Setter Property="Margin" Value="8" />
-                <Setter Property="RowSpacing" Value="8" />
-                <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="Padding" Value="0" />
-            </Style>
-            <Style TargetType="StackLayout">
-                <Setter Property="Margin" Value="16" />
-                <Setter Property="Spacing" Value="8" />
-                <Setter Property="Padding" Value="0" />
-            </Style>
-            <Style TargetType="ScrollView">
-                <Setter Property="Margin" Value="0" />
-                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
             </Style>
             <Style TargetType="RadioButton">
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="Padding" Value="0" />
             </Style>
-            <Style TargetType="Label">
-                <Setter Property="Margin" Value="0" />
-            </Style>
             <Style TargetType="Switch">
-                <Setter Property="OnColor" Value="LightGray" />
-                <Setter Property="ThumbColor" Value="#512bdf" />
+                <Setter Property="OnColor" Value="{StaticResource Surface}" />
+                <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>
